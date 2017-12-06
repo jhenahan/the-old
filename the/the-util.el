@@ -1,0 +1,85 @@
+;;; the-util.el --- Miscellaneous utility functions
+
+(require 'the-os)
+(require 'subr-x)
+
+;; These functions will become unnecessary in Emacs 26.1, which
+;; extends `map-put' to have a TESTFN argument.
+
+(defun the-alist-set (key val alist &optional symbol)
+  "Set property KEY to VAL in ALIST. Return new alist.
+This creates the association if it is missing, and otherwise sets
+the cdr of the first matching association in the list. It does
+not create duplicate associations. By default, key comparison is
+done with `equal'. However, if SYMBOL is non-nil, then `eq' is
+used instead.
+This method may mutate the original alist, but you still need to
+use the return value of this method instead of the original
+alist, to ensure correct results."
+  (if-let ((pair (if symbol (assq key alist) (assoc key alist))))
+      (setcdr pair val)
+    (push (cons key val) alist))
+  alist)
+
+(defmacro the-alist-set* (key val alist &optional symbol)
+  "Set property KEY to VAL in ALIST. Return new alist.
+ALIST must be a literal symbol naming a variable holding an
+alist. That variable will be re-set using `setq'. By default, key
+comparison is done with `equal'. However, if SYMBOL is non-nil,
+then `eq' is used instead. See also `the-alist-set'."
+  `(setq ,alist (the-alist-set ,key ,val ,alist ,symbol)))
+
+(defun the-insert-after (insert-elt before-elt list &optional testfn)
+  "Insert INSERT-ELT after BEFORE-ELT in LIST, returning copy of LIST.
+The original LIST is not modified. If BEFORE-ELT is not in LIST,
+it is inserted at the end. Element comparison is done with
+TESTFN, which defaults to `eq'. See also `the-insert-before'
+and `the-insert-after*'."
+  (let ((testfn (or testfn #'eq)))
+    (cond
+     ((null list)
+      (list insert-elt))
+     ((funcall testfn before-elt (car list))
+      (append (list (car list) insert-elt) (copy-sequence (cdr list))))
+     (t (cons (car list)
+              (the-insert-after
+               insert-elt before-elt (cdr list) testfn))))))
+
+(defmacro the-insert-after* (insert-elt before-elt list &optional testfn)
+  "Insert INSERT-ELT after BEFORE-ELT in LIST, returning copy of LIST.
+LIST must be a literal symbol naming a variable holding a list.
+That variable will be re-set using `setq'. Element comparison is
+done with TESTFN, which defaults to `eq'. See also
+`the-insert-after' and `the-insert-before'."
+  `(setq ,list (the-insert-after ,insert-elt ,before-elt ,list ,testfn)))
+
+(defun the-insert-before (insert-elt after-elt lst &optional testfn)
+  "Insert INSERT-ELT before AFTER-ELT in LIST, returning copy of LIST.
+The original LIST is not modified. If BEFORE-ELT is not in LIST,
+it is inserted at the beginning. Element comparison is done with
+TESTFN, which defaults to `eq'. See also `the-insert-after'
+and `the-insert-before*'."
+  (nreverse (the-insert-after insert-elt after-elt (reverse lst) testfn)))
+
+(defmacro the-insert-before* (insert-elt after-elt list &optional testfn)
+  "Insert INSERT-ELT before AFTER-ELT in LIST, returning copy of LIST.
+LIST must be a literal symbol naming a variable holding a list.
+That variable will be re-set using `setq'. Element comparison is
+done with TESTFN, which defaults to `eq'. See also
+`the-insert-before' and `the-insert-after*'."
+  `(setq ,list (the-insert-before ,insert-elt ,after-elt ,list ,testfn)))
+
+(defun the-managed-p (filename)
+  "Return non-nil if FILENAME is managed by The.
+This means that FILENAME is a symlink whose target is inside
+`the-directory'."
+  (and the-directory
+       (string-prefix-p the-directory (file-truename filename)
+                        ;; The filesystem on macOS is case-insensitive
+                        ;; but case-preserving, so we have to compare
+                        ;; case-insensitively in that situation.
+                        (eq the-operating-system 'macOS))))
+
+(provide 'the-util)
+
+;;; the-util.el ends here
