@@ -2,7 +2,7 @@
 
 (require 'the-custom)
 
-(defcustom radian-operating-system
+(defcustom the-operating-system
   (pcase system-type
     ('darwin 'macOS)
     ((or 'ms-dos 'windows-nt 'cygwin) 'windows)
@@ -10,7 +10,7 @@
   "Specifies the operating system.
 This can be `macOS', `linux', or `windows'. Normally this is
 automatically detected and does not need to be changed."
-  :group 'radian
+  :group 'the
   :type '(choice (const :tag "macOS" macOS)
                  (const :tag "Windows" windows)
                  (const :tag "Linux" linux)))
