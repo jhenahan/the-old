@@ -269,6 +269,28 @@ This is scheduled repeatedly at intervals after
 ;; entirely.
 (setq echo-keystrokes 1e-6)
 
+(use-package dynamic-fonts
+  :init
+  (setq dynamic-fonts-preferred-monospace-fonts '("Pragmata Pro"))
+  (dynamic-fonts-setup))
+
+;; Set font size according to resolution
+(defun fontify-frame (frame)
+  (interactive)
+  (when window-system
+    (if (> (x-display-pixel-width) 2000)
+        (set-frame-parameter frame 'font "PragmataPro 19") ;; Cinema Display
+      (set-frame-parameter frame 'font "PragmataPro 16"))))
+
+;; Fontify current frame
+(add-hook 'after-init-hook (lambda () (fontify-frame nil)))
+(add-hook 'window-setup-hook (lambda () (fontify-frame nil)))
+
+
+;; Fontify any future frames
+(push 'fontify-frame after-make-frame-functions)
+
+
 (provide 'the-appearance)
 
 ;;; the-appearance.el ends here
