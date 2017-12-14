@@ -50,11 +50,7 @@
 		(nil . "default.el")))
 
 	;; Use the develop branch of straight.el
-	(setq straight-recipe-overrides
-	      '((the . ((straight :type git :host github
-				  :repo "raxod502/straight.el"
-				  :branch "develop"
-				  :files ("straight.el"))))))
+        (setq straight-repository-branch "develop")
 
 	(defvar the-after-init-hook nil
 	  "Hook run after THE finishes initializing. Local init settings should likely go here.")
@@ -87,8 +83,7 @@
 			       (intern (string-remove-suffix ".el" file)))
 			     (directory-files
 			      the-lib-directory nil
-			      "^[a-z-]+\\.el$"
-			      'nosort)))
+			      "^[a-z-]+\\.el$")))
 	      ;; Any packages installed here are official THE
 	      ;; packages.
 	      (straight-current-profile 'the))
