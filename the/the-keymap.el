@@ -47,6 +47,10 @@
     (add-to-list 'modalka-excluded-modes 'deft-mode)
     (add-to-list 'modalka-excluded-modes 'term-mode)
     (add-to-list 'modalka-excluded-modes 'help-mode)
+    (add-to-list 'modalka-excluded-modes 'diff-mode)
+    (add-to-list 'modalka-excluded-modes 'debugger-mode)
+    (add-to-list 'modalka-excluded-modes 'special-mode)
+    (add-to-list 'modalka-excluded-modes 'makey-key-mode)
     (which-key-add-key-based-replacements
       "M-m"     "Modalka prefix"
       "M-m :"   "extended prefix"
@@ -105,7 +109,7 @@
     (modalka-define-kbd ")" "M-e")
     (modalka-define-kbd "/" "C-s")
     (modalka-define-kbd "E" "C-g")
-    (modalka-define-kbd "d" "C-w")
+    (modalka-define-kbd "d w" "M-d")
     (modalka-define-kbd "w" "C-x o")
     (modalka-define-kbd "W" "M-m W")
     (modalka-define-kbd "B" "M-m B")
@@ -222,7 +226,8 @@
       "W"   "winner undo"
       "w"   "other window"
       "G"   "end of file"
-      "d"   "delete selection"
+      "d"   "delete prefix"
+      "d w"   "delete word"
       "y"   "copy selection"
       "p"   "paste"
       "P"   "paste history"
@@ -280,7 +285,7 @@
 
     (which-key-add-key-based-replacements
       "i"   "exit mode"
-      "a" "expand entire buffer")
+      "a a" "expand entire buffer")
 
     (which-key-add-key-based-replacements
       "]"   "forward nav/edit"

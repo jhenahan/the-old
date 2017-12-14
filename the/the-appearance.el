@@ -49,7 +49,7 @@
 (defun the-fontify-idle ()
   (interactive)
   (the-fontify-frame nil)
-  (run-with-idle-timer 5 t (lambda () (the-fontify-frame nil))))
+  (run-with-idle-timer 1 t (lambda () (the-fontify-frame nil))))
 
 ;; Fontify any future frames
 ;;(add-hook 'after-make-frame-functions 'fontify-idle t)

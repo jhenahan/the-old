@@ -18,21 +18,22 @@
 (use-package delight
   :demand t
   :delight
-  (which-key-mode)
-  (lisp-interaction-mode "λ")
-  (company-mode " C")
-  (eldoc-mode " ε")
-  (flycheck-mode " ƒ")
-  (visual-line-mode "ω")
-  (emacs-lisp-mode "ξ")
-  (modalka-mode "μ")
-  (whitespace-mode)
   (abbrev-mode)
   (auto-fill-function)
+  (auto-revert-mode)
+  (company-mode " C")
+  (eldoc-mode " ε")
+  (emacs-lisp-mode "ξ")
+  (filladapt-mode)
+  (flycheck-mode " ƒ")
+  (lisp-interaction-mode "λ")
+  (modalka-mode "μ")
+  (smerge-mode)
   (subword-mode)
   (undo-tree-mode)
-  (auto-revert-mode)
-  (smerge-mode)
+  (visual-line-mode "ω")
+  (which-key-mode)
+  (whitespace-mode)
   )
 
 ;;; The following code customizes the mode line to something like:

@@ -61,8 +61,7 @@ Trailing whitespace is only deleted if variable
   ;; Enable filladapt in text modes. Enabling it globally has some
   ;; nasty side effects for filling docstrings in e.g.
   ;; `emacs-lisp-mode' and `clojure-mode'.
-  (add-hook 'text-mode-hook #'filladapt-mode)
-  :diminish filladapt-mode)
+  (add-hook 'text-mode-hook #'filladapt-mode))
 
 ;; Use an adaptive fill prefix when visually wrapping too-long lines.
 ;; This means that if you have a line that is long enough to wrap
