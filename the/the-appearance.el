@@ -39,21 +39,21 @@
   (dynamic-fonts-setup))
 
 ;; Set font size according to resolution
-(defun fontify-frame (frame)
+(defun the-fontify-frame (frame)
   (interactive)
-  (when window-system
+  (the-with-windowed-emacs
     (if (> (x-display-pixel-width) 2000)
         (set-frame-parameter frame 'font "PragmataPro 19") ;; Cinema Display
-      (set-frame-parameter frame 'font "PragmataPro 16"))))
+      (set-frame-parameter frame 'font "PragmataPro 14"))))
 
-;; Fontify current frame
-(add-hook 'after-init-hook (lambda () (fontify-frame nil)))
-(add-hook 'window-setup-hook (lambda () (fontify-frame nil)))
-
+(defun the-fontify-idle ()
+  (interactive)
+  (the-fontify-frame nil)
+  (run-with-idle-timer 5 t (lambda () (the-fontify-frame nil))))
 
 ;; Fontify any future frames
-(push 'fontify-frame after-make-frame-functions)
-
+;;(add-hook 'after-make-frame-functions 'fontify-idle t)
+(call-interactively 'the-fontify-idle)
 
 (provide 'the-appearance)
 
