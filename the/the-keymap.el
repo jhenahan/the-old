@@ -62,6 +62,9 @@
     :diminish (modalka-mode . "µ"))
 
 
+    ;; Leave Modalka
+    (modalka-define-kbd "i" "C-z")
+
     ;;; Vim-style numeric prefix keys
     (modalka-define-kbd "0" "C-0")
     (modalka-define-kbd "1" "C-1")
@@ -152,7 +155,7 @@
     (modalka-define-kbd "g ?" "C-h k")
 
     ;; Region prefixed
-    (modalka-define-kbd "i a" "C-x h")
+    (modalka-define-kbd "a a" "C-x h")
 
     ;; Narrowing
     (modalka-define-kbd "] ]" "C-x n n")
@@ -276,8 +279,8 @@
       "g ?" "find command bound to key")
 
     (which-key-add-key-based-replacements
-      "i"   "expand prefix"
-      "i a" "expand entire buffer")
+      "i"   "exit mode"
+      "a" "expand entire buffer")
 
     (which-key-add-key-based-replacements
       "]"   "forward nav/edit"
