@@ -28,16 +28,7 @@
 ;; lazy-loading, through the use of keyword arguments. See the README
 ;; [1].
 ;;
-;; We are using raxod's fork for the foreseeable future, until
-;; `with-feature' is ready. See [2].
-;;
-;; [1]: https://github.com/jwiegley/use-package
-;; [2]: https://github.com/jwiegley/use-package/commit/93bf693b6467df0a4992b2804330378dcd486040
-(straight-use-package '(use-package
-                         :host github
-                         :repo "raxod502/use-package"
-                         :upstream (:host github
-				    :repo "jwiegley/use-package")))
+(straight-use-package 'use-package)
 
 ;; Tell use-package to automatically install packages if they are
 ;; missing. By default, packages are installed via straight.el [1],
@@ -53,7 +44,8 @@
 ;; [3]: https://elpa.gnu.org/
 ;; [4]: https://emacsmirror.net/
 ;; [5]: https://github.com/melpa/melpa#recipe-format
-(setq use-package-always-ensure t)
+;; Install packages by default.
+(setq straight-use-package-by-default t)
 
 ;; Tell use-package to always load packages lazily unless told
 ;; otherwise. It's nicer to have this kind of thing be deterministic:

@@ -11,8 +11,9 @@
   ;; buffers. See [1].
   ;;
   ;; [1]: https://github.com/flycheck/flycheck/pull/1308
-  :recipe (:host github :repo "raxod502/flycheck"
-           :upstream (:host github :repo "flycheck/flycheck"))
+  :straight (:host github
+             :repo "raxod502/flycheck"
+             :upstream (:host github :repo "flycheck/flycheck"))
   :init
 
   ;; Enable `flycheck' everywhere unless otherwise specified.
@@ -28,9 +29,7 @@
 
   ;; Run a syntax check when changing buffers, just in case you
   ;; modified some other files that impact the current one.
-  (add-to-list 'flycheck-check-syntax-automatically 'buffer-switch)
-
-  :diminish flycheck-mode)
+  (add-to-list 'flycheck-check-syntax-automatically 'buffer-switch))
 
 (provide 'the-check)
 

@@ -8,7 +8,7 @@
 ;;
 ;; [1]: https://github.com/raxod502/el-patch
 (use-package el-patch
-  :recipe (:host github
+  :straight (:host github
            :repo "raxod502/el-patch"
            :branch "develop")
   :config

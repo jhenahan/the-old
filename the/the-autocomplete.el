@@ -77,7 +77,7 @@ backends will still be included.")
           ;; make sure that no minor modes override this keybinding.
           ("M-TAB" . company-manual-begin))
 
-  :diminish company-mode
+
   :config
 
   ;; Show completions instantly, rather than after half a second.

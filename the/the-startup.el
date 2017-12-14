@@ -24,6 +24,7 @@ This is an `:override' advice for
 ;; Remove the initial *scratch* message.
 (setq initial-scratch-message nil)
 
+
 (server-start)
 
 (provide 'the-startup)

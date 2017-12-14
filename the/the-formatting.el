@@ -56,13 +56,13 @@ Trailing whitespace is only deleted if variable
 ;; behaves nicely in Markdown's bulleted lists.
 (use-package filladapt
   :demand t
-  :diminish filladapt-mode
   :config
 
   ;; Enable filladapt in text modes. Enabling it globally has some
   ;; nasty side effects for filling docstrings in e.g.
   ;; `emacs-lisp-mode' and `clojure-mode'.
-  (add-hook 'text-mode-hook #'filladapt-mode))
+  (add-hook 'text-mode-hook #'filladapt-mode)
+  :diminish filladapt-mode)
 
 ;; Use an adaptive fill prefix when visually wrapping too-long lines.
 ;; This means that if you have a line that is long enough to wrap
@@ -90,9 +90,6 @@ Interactively, reverse the characters in the current region."
     (delete-and-extract-region
      beg end))))
 
-;; Don't show `whitespace-mode' in the mode line.
-(diminish 'whitespace-mode)
-
 ;; Minor mode for configuring `whitespace-mode' to highlight long
 ;; lines.
 (define-minor-mode the-long-lines-mode
@@ -108,9 +105,7 @@ Interactively, reverse the characters in the current region."
 ;; Support for EditorConfig, a "file format and collection of text
 ;; editor plugins for maintaining consistent coding styles between
 ;; different editors and IDEs".
-(use-package editorconfig
-  :defer-install t
-  :mode ("/\\.editorconfig\\'" . editorconfig-conf-mode))
+(use-package editorconfig)
 
 (provide 'the-formatting)
 
