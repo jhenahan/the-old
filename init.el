@@ -34,9 +34,30 @@
 	       (file-truename link-target))))
 	  "Absolute path to THE. nil if not found.")
 
+        (defvar the-org-lib-directory
+          (and the-directory
+               (expand-file-name "the/org" the-directory))
+          "Absolute path to THE org sources. nil if not found.")
+
+	(defvar the-doc-source-file
+	  (and the-directory
+	       (expand-file-name "the/doc/README.org" the-directory))
+	  "Absolute path to THE doc source file. nil if not found.")
+
+	(defvar the-readme
+	  (and the-directory
+	       the-doc-source-file
+	       (expand-file-name "the/README.org"))
+	  "Absolute path to the README. nil if not found.")
+
+	(defvar the-image-directory
+	  (and the-directory
+	       (expand-file-name "the/images" the-directory))
+	  "Absolute path to the images directory. nil if not found.")
+
 	(defvar the-lib-directory
 	  (and the-directory
-	       (expand-file-name "the/" the-directory))
+	       (expand-file-name "the/lisp" the-directory))
 	  "Absolute path to THE libs. nil if not found.")
 
 	;; fail fast
@@ -74,7 +95,7 @@
 
 	;; make THE libs available
 	(add-to-list 'load-path the-lib-directory)
-	
+
 	;; load THE libs
 	(let ((preloaded-features
 	       '(the-emacsd))
@@ -87,19 +108,19 @@
 	      ;; Any packages installed here are official THE
 	      ;; packages.
 	      (straight-current-profile 'the))
-	  
+
 	  ;; First we need to unload all the features, so that the
 	  ;; init-file can be reloaded to pick up changes.
 	  (dolist (feature the-features)
 	    (setq features (remove feature features)))
-	  
+
 	  ;; Now load features that should be loaded first.
 	  (dolist (feature preloaded-features)
 	    (condition-case-unless-debug error-data
 		(require feature)
 	      (error (warn "Could not load `%S': %s" feature
 			   (error-message-string error-data)))))
-	  
+
 	  ;; And then the rest of the features.
 	  (dolist (feature the-features)
 	    (unless (member feature preloaded-features)
@@ -107,7 +128,7 @@
 		  (require feature)
 		(error (warn "Could not load `%S': %s" feature
 			     (error-message-string error-data))))))
-	  
+
 	  ;; Run local customizations that are supposed to be run
 	  ;; after init. Any packages installed here are
 	  ;; user-local packages. (Packages installed
