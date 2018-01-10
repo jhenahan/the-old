@@ -1,0 +1,35 @@
+;;; the-path.el --- Setting the $PATH correctly
+
+(require 'the-os)
+(require 'the-windowed)
+(require 'the-libraries)
+
+(the-with-operating-system macOS
+  (the-with-windowed-emacs
+    (with-temp-buffer
+      ;; See: man path_helper.
+      (call-process "/usr/libexec/path_helper" nil t nil "-s")
+      (goto-char (point-min))
+      (if (search-forward-regexp "PATH=\"\\(.+\\)\"; export PATH;"
+                                 nil 'noerror)
+          (let ((path (match-string 1)))
+            (setenv "PATH" path)
+            ;; The next two statements are from the code of
+            ;; exec-path-from-shell [1], and I thought they were
+            ;; probably there for a good reason.
+            ;;
+            ;; [1]: https://github.com/purcell/exec-path-from-shell
+            (setq eshell-path-env path)
+            (setq exec-path (append (parse-colon-path path)
+                                    (list exec-directory))))
+        (warn "Could not set $PATH using /usr/libexec/path_helper"))
+      ;; Sometimes path_helper also reports a MANPATH setting, but not
+      ;; always.
+      (when (search-forward-regexp "MANPATH=\"\\(.+\\)\"; export MANPATH;"
+                                   nil 'noerror)
+        (let ((manpath (match-string 1)))
+          (setenv "MANPATH" manpath))))))
+
+(provide 'the-path)
+
+;;; the-path.el ends here
