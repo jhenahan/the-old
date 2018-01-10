@@ -1,0 +1,30 @@
+* Window System
+These macros give us a convenient way to conditionally execute code
+based on the active window system.
+
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-windowed.el --- Checking the window system
+#+end_src
+
+** Macros
+#+begin_src emacs-lisp
+  (defmacro the-with-windowed-emacs (&rest body)
+    "Eval BODY if Emacs is windowed, else return nil."
+    (declare (indent defun))
+    `(when (display-graphic-p)
+       ,@body))
+
+  (defmacro the-with-terminal-emacs (&rest body)
+    "Eval BODY if Emacs is not windowed, else return nil."
+    (declare (indent defun))
+    `(unless (display-graphic-p)
+       ,@body))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-windowed)
+
+  ;;; the-windowed.el ends here
+#+end_src

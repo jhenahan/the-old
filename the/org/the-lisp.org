@@ -1,0 +1,20 @@
+* Common Lisp
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-lisp.el --- Support for Lisps
+
+  (require 'the-indent)
+#+end_src
+
+** Aggressive Indent
+Enable aggressive indentation in all Lisp modes.
+#+begin_src emacs-lisp
+  (add-hook 'lisp-mode-hook #'aggressive-indent-mode)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-lisp)
+
+  ;;; the-lisp.el ends here
+#+end_src

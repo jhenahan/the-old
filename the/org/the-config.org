@@ -1,0 +1,66 @@
+* Config File Utilities
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-config.el --- Configuration file editing
+
+  (require 'the-package)
+  (require 'the-regexp)
+#+end_src
+** Apache configs
+#+begin_src emacs-lisp
+  (use-package apache-mode)
+#+end_src
+** Dockerfiles
+#+begin_src emacs-lisp
+  (use-package dockerfile-mode)
+#+end_src
+
+** Git files
+*** Git config and modules
+#+begin_src emacs-lisp
+  (use-package gitconfig-mode)
+#+end_src
+
+*** Git ignore files
+#+begin_src emacs-lisp
+  (use-package gitignore-mode)
+#+end_src
+
+** SSH configs
+#+begin_src emacs-lisp
+  (use-package ssh-config-mode)
+#+end_src
+
+** YAML
+I edit a lot of YAML files, especially Ansible configs. The current
+version of =emacs-ansible= has a hard dependency on =auto-complete=,
+which we don't use, so until there's a version without that
+dependency, we just turn =yaml-mode= on whenever we think we're in an
+Ansible file. =auto-fill= is also turned off in YAML buffers because
+it breaks things.
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :init
+    (setq the--ansible-filename-re ".*\\(main\.yml\\|site\.yml\\|encrypted\.yml\\|roles/.+\.yml\\|group_vars/.+\\|host_vars/.+\\)")
+    (add-to-list 'auto-mode-alist `(,the--ansible-filename-re . yaml-mode))
+    :config
+    (defun the--disable-auto-fill-mode ()
+      (auto-fill-mode -1))
+
+    (add-hook 'yaml-mode-hook #'the--disable-auto-fill-mode))
+#+end_src
+
+** Jinja2
+Jinja2 is the template format of record for Ansible, so we just add
+basic support here.
+#+begin_src emacs-lisp
+  (use-package jinja2-mode)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-config)
+
+  ;;; the-config.el ends here
+#+end_src

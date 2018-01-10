@@ -1,0 +1,63 @@
+* Indentation
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-indent.el --- Indentation
+
+  (require 'the-package)
+  (require 'the-slow)
+#+end_src
+
+** Aggressive Indent
+Assuming your indentation is consistent, this will keep it correct
+without any additional work.
+*** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+**** Local Variable
+Here, we set up =aggressive-indent-mode= as a variable we can set on a
+file- or directory-local level.
+#+NAME: agg-indent-local
+#+begin_src emacs-lisp
+  (put 'aggressive-indent-mode 'safe-local-variable #'booleanp)
+#+end_src
+**** Slow mode
+We register =aggressive-indent= with our slow mode, allowing us to
+disabled reindentation on save for situations in which reindentation
+is expensive. Note that
+=aggressive-indent--proccess-changed-list-and-indent= is not a
+typo. Or rather, it is, but it's in the actual package, not on us.
+#+NAME: agg-indent-slow
+#+begin_src emacs-lisp
+  (defun the-aggressive-indent-toggle-slow ()
+    "Slow down `aggressive-indent' by disabling reindentation on save.
+  This is done in `the-slow-indent-mode'."
+    (add-hook 'aggressive-indent-mode-hook
+              #'the-aggressive-indent-toggle-slow)
+    (if (or the-slow-indent-mode (not aggressive-indent-mode))
+        (remove-hook 'before-save-hook
+                     #'aggressive-indent--proccess-changed-list-and-indent
+                     'local)
+      (add-hook 'before-save-hook
+                #'aggressive-indent--proccess-changed-list-and-indent
+                nil 'local)))
+
+  (add-hook 'the-slow-indent-mode #'the-aggressive-indent-toggle-slow)
+#+end_src
+*** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :init
+    <<agg-indent-local>>
+    :config
+    <<agg-indent-slow>>
+    :delight (aggressive-indent-mode "AggrIndent"))
+
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-indent)
+
+  ;;; the-indent.el ends here
+#+end_src

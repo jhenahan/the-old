@@ -1,0 +1,80 @@
+* Modern Libraries
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-libraries.el --- Helfpul utility libraries
+
+  (require 'the-package)
+#+end_src
+
+** Libraries
+*** Async
+The =async= library makes writing asynchronous functions easier (since
+async in Emacs is kind of a nightmare, otherwise).
+
+#+begin_src emacs-lisp
+  (use-package async
+    :commands (async-start))
+#+end_src
+
+*** =cl-lib=
+This library extends the "Lispiness" of Elisp, making it more like
+Common Lisp though I always feel a bit dirty about using it.
+
+#+begin_src emacs-lisp
+  (use-package cl-lib
+    :demand t)
+#+end_src
+
+*** Lists
+The list API in Elisp basically sucks, so there's =dash=. I'm
+attempting to learn how to use =seq= properly, though, since it's
+built in and should be just about at parity with =dash='s API, if a
+bit more verbose.
+
+#+begin_src emacs-lisp
+  (use-package dash
+    :demand t)
+#+end_src
+
+*** Files
+The file API in Elisp *also* sucks, so we have =f.el=.
+
+#+begin_src emacs-lisp
+  (use-package f
+    :demand t)
+#+end_src
+
+*** Strings
+Keeping up the pattern, the string API in Elisp is hot garbage, so we
+have =s.el= to make things nice.
+
+#+begin_src emacs-lisp
+  (use-package s
+    :demand t)
+#+end_src
+
+*** Hash Tables
+Elisp's hash table API is based around =make-hash-table=, which is a
+pretty awful function with five keyword arguments. This might almost
+be worth it for how much faster hash tables are than alists, but
+luckily =ht.el= means we don't have to choose.
+
+#+begin_src emacs-lisp
+  (use-package ht
+    :demand t)
+#+end_src
+
+*** =subr= extensions
+=subr-x= provides some built-in equivalents to some of the modern APIs
+above, some implemented in C.
+
+#+begin_src emacs-lisp
+  (require 'subr-x)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-libraries)
+
+  ;;; the-libraries.el ends here
+#+end_src

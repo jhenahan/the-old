@@ -1,0 +1,150 @@
+* Formatting Options
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-formatting.el --- Formatting text
+
+  (require 'the-appearance)
+  (require 'the-package)
+#+end_src
+
+** Formatting
+*** Sanity
+Don't use tabs for indentation, even in deeply indented lines.
+
+#+begin_src emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+end_src
+
+Sentences end with one space, not two. We're not French typographers,
+so cut it out.
+
+#+begin_src emacs-lisp
+  (setq sentence-end-double-space nil)
+#+end_src
+
+*** Whitespace
+Trim trailing whitespace on save. This will get rid of end-of-line
+whitespace, and reduce the number of blank lines at the end of the
+file to one.
+
+We don't always want this (though I almost always do), so we create a
+variable which is set globally, but which can be overridden on a
+per-file or per-directory basis.
+
+#+begin_src emacs-lisp
+  (defvar the-delete-trailing-whitespace t
+    "If non-nil, delete trailing whitespace on save.")
+
+  (put 'the-delete-trailing-whitespace
+       'safe-local-variable #'booleanp)
+#+end_src
+
+And now we have a little helper to delete whitespace according to our
+variable.
+
+#+begin_src emacs-lisp
+  (defun the--maybe-delete-trailing-whitespace ()
+    "Maybe delete trailing whitespace in buffer.
+  Trailing whitespace is only deleted if variable
+  `the-delete-trailing-whitespace' if non-nil."
+    (when the-delete-trailing-whitespace
+      (delete-trailing-whitespace)))
+#+end_src
+
+Now we make sure whitespace is (maybe) deleted on save.
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook
+            #'the--maybe-delete-trailing-whitespace)
+#+end_src
+
+Finally, always end files with a newline.
+
+#+begin_src emacs-lisp
+  (setq require-final-newline t)
+#+end_src
+
+**** =long-lines-mode=
+We define a minor mode for configuring =whitespace-mode= to highlight
+long lines. Enabling the mode will highlight characters beyond the
+fill column (80 columns, by default).
+
+#+begin_src emacs-lisp
+  (define-minor-mode the-long-lines-mode
+    "When enabled, highlight long lines."
+    nil nil nil
+    (if the-long-lines-mode
+        (progn
+          (setq-local whitespace-style '(face lines-tail))
+          (whitespace-mode 1))
+      (whitespace-mode -1)
+      (kill-local-variable 'whitespace-style)))
+#+end_src
+
+*** Line Wrapping
+When editing text (i.e., not code), we want to automatically keep
+lines a reasonable length (<80 columns).
+
+#+begin_src emacs-lisp
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+#+end_src
+
+=fill-paragraph= is pretty good, but some structured markup (like
+markdown) doesn't always play nice. =filladapt= will fill in these
+gaps. However, we shut it off in Org because Org already has its own
+version of the functionality of =filladapt=, and they don't agree with
+each other.
+
+#+begin_src emacs-lisp
+  (use-package filladapt
+    :demand t
+    :config
+    (add-hook 'text-mode-hook #'filladapt-mode)
+    (add-hook 'org-mode-hook #'turn-off-filladapt-mode))
+#+end_src
+
+Use an adaptive fill prefix when visually wrapping too-long lines.
+This means that if you have a line that is long enough to wrap
+around, the prefix (e.g. comment characters or indent) will be
+displayed again on the next visual line. We turn it on everywhere by
+lifting it up to a global minor mode.
+
+#+begin_src emacs-lisp
+  (use-package adaptive-wrap
+    :demand t
+    :config
+    (define-globalized-minor-mode global-adaptive-wrap-prefix-mode
+      adaptive-wrap-prefix-mode adaptive-wrap-prefix-mode)
+
+    (global-adaptive-wrap-prefix-mode))
+#+end_src
+
+*** EditorConfig
+EditorConfig is a tool for establishing and maintaining consistent
+code style in editors and IDEs which support it (most of the major
+ones have a plugin).
+
+#+begin_src emacs-lisp
+  (use-package editorconfig)
+#+end_src
+
+*** Utilities
+Like =reverse-region=, but works characterwise rather than linewise.
+
+#+begin_src emacs-lisp
+  (defun the-reverse-characters (beg end)
+    "Reverse the characters in the region from BEG to END.
+  Interactively, reverse the characters in the current region."
+    (interactive "*r")
+    (insert
+     (reverse
+      (delete-and-extract-region
+       beg end))))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-formatting)
+
+  ;;; the-formatting.el ends here
+#+end_src

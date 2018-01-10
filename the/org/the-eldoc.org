@@ -1,0 +1,48 @@
+* ElDoc
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-eldoc.el --- Eldoc customizations
+
+  (require 'the-slow)
+#+end_src
+** Settings
+Show ElDoc messages in the echo area immediately, instead of after 1/2
+a second.
+
+#+begin_src emacs-lisp
+  (setq eldoc-idle-delay 0)
+#+end_src
+
+Always truncate ElDoc messages to one line. This prevents the echo
+area from resizing itself unexpectedly when point is on a variable
+with a multiline docstring.
+
+#+begin_src emacs-lisp
+  (setq eldoc-echo-area-use-multiline-p nil)
+#+end_src
+
+Don't show ElDoc in the mode line.
+
+#+begin_src emacs-lisp
+  (setq eldoc-minor-mode-string nil)
+#+end_src
+
+Slow down ElDoc if metadata fetching is causing performance issues.
+
+#+begin_src emacs-lisp
+  (defun the-eldoc-toggle-slow ()
+    "Slow down `eldoc' by turning up the delay before metadata is shown.
+  This is done in `the-slow-autocomplete-mode'."
+    (if the-slow-autocomplete-mode
+        (setq-local eldoc-idle-delay 1)
+      (kill-local-variable 'eldoc-idle-delay)))
+
+  (add-hook 'the-slow-autocomplete-mode-hook #'the-eldoc-toggle-slow)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-eldoc)
+
+  ;;; the-eldoc.el ends here
+#+end_src

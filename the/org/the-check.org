@@ -1,0 +1,52 @@
+* Syntax Checking
+** Requirements :noexport:
+#+begin_src emacs-lisp
+  ;;; the-check.el --- On-the-fly syntax and semantics checking
+
+  (require 'the-package)
+#+end_src
+
+** Flycheck
+Flycheck provides a framework for in-buffer error and warning
+highlighting, or more generally syntax checking. It comes with a large
+number of checkers pre-defined, and other packages define more.
+
+*** Settings
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+
+**** Enable Flycheck Globally
+Enable Flycheck in all buffers, but also allow for disabling it
+per-buffer.
+
+#+NAME: flycheck-global
+#+begin_src emacs-lisp
+  (global-flycheck-mode +1)
+  (put 'flycheck-mode 'safe-local-variable #'booleanp)
+#+end_src
+
+**** Disable Flycheck in the modeline
+It's honestly more distracting than anything,
+
+#+NAME: no-flycheck-modeline
+#+begin_src emacs-lisp
+  (setq flycheck-mode-line nil)
+#+end_src
+
+*** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :defer 3
+    :config
+    <<flycheck-global>>
+    <<no-flycheck-modeline>>
+    )
+#+end_src
+
+** Provides :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-check)
+
+  ;;; the-check.el ends here
+#+end_src

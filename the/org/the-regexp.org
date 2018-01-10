@@ -1,0 +1,22 @@
+* Regular Expressions
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-regexp.el --- Support for regular expressions
+
+  (require 'the-package)
+#+end_src
+
+** Rx
+A prescription for your regex woes. Don't write obscure regex
+syntax. Describe the regex you want, then generate the bizarre
+incantation you need.
+
+#+begin_src emacs-lisp
+  (use-package rx)
+#+end_src
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-regexp)
+
+  ;;; the-regexp.el ends here
+#+end_src

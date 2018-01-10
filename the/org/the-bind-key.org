@@ -1,0 +1,53 @@
+* Binding Keys
+
+** Requirements                                                    :noexport:
+#+begin_src emacs-lisp
+  ;;; the-bind-key.el --- Utility functions for keybindings
+
+  (require 'the-custom)
+  (require 'the-package)
+  (require 'the-libraries)
+#+end_src
+
+** Custom Prefix
+There's a lot of room for keybindings, but we rely on a common prefix
+for discoverability and to leave room for extension. This also makes
+creating modal bindings later quite a bit easier.
+
+#+begin_src emacs-lisp
+  (defcustom the-prefix "M-T"
+    "Prefix key sequence for The-related keybindings.
+  This is a string as would be passed to `kbd'."
+    :group 'the
+    :type 'string)
+#+end_src
+
+For convenience, we also have a function that will create binding
+strings using our prefix. This mainly gets used in bind-key
+declarations until I can figure out how to evaluate code in org-table
+cells to make the whole thing more customizable.
+
+#+begin_src emacs-lisp
+  (defun the-join-keys (&rest keys)
+    "Join key sequences. Empty strings and nils are discarded.
+  \(the--join-keys \"M-P e\" \"e i\") => \"M-P e e i\"
+  \(the--join-keys \"M-P\" \"\" \"e i\") => \"M-P e i\""
+    (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
+#+end_src
+
+
+** =bind-key=
+=bind-key= is the prettier cousin of =define-key= and
+=global-set-key=, as well as providing the =:bind= family of keywords
+in =use-package=,
+
+#+begin_src emacs-lisp
+  (use-package bind-key)
+#+end_src
+
+** Provides                                                        :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-bind-key)
+
+  ;;; the-bind-key.el ends here
+#+end_src

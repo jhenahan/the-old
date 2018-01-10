@@ -1,0 +1,23 @@
+* Hydra
+Hydras are a really fancy feature that let you create families of
+related bindings with a common prefix.
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-hydra.el --- The many-headed keybinding machine
+
+  (require 'the-custom)
+  (require 'the-package)
+#+end_src
+
+** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package hydra
+    :demand t)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-hydra)
+
+  ;;; the-hydra.el ends here
+#+end_src

@@ -1,0 +1,251 @@
+* Completion
+** Requires                                                       :noexport:
+
+#+begin_src emacs-lisp
+  ;;; the-completion.el --- Completion systems
+
+  (require 'the-appearance)
+  (require 'the-libraries)
+  (require 'the-package)
+  (require 'the-patch)
+#+end_src
+
+** Packages
+*** Smex - Frecency for command history
+This package provides a simple mechanism for recording the user's
+command history so that it can be used to sort commands by usage. It
+is automatically used by Ivy. Note, however, that historian.el will
+hopefully replace smex soon, since it provides more functionality in a
+more elegant way. See [[https://github.com/nonsequitur/smex][1]], [[https://github.com/PythonNut/historian.el][2]].
+
+#+begin_src emacs-lisp
+  (use-package smex)
+#+end_src
+
+*** flx - Fuzzy command matching
+This package provides a framework for sorting choices in a hopefully
+intelligent way based on what the user has typed in, using "fuzzy
+matching" (i.e. "ffap" matches "find-file-at-point"). See [[https://github.com/lewang/flx][1]].
+
+#+begin_src emacs-lisp
+  (use-package flx)
+#+end_src
+
+*** Ivy - completing-read on steroids
+Ivy is a completion and narrowing framework. What does this mean?
+By default, Emacs has some basic tab-completion for commands,
+files, and so on. Ivy replaces this interface by showing a list of
+all the possible options, and narrowing it in an intelligent
+way (using smex and flx, if they are installed) as the user inputs
+a query. This is much faster.
+**** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+***** Lazy Loading
+We'll be making a few patches, so we want to make sure that the
+patches aren't loaded until =ivy= is.
+
+#+NAME: ivy-lazy-load
+#+begin_src emacs-lisp
+  (el-patch-feature ivy)
+#+end_src
+***** Keymap
+We define a keymap for =ivy-mode= so we can remap buffer switching
+commands when =ivy= is active.
+#+NAME: ivy-keymap
+#+begin_src emacs-lisp
+  (el-patch-defvar ivy-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map [remap switch-to-buffer]
+            'ivy-switch-buffer)
+          (define-key map [remap switch-to-buffer-other-window]
+            'ivy-switch-buffer-other-window)
+          map)
+        "Keymap for `ivy-mode'.")
+#+end_src
+***** Minor Mode Patches
+We patch Ivy to be easily toggle-able, and to restore normal
+=completing-read= functionality if =ivy-mode= is disabled.
+#+NAME: ivy-mode-patches
+#+begin_src emacs-lisp
+  (el-patch-define-minor-mode ivy-mode
+    "Toggle Ivy mode on or off.
+    Turn Ivy mode on if ARG is positive, off otherwise.
+    Turning on Ivy mode sets `completing-read-function' to
+    `ivy-completing-read'.
+    Global bindings:
+    \\{ivy-mode-map}
+    Minibuffer bindings:
+    \\{ivy-minibuffer-map}"
+    :group 'ivy
+    :global t
+    :keymap ivy-mode-map
+    :lighter " ivy"
+    (if ivy-mode
+        (progn
+          (setq completing-read-function 'ivy-completing-read)
+          (el-patch-splice 2
+            (when ivy-do-completion-in-region
+              (setq completion-in-region-function 'ivy-completion-in-region))))
+      (setq completing-read-function 'completing-read-default)
+      (setq completion-in-region-function 'completion--in-region)))
+#+end_src
+***** Keybindings
+=ivy-resume= lets us jump back into the last completion session, which
+is pretty handy.
+
+#+NAME: ivy-global-bindings
+#+begin_src emacs-lisp
+  ("C-x C-r" . ivy-resume)
+#+end_src
+****** Minibuffer bindings
+The behavior of Ivy in the minibuffer is a bit unintuitive, so we're
+gonna make it a bit more intuitive. In short, tab for navigation,
+return for interaction, and =C-j= to use the current candidate as is.
+#+NAME: ivy-minibuffer-bindings
+#+begin_src emacs-lisp
+  ("TAB" . ivy-alt-done)
+  ("<tab>" . ivy-alt-done)
+  ("C-j" . ivy-immediate-done)
+#+end_src
+***** Fuzzy matching
+Fuzzy matching is nice almost everywhere, so we turn it on for all
+=ivy= completions except for =swiper= (text search), since fuzzy
+matching for text is weird. We also raise the =ivy-flx-limit= so that
+it will actually be used.
+#+NAME: ivy-fuzzy
+#+begin_src emacs-lisp
+  (setq ivy-re-builders-alist
+        '((swiper . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)))
+  (setq ivy-flx-limit 2000)
+#+end_src
+**** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package ivy
+    :demand t
+    :init
+    <<ivy-lazy-load>>
+    <<ivy-keymap>>
+    <<ivy-mode-patches>>
+    (ivy-mode 1)
+    :bind (
+           <<ivy-global-bindings>>
+           :map ivy-minibuffer-map
+           <<ivy-minibuffer-bindings>>
+           )
+    :config
+    <<ivy-fuzzy>>
+    :delight ivy-mode)
+#+end_src
+
+*** Counsel - Ivy-ized standard Emacs commands
+Ivy is just a general-purpose completion framework. It can be used
+to generate improved versions of many stock Emacs commands. This is
+done by the Counsel library. (It also adds a few new commands, such
+as =counsel-git-grep=.)
+**** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+***** Bindings
+Counsel is a set of convenient commands based on Ivy meant to improve
+the built-in Emacs equivalents. We bind them to the normal Emacs keys
+so we can use Ivy nearly everywhere. We also have some other useful
+commands for finding and searching within Git repos, and a visual kill
+ring for yanking.
+#+NAME: counsel-bindings
+#+begin_src emacs-lisp
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
+  ("C-h f" . counsel-describe-function)
+  ("C-h v" . counsel-describe-variable)
+  ("C-h l" . counsel-load-library)
+  ("C-h C-l" . counsel-find-library)
+  ("C-h S" . counsel-info-lookup-symbol)
+  ("C-x 8 RET" . counsel-unicode-char)
+  ("C-c g" . counsel-git)
+  ("C-c j" . counsel-git-grep)
+  ("C-c k" . counsel-rg)
+  ("M-y" . counsel-yank-pop)
+#+end_src
+
+We also bind a key for use in expression buffers (like
+=eval-expression=) to give us history search.
+
+#+NAME: counsel-expression-bindings
+#+begin_src emacs-lisp
+  ("C-r" . counsel-expression-history)
+#+end_src
+***** Find file at point
+If there is a valid file at point, =counsel-find-file= will select
+that file by default.
+#+NAME: counsel-ffap
+#+begin_src emacs-lisp
+  (setq counsel-find-file-at-point t)
+#+end_src
+**** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package counsel
+    :bind (;; Use Counsel for common Emacs commands.
+           <<counsel-bindings>>
+           :map read-expression-map
+           <<counsel-expression-bindings>>
+           )
+    :config
+    <<counsel-ffap>>
+  )
+#+end_src
+
+*** Historian - Remember completion choices
+Remembers your choices in completion menus.
+
+#+begin_src emacs-lisp
+  (use-package historian
+    :demand t
+    :config
+    (historian-mode 1))
+#+end_src
+
+**** =ivy-historian=
+We use Historian to sort Ivy candidates by frecency+flx.
+
+***** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+The only configuration we do here is to mess around with how Historian
+weights results.
+#+NAME: ivy-historian-weights
+#+begin_src emacs-lisp
+  (setq ivy-historian-freq-boost-factor 500)
+  (setq ivy-historian-recent-boost 500)
+  (setq ivy-historian-recent-decrement 50)
+#+end_src
+
+***** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package ivy-historian
+    :demand t
+    :after ivy
+    :config
+    <<ivy-historian-weights>>
+    (ivy-historian-mode 1))
+#+end_src
+
+*** Icicles - Sheesh
+Icicles is steroids for the steroids. I don't even know everything it
+does, so it's not on by default.
+
+#+begin_src emacs-lisp
+  (use-package icicles
+    :demand t)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-completion)
+
+  ;;; the-completion.el ends here
+#+end_src

@@ -1,0 +1,20 @@
+* Enable Disabled Commands
+  It is obvious to anyone that if a function is disabled then it must
+  be powerful, or at least interesting. I want them.
+
+** Requirements                                                    :noexport:
+   #+begin_src emacs-lisp
+     ;;; the-command.el --- Enable disabled commands
+   #+end_src
+
+** Do it
+   #+begin_src emacs-lisp
+     (setq disabled-command-function nil)
+   #+end_src
+
+** Provides                                                        :noexport:
+   #+begin_src emacs-lisp
+     (provide 'the-command)
+
+     ;;; the-command.el ends here
+   #+end_src

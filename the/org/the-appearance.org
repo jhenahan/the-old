@@ -1,0 +1,97 @@
+* Appearance
+** Requires                                                        :noexport:
+#+begin_src emacs-lisp
+  ;;; the-appearance.el --- Non-color-theme appearance tweaks
+
+  (require 'the-custom)
+  (require 'the-package)
+  (require 'the-windowed)
+  (require 'the-os)
+#+end_src
+
+** Basic Setup
+This file has appearance tweaks that are unrelated to the color
+theme. Menus, scroll bars, bells, cursors, and so on. See also
+=the-theme=, which customizes the color theme specifically.
+
+** Fullscreen
+I use =chunkwm= to manage most windows, including Emacs, so the native
+fullscreen mode is unnecessary. It's also necessary to set pixelwise
+frame resizing non-nil for a variety of window managers. I don't see
+any particular harm in having it on, regardless of WM.
+
+#+begin_src emacs-lisp
+  (the-with-operating-system macOS
+    (setq ns-use-native-fullscreen nil))
+  (setq frame-resize-pixelwise t)
+#+end_src
+
+** Interface Cleanup
+Emacs defaults are a nightmare of toolbars and scrollbars and such
+nonsense. We'll turn all of that off.
+
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (setq ring-bell-function #'ignore)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (blink-cursor-mode -1)
+#+end_src
+
+** Keystroke Display
+Display keystrokes in the echo area immediately, not after one
+second. We can't set the delay to zero because somebody thought it
+would be a good idea to have that value suppress keystroke display
+entirely.
+
+#+begin_src emacs-lisp
+  (setq echo-keystrokes 1e-6)
+#+end_src
+
+** No Title Bars
+I put a lot of effort into purging title bars from most of the
+software I use on a regular basis (what a waste of real estate), and
+in Emacs 26 (might really be 26.2 or so) this is built in. For earlier
+versions, patches exist to get the same effect.
+
+#+begin_src emacs-lisp
+  (if (version<= "26" emacs-version)
+      (setq default-frame-alist '((undecorated . t))))
+#+end_src
+
+** Fonts
+I use Pragmata Pro everywhere, but I'll eventually figure out how to
+deal with fonts properly and allow this to be specified.
+
+** Adjust font size by screen resolution
+The biggest issue I have with multiple monitors is that the font size
+is all over the place. The functions below just set up some reasonable
+defaults and machinery to change the size depending on the resolution
+of the monitor.
+
+#+begin_src emacs-lisp
+  (defun the-fontify-frame (frame)
+    (interactive)
+    (the-with-windowed-emacs
+      (if (> (x-display-pixel-width) 2000)
+          (set-frame-parameter frame 'font "PragmataPro 22") ;; Cinema Display
+        (set-frame-parameter frame 'font "PragmataPro 16"))))
+
+  (defun the-fontify-this-frame ()
+    (interactive)
+    (the-fontify-frame nil))
+
+  (defun the-fontify-idle ()
+    (interactive)
+    (the-fontify-this-frame)
+    (run-with-idle-timer 1 t 'the-fontify-this-frame))
+
+  (call-interactively 'the-fontify-idle)
+#+end_src
+
+** Provides                                                        :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-appearance)
+
+  ;;; the-appearance.el ends here
+#+end_src

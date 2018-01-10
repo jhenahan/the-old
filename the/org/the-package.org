@@ -1,0 +1,74 @@
+* Package Management
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-package.el --- Package management
+#+end_src
+
+** Disable =package.el=
+We use =straight.el= in this household, and like it! Emacs will
+initialize =package.el= unless we tell it not to, so we do so.
+
+#+begin_src emacs-lisp
+(setq package-enable-at-startup nil)
+#+end_src
+
+** Bootstrap =straight.el=
+We are using a package manager called straight.el. This code, which is
+taken from [[https://github.com/raxod502/straight.el][the README]], bootstraps the system (because obviously the
+package manager is unable to install and load itself, if it is not
+already installed and loaded).
+
+#+begin_src emacs-lisp
+  (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+        (bootstrap-version 3))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
+** =use-package=
+To handle a lot of useful tasks related to package configuration, we
+use a library called `use-package', which provides a macro by the same
+name. This macro automates many common tasks, like autoloading
+functions, binding keys, registering major modes, and lazy-loading,
+through the use of keyword arguments. See the README.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'use-package)
+#+end_src
+
+*** =straight.el= integration
+Tell use-package to automatically install packages if they are
+missing. By default, packages are installed via [[https://github.com/raxod502/straight.el][=straight.el=]], which
+draws package installation recipes (short lists explaining where to
+download the package) from [[http://melpa.org/#/][MELPA]], [[https://elpa.gnu.org/][GNU ELPA]], and [[https://emacsmirror.net/][EmacsMirror]]. (But you
+can also specify a recipe manually by putting =:straight= in the
+=use-package= call, which is an extension to =use-package= provided by
+=straight.el=.) Learn more about recipe formatting from the [[https://github.com/melpa/melpa#recipe-format][MELPA
+README]].
+
+#+begin_src emacs-lisp
+  (setq straight-use-package-by-default t)
+#+end_src
+
+*** Lazy-loading
+Tell use-package to always load packages lazily unless told otherwise.
+It's nicer to have this kind of thing be deterministic: if `:demand'
+is present, the loading is eager; otherwise, the loading is lazy. See
+[[https://github.com/jwiegley/use-package#notes-about-lazy-loading][the =use-package= documentation]].
+
+#+begin_src emacs-lisp
+  (setq use-package-always-defer t)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-package)
+
+  ;;; the-package.el ends here
+#+end_src

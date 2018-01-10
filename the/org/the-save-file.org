@@ -1,0 +1,34 @@
+* Saving Files
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-save-file.el --- Saving files
+#+end_src
+
+Always use copying to make backup files. This prevents hard links from
+being made to point at the backup file rather than the original.
+#+begin_src emacs-lisp
+  (setq backup-by-copying t)
+#+end_src
+
+Keep multiple numbered backup files, rather than a single unnumbered
+backup file.
+#+begin_src emacs-lisp
+  (setq version-control t)
+#+end_src
+
+Delete old backups silently, instead of asking for confirmation.
+#+begin_src emacs-lisp
+  (setq delete-old-versions t)
+#+end_src
+
+Don't make autosave files.
+#+begin_src emacs-lisp
+  (setq auto-save-default nil)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-save-file)
+
+  ;;; the-save-file.el ends here
+#+end_src

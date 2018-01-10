@@ -1,0 +1,61 @@
+* Network Services
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-network.el --- Network and web browsing
+
+  (require 'the-os)
+  (require 'the-package)
+#+end_src
+
+** macOS TLS verification
+TLS certs on macOS don't live anywhere that =gnutls= can see them, by
+default, so =brew install libressl= and we'll use those.
+#+begin_src emacs-lisp
+  (the-with-operating-system macOS
+    (with-eval-after-load 'gnutls
+      (setq gnutls-verify-error t)
+      (setq gnutls-min-prime-bits 3072)
+      (add-to-list 'gnutls-trustfiles "/usr/local/etc/libressl/cert.pem")))
+#+end_src
+
+** StackOverflow
+Honestly, probably the most important package here. =M-x
+sx-authenticate=, provide a username and password, then get to
+overflowing.
+#+begin_src emacs-lisp
+  (use-package sx)
+#+end_src
+
+** Bug URL references
+Allow setting the regexp for bug references from file-local or
+directory-local variables. CIDER does this in its files, for example.
+#+begin_src emacs-lisp
+  (put 'bug-reference-bug-regexp 'safe-local-variable #'stringp)
+#+end_src
+
+** Pastebin
+=ix.io= is a slick little pastebin, and now we can use it in Emacs.
+#+begin_src emacs-lisp
+  (use-package ix)
+#+end_src
+
+** Browsing
+=eww= is the wonderfully named Emacs Web Wowser, a text-based browser.
+#+begin_src emacs-lisp
+  (use-package eww
+    :bind* (("M-T g x" . eww)
+            ("M-T g :" . eww-browse-with-external-browser)
+            ("M-T g #" . eww-list-histories)
+            ("M-T g {" . eww-back-url)
+            ("M-T g }" . eww-forward-url))
+    :config
+    (progn
+      (add-hook 'eww-mode-hook 'visual-line-mode)))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-network)
+
+  ;;; the-network.el ends here
+#+end_src

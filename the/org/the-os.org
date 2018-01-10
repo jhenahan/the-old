@@ -1,0 +1,46 @@
+* OS-specific Customization
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-os.el --- Operating system detection
+
+  (require 'the-custom)
+#+end_src
+
+** OS detection
+Ideally, we detect the operating system here, as well as giving the
+option to customize it directly in case we get it wrong.
+#+begin_src emacs-lisp
+  (defcustom the-operating-system
+    (pcase system-type
+      ('darwin 'macOS)
+      ((or 'ms-dos 'windows-nt 'cygwin) 'windows)
+      (_ 'linux))
+    "Specifies the operating system.
+  This can be `macOS', `linux', or `windows'. Normally this is
+  automatically detected and does not need to be changed."
+    :group 'the
+    :type '(choice (const :tag "macOS" macOS)
+                   (const :tag "Windows" windows)
+                   (const :tag "Linux" linux)))
+#+end_src
+
+** OS-specific settings
+This macro allows us to handle things like operating system specific
+clipboard/mouse hacks and other things like that.
+
+#+begin_src emacs-lisp
+  (defmacro the-with-operating-system (os &rest body)
+    "If the operating system is OS, eval BODY.
+  See `the-operating-system' for the possible values of OS,
+  which should not be quoted."
+    (declare (indent 1))
+    `(when (eq the-operating-system ',os)
+       ,@body))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-os)
+
+  ;;; the-os.el ends here
+#+end_src

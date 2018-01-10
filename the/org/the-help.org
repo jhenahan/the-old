@@ -1,0 +1,27 @@
+* Better Help
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-help.el --- better help behavior
+
+  (require 'the-package)
+#+end_src
+
+** Helpful
+We alias common help methods to their Helpful equivalents because
+Helpful is a much nicer version of the built-in help.
+#+begin_src emacs-lisp
+  (use-package helpful
+    :demand t
+    :config
+    (defalias #'describe-key #'helpful-key)
+    (defalias #'describe-function #'helpful-callable)
+    (defalias #'describe-variable #'helpful-variable)
+    (defalias #'describe-symbol #'helpful-symbol))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-help)
+
+  ;;; the-help.el ends here
+#+end_src

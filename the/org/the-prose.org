@@ -1,0 +1,22 @@
+* Editing Prose
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-prose.el --- Useful utilities for writing prose
+
+  (require 'the-package)
+#+end_src
+
+** Flyspell
+Flyspell is Flycheck but for spelling. Simple as.
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :bind* (("M-T ] s" . flyspell-goto-next-error))
+    :diminish (flyspell-mode . "φ"))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-prose)
+
+  ;;; the-prose.el ends here
+#+end_src

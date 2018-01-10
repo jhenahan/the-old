@@ -1,0 +1,342 @@
+* Org Mode Customization
+** Requirements                                                    :noexport:
+#+begin_src emacs-lisp
+  ;;; the-org.el -- Org mode customizations
+
+  (require 'the-bind-key)
+  (require 'the-package)
+  (require 'the-libraries)
+  (require 'the-git)
+  (require 'the-modeline)
+#+end_src
+
+** Global Outline Mode
+Outlines work for just about any structured text imaginable, from code
+to prose. If it's got something that Emacs thinks is a paragraph, it
+works. When you need a high-level overview, it's hard to beat this.
+
+#+begin_src emacs-lisp
+  (define-globalized-minor-mode global-outline-minor-mode
+    outline-minor-mode outline-minor-mode)
+
+  (global-outline-minor-mode +1)
+#+end_src
+
+** Org
+Org is a hugely expansive framework (a.k.a. collection of hacks) for
+organizing information, notes, tasks, calendars, and anything else
+related to Org-anization.
+
+*** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+**** Version Hack
+    Because =straight.el= runs Org directly from a Git repo, the
+    autoloads Org uses to identify its version are not generated in
+    the way that it expects. This causes it to either a) fail to
+    determine its version at all or b) incorrectly report the version
+    of the built-in Org which ships with Emacs. This causes some
+    issues down the line, so we have to trick Org. This is how we do it.
+
+    First, we have to get the Git version, here represented by a short
+    hash of the current commit.
+
+    #+NAME: org-version
+    #+begin_src emacs-lisp
+      (defun the-org-git-version ()
+	(let ((git-repo
+	       (f-join user-emacs-directory "straight/repos/org")))
+	  (s-trim (git-run "describe"
+			   "--match=release\*"
+			   "--abbrev=6"
+			   "HEAD"))))
+    #+end_src
+
+    #+NAME: org-release
+    #+begin_src emacs-lisp
+      (defun the-org-release ()
+	(let ((git-repo
+	       (f-join user-emacs-directory "straight/repos/org")))
+	  (s-trim (s-chop-prefix "release_"
+				 (git-run "describe"
+					  "--match=release\*"
+					  "--abbrev=0"
+					  "HEAD")))))
+    #+end_src
+
+    Next, we need to define =org-git-version= and =org-release= eagerly.
+
+    #+NAME: org-version-definitions
+    #+begin_src emacs-lisp
+      <<org-version>>
+      <<org-release>>
+      (defalias #'org-git-version #'the-org-git-version)
+      (defalias #'org-release #'the-org-release)
+      (provide 'org-version)
+    #+end_src
+
+**** =org-tempo=
+In the most recent release of Org, the way easy template expansion
+(i.e., =<s[TAB]= expands to a =begin_src= block) was changed to use
+=tempo=, so we need to require this in order to keep this very
+convenient functionality in place.
+
+#+NAME: org-requires
+#+begin_src emacs-lisp
+  (defun the-fix-easy-templates ()
+    (require 'org-tempo))
+
+  (add-hook 'org-mode-hook 'the-fix-easy-templates)
+#+end_src
+
+**** Bindings
+
+First, we want to set up some recommended bindings as specified in the
+Org manual.
+
+#+NAME: basic-bindings
+#+begin_src emacs-lisp
+  ("C-c a" . org-agenda)
+  ("C-c c" . org-capture)
+#+end_src
+
+First, we move the Org bindings for =org-shift*= from the =S-= prefix
+to =C-=.
+
+#+NAME: org-mode-bindings
+#+begin_src emacs-lisp
+  ("S-<left>" . nil)
+  ("S-<right>" . nil)
+  ("S-<up>" . nil)
+  ("S-<down>" . nil)
+  ("C-<left>" . org-shiftleft)
+  ("C-<right>" . org-shiftright)
+  ("C-<up>" . org-shiftup)
+  ("C-<down>" . org-shiftdown)
+#+end_src
+
+By default, Org maps =org-(backward/forward)-paragraph=, but only maps
+it to the keys we overrode for shift up and down. We'll remap all
+instances so that our existing bindings for those functions will work
+as expected.
+
+#+NAME: org-mode-remaps
+#+begin_src emacs-lisp
+  ([remap backward-paragraph] . org-backward-paragraph)
+  ([remap forward-paragraph] . org-forward-paragraph)
+#+end_src
+
+Finally, we'll set up a convenient binding for inserting headings.
+
+#+NAME: org-mode-heading
+#+begin_src emacs-lisp
+  ("M-RET" . org-insert-heading)
+#+end_src
+
+**** Settings
+=org-insert-headline= will split your content by default, which is
+pretty dumb. We therefore set it to create a new heading, instead. We
+also activate =org-indent-mode= for more beautiful documents.
+
+#+NAME: org-settings
+#+begin_src emacs-lisp
+  (setq org-insert-heading-respect-content t)
+  (add-hook 'org-mode-hook #'org-indent-mode)
+#+end_src
+
+**** Utilities
+***** Recursively sort buffer entries alphabetically
+#+NAME: org-sort-buffer
+#+begin_src emacs-lisp
+  (defun the-org-sort-ignore-errors ()
+    (condition-case x
+        (org-sort-entries nil ?a)
+      (user-error)))
+
+  (defun the-org-sort-buffer ()
+    "Sort all entries in the Org buffer recursively in alphabetical order."
+    (interactive)
+    (org-map-entries #'the-org-sort-ignore-errors))
+#+end_src
+
+***** Archive dead tasks
+If tasks are marked DONE, and either have no deadline or the deadline
+has passed, archive it.
+
+#+NAME: org-archive-past
+#+begin_src emacs-lisp
+  (defun the-org-past-entries ()
+    (when (and (string= (org-get-todo-state) "DONE")
+               (let ((deadline (org-entry-get (point) "DEADLINE")))
+                 (or (null deadline)
+                     (time-less-p (org-time-string-to-time deadline)
+                                  (current-time)))))
+      (org-archive-subtree)
+      (setq org-map-continue-from (line-beginning-position))))
+
+
+  (defun the-org-archive-past ()
+    "Archive DONE items with deadlines either missing or in the past."
+    (interactive)
+    (org-map-entries #'the-org-past-entries))
+#+end_src
+
+***** Pretty bullets
+We use =org-bullets= to make our outlines prettier. There's some minor
+alignment weirdness with my font, so I may need to specify the bullet
+codepoints, later.
+#+NAME: org-bullets
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :init
+    (add-hook 'org-mode-hook 'org-bullets-mode))
+#+end_src
+*** =use-package= declaration
+
+#+begin_src emacs-lisp
+  (use-package org
+    :straight org-plus-contrib
+    :demand t
+    :bind (
+           <<basic-bindings>>
+           :map org-mode-map
+           <<org-mode-bindings>>
+           <<org-mode-remaps>>
+           <<org-mode-heading>>
+           )
+    :init
+    <<org-version-definitions>>
+    :config
+    <<org-requires>>
+    <<org-bullets>>
+    <<org-settings>>
+    <<org-sort-buffer>>
+    <<org-archive-past>>
+    :delight
+    (org-indent-mode)
+    )
+#+end_src
+
+** Org Agenda
+   Org Agenda is for generating a more useful consolidated summary of all
+   or some of your tasks, according to their metadata.
+
+*** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+**** Bindings
+Analogously to our bindings for regular org files, we'll also move
+things off of =S-= and onto =C-=.
+
+#+NAME: org-agenda-bindings
+#+begin_src emacs-lisp
+  ("S-<up>" . nil)
+  ("S-<down>" . nil)
+  ("S-<left>" . nil)
+  ("S-<right>" . nil)
+  ("C-<left>" . org-agenda-do-date-earlier)
+  ("C-<right>" . org-agenda-do-date-later)
+#+end_src
+
+**** Window Splitting
+We want Org Agenda to split the window into two tall windows, rather
+than two wide windows stacked.
+
+#+NAME: agenda-window-split
+#+begin_src emacs-lisp
+  (defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
+    "Make `org-agenda' split horizontally, not vertically, by default.
+    This is an `:around' advice for `org-agenda'. It commutes with
+    `the--advice-org-agenda-default-directory'."
+    (let ((split-height-threshold nil))
+      (apply org-agenda args)))
+
+  (advice-add #'org-agenda :around
+              #'the--advice-org-agenda-split-horizontally)
+#+end_src
+
+**** Default Directory
+If =org-directory= exists, set =default-directory= to its value in the
+agenda so that things like =find-file= work sensibly.
+
+#+NAME: agenda-default-directory
+#+begin_src emacs-lisp
+  (defun the--advice-org-agenda-default-directory
+      (org-agenda &rest args)
+    "If `org-directory' exists, set `default-directory' to it in the agenda.
+    This is an `:around' advice for `org-agenda'. It commutes with
+    `the--advice-org-agenda-split-horizontally'."
+    (let ((default-directory (if (f-exists? org-directory)
+                                 org-directory
+                               default-directory)))
+      (apply org-agenda args)))
+
+  (advice-add #'org-agenda :around
+              #'the--advice-org-agenda-default-directory)
+#+end_src
+
+*** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package org-agenda
+    :straight org-plus-contrib
+    :bind (:map org-agenda-mode-map
+           <<org-agenda-bindings>>
+           )
+    :config
+    <<agenda-window-split>>
+    <<agenda-default-directory>>
+    )
+#+end_src
+
+** Org-mode Config Settings
+Our config files live in =the-lib-directory=, but our org source files
+live in =the-org-lib-directory=. Unless I decide to start loading org
+files directly (which is doable if a touch annoying, at times), for
+now I want the =:tangle= attribute set for me automatically as long as
+I'm working on one of THE's lib files.
+
+Additionally, I'd like to regenerate the documentation on save so
+things will always be up to date.
+
+#+begin_src emacs-lisp
+  (defun the-in-the-org-lib-p ()
+    (and (f-this-file)
+         (f-child-of? (f-this-file) the-org-lib-directory)))
+
+  (defun the-update-doc ()
+    "Update the readme."
+    (interactive)
+    (save-window-excursion
+      (find-file-read-only the-doc-source-file)
+      (org-org-export-to-org)))
+
+
+  (defun the-org-lib-hook ()
+    (if (the-in-the-org-lib-p)
+        (progn
+          (setq-local org-babel-default-header-args:emacs-lisp
+                      `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
+                        (:noweb . "yes")))
+          (the-update-doc))))
+
+  (add-hook 'org-mode-hook 'the-org-lib-hook)
+#+end_src
+
+Finally, I'd like to automatically tangle the files on save.
+
+#+begin_src emacs-lisp
+  (defun the-org-lib-tangle-hook ()
+    (if (the-in-the-org-lib-p)
+        (org-babel-tangle)))
+
+  (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
+#+end_src
+
+** Provides                                                        :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-org)
+
+  ;;; the-org.el ends here
+#+end_src

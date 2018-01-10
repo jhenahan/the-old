@@ -1,0 +1,61 @@
+* Startup
+By default, Emacs fills your universe with (FSF-approved and
+GPL-compliant) garbage. I don't want a bit of it.
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-startup.el --- Cleaning up Emacs startup
+#+end_src
+
+** Disable Startup Message
+I like GNU. You maybe like GNU. You're using Emacs. Whatever. You
+don't need the "For information about Emacs..." message.
+
+#+begin_src emacs-lisp
+  (defalias 'the--advice-inhibit-startup-echo-area-message #'ignore
+    "Unconditionally inhibit the startup message in the echo area.
+  This is an `:override' advice for
+  `display-startup-echo-area-message'.")
+
+  (advice-add #'display-startup-echo-area-message :override
+              #'the--advice-inhibit-startup-echo-area-message)
+#+end_src
+
+** Disable About
+If I wanted to know about GNU Emacs, there are dozens of doc
+options. I do not need that buffer on startup. We disable that and
+instead use our own fancy dashboard.
+
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :demand t
+    :init
+    (setq dashboard-banner-logo-title "REPENT!")
+    (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
+    (setq dashboard-items '((recents  . 5)
+                            (bookmarks . 5)
+                            (projects . 5)
+                            (agenda . 5)
+                            (registers . 5)))
+    :config
+    (dashboard-setup-startup-hook))
+#+end_src
+
+** Blank Scratch Buffer
+I know what a scratch buffer is. Hush.
+#+begin_src emacs-lisp
+  (setq initial-scratch-message nil)
+#+end_src
+
+** Emacs Server
+Start up an Emacs server process so we can attach =emacsclient= to it
+and get that fast response time the Vim people are so smug about.
+
+#+begin_src emacs-lisp
+  (server-start)
+#+end_src
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-startup)
+
+  ;;; the-startup.el ends here
+#+end_src

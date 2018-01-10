@@ -1,0 +1,37 @@
+* Killing and Yanking (copying and pasting)
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-yank.el --- Killing and yanking
+#+end_src
+
+** Settings
+*** Delete Selection
+If you start typing when you have something selected, then the
+selection will be deleted. If you press DEL while you have something
+selected, it will be deleted rather than killed. (Otherwise, in both
+cases the selection is deselected and the normal function of the key
+is performed.)
+
+#+begin_src emacs-lisp
+  (delete-selection-mode 1)
+#+end_src
+
+**** AUCTeX compatibility
+Make delete-selection-mode work properly with AUCTeX.
+#+begin_src emacs-lisp
+  (with-eval-after-load 'latex
+    (put 'LaTeX-insert-left-brace 'delete-selection t))
+#+end_src
+*** Eliminate duplicates in kill ring
+If you kill the same thing twice, you won't have to use =yank= twice
+to get past it to older entries in the kill ring.
+#+begin_src emacs-lisp
+  (setq kill-do-not-save-duplicates t)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-yank)
+
+  ;;; the-yank.el ends here
+#+end_src

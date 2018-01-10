@@ -1,0 +1,25 @@
+* emacs.d Organization
+** Requirements                                                       :noexport:
+#+begin_src emacs-lisp
+  ;;; the-emacsd.el --- Organizing ~/.emacs.d
+
+  (require 'the-package)
+#+end_src
+
+** =no-littering=
+A lot of packages (and also a lot of Emacs defaults) throw files all
+over your config directory. =no-littering= sets a lot of sensible
+defaults for commonly used packages to keep the config directory
+manageable and discoverable.
+
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :demand t)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-emacsd)
+
+  ;;; the-emacsd.el ends here
+#+end_src

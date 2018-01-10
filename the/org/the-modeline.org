@@ -1,0 +1,121 @@
+* Modeline Configuration
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-modeline.el --- Modeline configuration
+
+  (require 'the-package)
+#+end_src
+** Diminish
+=diminish= allows us to change the display of minor modes in the
+modeline. I prefer Delight, but =diminish= is the standard used by
+many packages.
+#+begin_src emacs-lisp
+  (use-package diminish
+    :demand t)
+#+end_src
+** Delight
+=delight= allows us to change the display of minor and major modes in
+the modeline. Spaceline is gonna do a lot of this work for us, but for
+anything it doesn't catch we'll make our own lighter. This also gives
+us the =:delight= keyword in our =use-package= declarations.
+
+#+begin_src emacs-lisp
+  (use-package delight
+    :demand t
+    :delight
+    (abbrev-mode)
+    (auto-fill-function)
+    (eldoc-mode "ε")
+    (emacs-lisp-mode "ξ")
+    (filladapt-mode)
+    (outline-minor-mode)
+    (smerge-mode)
+    (subword-mode)
+    (undo-tree-mode)
+    (visual-line-mode "ω")
+    (which-key-mode)
+    (whitespace-mode)
+    )
+#+end_src
+** Nyan!
+Gotta have that cat! This will add a Nyan Cat progress indicator to
+the modeline.
+#+begin_src emacs-lisp
+  (use-package nyan-mode
+    :demand t
+    :init
+    (setq nyan-animate-nyancat t
+          nyan-wavy-trail t)
+    :config
+    (nyan-mode 1))
+#+end_src
+** Spaceline - All-the-Icons
+We use Spaceline for our modeline, along with a theme called
+=spaceline-all-the-icons= which uses rich icon fonts where
+appropriate.
+*** Setup
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+**** Display diminished minor modes
+#+NAME: spaceline-diminish
+#+begin_src emacs-lisp
+  (spaceline-toggle-all-the-icons-minor-modes-on)
+#+end_src
+**** Change modeline color based on Modalka stat
+#+NAME: spaceline-modalka
+#+begin_src emacs-lisp
+  (defface the-spaceline-modalka-off
+    '((t (:background "chartreuse3"
+          :foreground "#3E3D31")))
+    "Modalka inactive face."
+    :group 'the)
+
+  (defface the-spaceline-modalka-on
+    '((t (:background "DarkGoldenrod2"
+          :foreground "#3E3D31")))
+    "Modalka inactive face."
+    :group 'the)
+
+  (defun the-spaceline-modalka-highlight ()
+    (if modalka-mode
+        'the-spaceline-modalka-on
+      'the-spaceline-modalka-off))
+
+  (setq spaceline-highlight-face-func #'the-spaceline-modalka-highlight)
+#+end_src
+**** Turn on Nyan Cat
+#+NAME: nyan
+#+begin_src emacs-lisp
+  (spaceline-toggle-all-the-icons-nyan-cat-on)
+#+end_src
+*** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package spaceline-all-the-icons
+    :demand t
+    :init
+    (let ((fonts
+           '("all-the-icons"
+             "file-icons"
+             "FontAwesome"
+             "github-octicons"
+             "Material Icons")))
+      (unless `(and
+                (find-font (font-spec :name ,fonts)))
+        (all-the-icons-install-fonts)))
+    (setq spaceline-all-the-icons-icon-set-modified 'toggle)
+    (setq spaceline-all-the-icons-icon-set-bookmark 'heart)
+    (setq spaceline-all-the-icons-icon-set-flycheck-slim 'dots)
+    (setq spaceline-all-the-icons-hide-long-buffer-path t)
+    :config
+    (spaceline-all-the-icons-theme)
+    <<spaceline-modalka>>
+    <<nyan>>
+    )
+#+end_src
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-modeline)
+
+  ;;; the-modeline.el ends here
+#+end_src
