@@ -2,15 +2,13 @@
 #+OPTIONS: author:t broken-links:nil c:nil creator:nil
 #+OPTIONS: d:(not "LOGBOOK") date:nil e:t email:nil f:t inline:t num:t
 #+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
-#+OPTIONS: timestamp:nil title:t toc:nil todo:t |:t
+#+OPTIONS: timestamp:nil title:t toc:t todo:t |:t
 #+TITLE: The Heretic's Emacs config
 #+AUTHOR: Jack Henahan
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+EXPORT_FILE_NAME: ../README
-
-#+TOC: headlines
 
 * Appearance
 ** Basic Setup
