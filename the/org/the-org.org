@@ -290,6 +290,14 @@ agenda so that things like =find-file= work sensibly.
     )
 #+end_src
 
+** Extra Export Packages
+In order to correctly export Org files to certain formats, we need
+some additional tools.
+*** =htmlize=
+Used to convert symbols and such to HTML equivalents.
+#+begin_src emacs-lisp
+  (use-package htmlize)
+#+end_src
 ** Org-mode Config Settings
 Our config files live in =the-lib-directory=, but our org source files
 live in =the-org-lib-directory=. Unless I decide to start loading org

@@ -120,6 +120,8 @@
               #'the--advice-org-agenda-default-directory)
   )
 
+(use-package htmlize)
+
 (defun the-in-the-org-lib-p ()
   (and (f-this-file)
        (f-child-of? (f-this-file) the-org-lib-directory)))
