@@ -1,0 +1,28 @@
+* PDF Functionality
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-pdf.el --- PDF functionality
+
+  (require 'the-package)
+#+end_src
+
+** =pdf-tools=
+DocView is the built-in PDF viewer in Emacs, but it's a bit meh.
+=pdf-tools= is significantly nicer, with much better support for
+in-document hyperlinks and fancy things like that. It does require
+compilation of an external library, though.
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :init
+    (pdf-tools-install)
+    (setq pdf-view-midnight-colors '("#fe8019" . "#1d2021"))
+    (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-pdf)
+
+  ;;; the-pdf.el ends here
+#+end_src
