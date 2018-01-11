@@ -11,6 +11,9 @@
 #+EXCLUDE_TAGS: noexport
 #+EXPORT_FILE_NAME: ../README
 
+* Table of Contents                                                     :TOC:
+
+* The Heretic's Emacs Config
 #+include: "../org/the-appearance.org"
 #+include: "../org/the-autocomplete.org"
 #+include: "../org/the-bind-key.org"
