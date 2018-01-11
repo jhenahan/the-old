@@ -1,36 +1,39 @@
 
 # Table of Contents
 
-1.  [Appearance](#org5063954)
-    1.  [Basic Setup](#org0a99960)
-    2.  [Fullscreen](#orgb4bf4ce)
-    3.  [Interface Cleanup](#org9db530b)
-    4.  [Keystroke Display](#orgda5db7d)
-    5.  [No Title Bars](#org0af0a56)
-    6.  [Fonts](#orgb1c1ca0)
-    7.  [Adjust font size by screen resolution](#org1cd1e0f)
-2.  [Auto-completion](#org4d2f612)
-    1.  [Company](#orgcf3c9c9)
-    2.  [Company Settings](#orgc24bd73)
-3.  [Binding Keys](#org701f7ed)
-    1.  [Custom Prefix](#org6ba54be)
-    2.  [`bind-key`](#org1e42f53)
-4.  [Syntax Checking](#org9f6ac2c)
-    1.  [Flycheck](#org2873af5)
-        1.  [Settings](#org92c38b1)
-        2.  [`use-package` declaration](#orgc6d2ba7)
-5.  [Clipboard Integration](#org427143c)
-    1.  [macOS integration](#org6870dfb)
-    2.  [Inter-program paste](#orgb37bc85)
+1.  [Appearance](#org5d352a5)
+    1.  [Basic Setup](#orgc334bed)
+    2.  [Fullscreen](#orgedc3fc3)
+    3.  [Interface Cleanup](#org6779ecc)
+    4.  [Keystroke Display](#orgc373a3d)
+    5.  [No Title Bars](#org3662a2c)
+    6.  [Fonts](#org8e5619d)
+    7.  [Adjust font size by screen resolution](#org8c47625)
+2.  [Auto-completion](#org8fbad2b)
+    1.  [Company Settings](#org844e8c2)
+        1.  [Performance](#orgc870975)
+        2.  [YaSnippet Hack](#org39e0fcb)
+    2.  [Company](#org6091a87)
+    3.  [Company Statistics](#org91983b4)
+3.  [Binding Keys](#orgd696c58)
+    1.  [Custom Prefix](#orgeef2e38)
+    2.  [`bind-key`](#org5e81946)
+4.  [Syntax Checking](#orgb199661)
+    1.  [Flycheck](#org6e57450)
+        1.  [Settings](#orge63f93a)
+        2.  [`use-package` declaration](#org6b8cd77)
+5.  [Clipboard Integration](#org5237bd9)
+    1.  [macOS integration](#org2a731cb)
+    2.  [Inter-program paste](#org2f1fb68)
 
 
 
-<a id="org5063954"></a>
+<a id="org5d352a5"></a>
 
 # Appearance
 
 
-<a id="org0a99960"></a>
+<a id="orgc334bed"></a>
 
 ## Basic Setup
 
@@ -39,7 +42,7 @@ theme. Menus, scroll bars, bells, cursors, and so on. See also
 `the-theme`, which customizes the color theme specifically.
 
 
-<a id="orgb4bf4ce"></a>
+<a id="orgedc3fc3"></a>
 
 ## Fullscreen
 
@@ -53,7 +56,7 @@ any particular harm in having it on, regardless of WM.
     (setq frame-resize-pixelwise t)
 
 
-<a id="org9db530b"></a>
+<a id="org6779ecc"></a>
 
 ## Interface Cleanup
 
@@ -67,7 +70,7 @@ nonsense. We'll turn all of that off.
     (blink-cursor-mode -1)
 
 
-<a id="orgda5db7d"></a>
+<a id="orgc373a3d"></a>
 
 ## Keystroke Display
 
@@ -79,7 +82,7 @@ entirely.
     (setq echo-keystrokes 1e-6)
 
 
-<a id="org0af0a56"></a>
+<a id="org3662a2c"></a>
 
 ## No Title Bars
 
@@ -92,7 +95,7 @@ versions, patches exist to get the same effect.
         (setq default-frame-alist '((undecorated . t))))
 
 
-<a id="orgb1c1ca0"></a>
+<a id="org8e5619d"></a>
 
 ## Fonts
 
@@ -100,7 +103,7 @@ I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 
-<a id="org1cd1e0f"></a>
+<a id="org8c47625"></a>
 
 ## Adjust font size by screen resolution
 
@@ -128,43 +131,14 @@ of the monitor.
     (call-interactively 'the-fontify-idle)
 
 
-<a id="org4d2f612"></a>
+<a id="org8fbad2b"></a>
 
 # Auto-completion
 
 
-<a id="orgcf3c9c9"></a>
-
-## Company
-
-`company` provides an in-buffer autocompletion framework. It
-allows for packages to define backends that supply completion
-candidates, as well as optional documentation and source code. Then
-Company allows for multiple frontends to display the candidates, such
-as a tooltip menu. Company stands for "Complete Anything".
-
-    (defvar the-company-backends-global
-      '(company-capf
-        company-files
-        (company-dabbrev-code company-keywords)
-        company-dabbrev)
-      "Values for `company-backends' used everywhere.
-    If `company-backends' is overridden by The, then these
-    backends will still be included.")
-
-    (use-package company
-      :demand t
-      :init (company-tng-configure-default)
-      :config
-      <<company-config>>
-      :delight company-mode)
-
-
-<a id="orgc24bd73"></a>
+<a id="org844e8c2"></a>
 
 ## Company Settings
-
-Now that all the bindings are out of the way, we do the following:
 
 -   Show completions instantly, rather than after half a second.
 -   Show completions after typing three characters.
@@ -194,112 +168,149 @@ Now that all the bindings are out of the way, we do the following:
     like a great idea, but it turns out to look really bad when you
     have domain-specific words that have particular casing.
 
-      (setq company-idle-delay 0)
-      (setq company-minimum-prefix-length 3)
-      (setq company-tooltip-limit 10)
-      (setq company-tooltip-minimum company-tooltip-limit)
-      (setq company-show-numbers t)
-      (setq company-auto-complete-chars nil)
-      (setq company-dabbrev-downcase nil)
-      (setq company-dabbrev-other-buffers nil)
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3)
+    (setq company-tooltip-limit 10)
+    (setq company-tooltip-minimum company-tooltip-limit)
+    (setq company-show-numbers t)
+    (setq company-auto-complete-chars nil)
+    (setq company-dabbrev-downcase nil)
+    (setq company-dabbrev-other-buffers nil)
+    (setq company-dabbrev-ignore-case nil)
 
 
-      (setq company-dabbrev-ignore-case nil)
+<a id="orgc870975"></a>
 
-      ;; Register `company' in `the-slow-autocomplete-mode'.
+### Performance
 
-      (defun the-company-toggle-slow ()
-        "Slow down `company' by turning up the delays before completion starts.
+In case autocompletion is making Emacs drag, we add a toggle to slow
+it down.
+
+
+    (defun the-company-toggle-slow ()
+      "Slow down `company' by turning up the delays before completion starts.
     This is done in `the-slow-autocomplete-mode'."
-        (if the-slow-autocomplete-mode
-            (progn
-              (setq-local company-idle-delay 1)
-              (setq-local company-minimum-prefix-length 3))
-          (kill-local-variable 'company-idle-delay)
-          (kill-local-variable 'company-minimum-prefix-length)))
+      (if the-slow-autocomplete-mode
+          (progn
+            (setq-local company-idle-delay 1)
+            (setq-local company-minimum-prefix-length 3))
+        (kill-local-variable 'company-idle-delay)
+        (kill-local-variable 'company-minimum-prefix-length)))
 
-      (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
+    (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
 
-      ;; Make it so that Company's keymap overrides Yasnippet's keymap
-      ;; when a snippet is active. This way, you can TAB to complete a
-      ;; suggestion for the current field in a snippet, and then TAB to
-      ;; move to the next field. Plus, C-g will dismiss the Company
-      ;; completions menu rather than cancelling the snippet and moving
-      ;; the cursor while leaving the completions menu on-screen in the
-      ;; same location.
-      (with-eval-after-load 'yasnippet
-        ;; FIXME: this is all a horrible hack, can it be done with
-        ;; `bind-key' instead?
-        ;;
-        ;; This function translates the "event types" I get from
-        ;; `map-keymap' into things that I can pass to `lookup-key'
-        ;; and `define-key'. It's a hack, and I'd like to find a
-        ;; built-in function that accomplishes the same thing while
-        ;; taking care of any edge cases I might have missed in this
-        ;; ad-hoc solution.
-        (defun the-normalize-event (event)
-          "This function is a complete hack, do not use.
-    But in principle, it translates what we get from `map-keymap'
-    into what `lookup-key' and `define-key' want."
-          (if (vectorp event)
-              event
-            (vector event)))
 
-        ;; Here we define a hybrid keymap that delegates first to
-        ;; `company-active-map' and then to `yas-keymap'.
-        (setq the-yas-company-keymap
-              ;; It starts out as a copy of `yas-keymap', and then we
-              ;; merge in all of the bindings from
-              ;; `company-active-map'.
-              (let ((keymap (copy-keymap yas-keymap)))
-                (map-keymap
-                 (lambda (event company-cmd)
-                   (let* ((event (the-normalize-event event))
-                          (yas-cmd (lookup-key yas-keymap event)))
-                     ;; Here we use an extended menu item with the
-                     ;; `:filter' option, which allows us to
-                     ;; dynamically decide which command we want to
-                     ;; run when a key is pressed.
-                     (define-key keymap event
-                       `(menu-item
-                         nil ,company-cmd :filter
-                         (lambda (cmd)
-                           ;; There doesn't seem to be any obvious
-                           ;; function from Company to tell whether or
-                           ;; not a completion is in progress (à la
-                           ;; `company-explicit-action-p'), so I just
-                           ;; check whether or not `company-my-keymap'
-                           ;; is defined, which seems to be good
-                           ;; enough.
-                           (if company-my-keymap
-                               ',company-cmd
-                             ',yas-cmd))))))
-                 company-active-map)
-                keymap))
+<a id="org39e0fcb"></a>
 
-        ;; The function `yas--make-control-overlay' uses the current
-        ;; value of `yas-keymap' to build the Yasnippet overlay, so to
-        ;; override the Yasnippet keymap we only need to dynamically
-        ;; rebind `yas-keymap' for the duration of that function.
-        (defun the-advice-company-overrides-yasnippet
-            (yas--make-control-overlay &rest args)
-          "Allow `company' to override `yasnippet'.
-    This is an `:around' advice for `yas--make-control-overlay'."
-          (let ((yas-keymap the-yas-company-keymap))
-            (apply yas--make-control-overlay args)))
+### YaSnippet Hack
 
-        (advice-add #'yas--make-control-overlay :around
-                    #'the-advice-company-overrides-yasnippet))
+Make it so that Company's keymap overrides Yasnippet's keymap when a
+snippet is active. This way, you can TAB to complete a suggestion for
+the current field in a snippet, and then TAB to move to the next
+field. Plus, C-g will dismiss the Company completions menu rather than
+cancelling the snippet and moving the cursor while leaving the
+completions menu on-screen in the same location.
 
-      ;; Turn on Company everywhere.
+    (with-eval-after-load 'yasnippet
+      ;; FIXME: this is all a horrible hack, can it be done with
+      ;; `bind-key' instead?
+      ;;
+      ;; This function translates the "event types" I get from
+      ;; `map-keymap' into things that I can pass to `lookup-key'
+      ;; and `define-key'. It's a hack, and I'd like to find a
+      ;; built-in function that accomplishes the same thing while
+      ;; taking care of any edge cases I might have missed in this
+      ;; ad-hoc solution.
+      (defun the-normalize-event (event)
+        "This function is a complete hack, do not use.
+      But in principle, it translates what we get from `map-keymap'
+      into what `lookup-key' and `define-key' want."
+        (if (vectorp event)
+            event
+          (vector event)))
+
+      ;; Here we define a hybrid keymap that delegates first to
+      ;; `company-active-map' and then to `yas-keymap'.
+      (setq the-yas-company-keymap
+            ;; It starts out as a copy of `yas-keymap', and then we
+            ;; merge in all of the bindings from
+            ;; `company-active-map'.
+            (let ((keymap (copy-keymap yas-keymap)))
+              (map-keymap
+               (lambda (event company-cmd)
+                 (let* ((event (the-normalize-event event))
+                        (yas-cmd (lookup-key yas-keymap event)))
+                   ;; Here we use an extended menu item with the
+                   ;; `:filter' option, which allows us to
+                   ;; dynamically decide which command we want to
+                   ;; run when a key is pressed.
+                   (define-key keymap event
+                     `(menu-item
+                       nil ,company-cmd :filter
+                       (lambda (cmd)
+                         ;; There doesn't seem to be any obvious
+                         ;; function from Company to tell whether or
+                         ;; not a completion is in progress (à la
+                         ;; `company-explicit-action-p'), so I just
+                         ;; check whether or not `company-my-keymap'
+                         ;; is defined, which seems to be good
+                         ;; enough.
+                         (if company-my-keymap
+                             ',company-cmd
+                           ',yas-cmd))))))
+               company-active-map)
+              keymap))
+
+      ;; The function `yas--make-control-overlay' uses the current
+      ;; value of `yas-keymap' to build the Yasnippet overlay, so to
+      ;; override the Yasnippet keymap we only need to dynamically
+      ;; rebind `yas-keymap' for the duration of that function.
+      (defun the-advice-company-overrides-yasnippet
+          (yas--make-control-overlay &rest args)
+        "Allow `company' to override `yasnippet'.
+      This is an `:around' advice for `yas--make-control-overlay'."
+        (let ((yas-keymap the-yas-company-keymap))
+          (apply yas--make-control-overlay args)))
+
+      (advice-add #'yas--make-control-overlay :around
+                  #'the-advice-company-overrides-yasnippet))
+
+
+<a id="org6091a87"></a>
+
+## Company
+
+`company` provides an in-buffer autocompletion framework. It
+allows for packages to define backends that supply completion
+candidates, as well as optional documentation and source code. Then
+Company allows for multiple frontends to display the candidates, such
+as a tooltip menu. Company stands for "Complete Anything".
+
+    (defvar the-company-backends-global
+      '(company-capf
+        company-files
+        (company-dabbrev-code company-keywords)
+        company-dabbrev)
+      "Values for `company-backends' used everywhere.
+    If `company-backends' is overridden by The, then these
+    backends will still be included.")
+
+    (use-package company
+      :demand t
+      :config
+      (company-tng-configure-default)
+      <<company-config>>
+      <<company-slow>>
       (global-company-mode +1)
+      :delight company-mode)
 
-;; Package \`company-statistics' adds usage-based sorting to Company
-;; completions. It is a goal to replace this package with \`historian'
-;; or \`prescient'. See [1] and [2].
-;;
-;; [1]: <https://github.com/PythonNut/historian.el>
-;; [2]: <https://github.com/raxod502/prescient.el>
+
+<a id="org91983b4"></a>
+
+## Company Statistics
+
+`company-statistics` adds usage-based sorting to Company completions.
+It is a goal to replace this package with [`historian`](https://github.com/PythonNut/historian.el) or [`prescient`](https://github.com/raxod502/prescient.el).
 
     (use-package company-statistics
       :demand t
@@ -321,12 +332,12 @@ Now that all the bindings are out of the way, we do the following:
       (company-statistics-mode +1))
 
 
-<a id="org701f7ed"></a>
+<a id="orgd696c58"></a>
 
 # Binding Keys
 
 
-<a id="org6ba54be"></a>
+<a id="orgeef2e38"></a>
 
 ## Custom Prefix
 
@@ -352,7 +363,7 @@ cells to make the whole thing more customizable.
       (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
 
 
-<a id="org1e42f53"></a>
+<a id="org5e81946"></a>
 
 ## `bind-key`
 
@@ -363,12 +374,12 @@ in `use-package`,
     (use-package bind-key)
 
 
-<a id="org9f6ac2c"></a>
+<a id="orgb199661"></a>
 
 # Syntax Checking
 
 
-<a id="org2873af5"></a>
+<a id="org6e57450"></a>
 
 ## Flycheck
 
@@ -377,7 +388,7 @@ highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 
-<a id="org92c38b1"></a>
+<a id="orge63f93a"></a>
 
 ### Settings
 
@@ -396,7 +407,7 @@ number of checkers pre-defined, and other packages define more.
         (setq flycheck-mode-line nil)
 
 
-<a id="orgc6d2ba7"></a>
+<a id="org6b8cd77"></a>
 
 ### `use-package` declaration
 
@@ -408,12 +419,12 @@ number of checkers pre-defined, and other packages define more.
       )
 
 
-<a id="org427143c"></a>
+<a id="org5237bd9"></a>
 
 # Clipboard Integration
 
 
-<a id="org6870dfb"></a>
+<a id="org2a731cb"></a>
 
 ## macOS integration
 
@@ -475,7 +486,7 @@ modified based on [2](http://emacs.stackexchange.com/q/26471/12534).
         (setq interprogram-cut-function #'the-clipboard-copy)))
 
 
-<a id="orgb37bc85"></a>
+<a id="org2f1fb68"></a>
 
 ## Inter-program paste
 
