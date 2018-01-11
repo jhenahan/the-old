@@ -1,36 +1,36 @@
 
 # Table of Contents
 
-1.  [Appearance](#orgbcb69c6)
-    1.  [Basic Setup](#org901d6c1)
-    2.  [Fullscreen](#org0a075d5)
-    3.  [Interface Cleanup](#org88c6288)
-    4.  [Keystroke Display](#org103d5c3)
-    5.  [No Title Bars](#org1e553e1)
-    6.  [Fonts](#org595dc44)
-    7.  [Adjust font size by screen resolution](#org136e5a9)
-2.  [Auto-completion](#org2a4f481)
-    1.  [Company](#org09852c4)
-    2.  [Company Settings](#org256ef81)
-3.  [Binding Keys](#org17e68e5)
-    1.  [Custom Prefix](#org35c73d7)
-    2.  [`bind-key`](#org5f8a694)
-4.  [Syntax Checking](#orge936b3f)
-    1.  [Flycheck](#org9f490d7)
-        1.  [Settings](#org3e8ffb8)
-        2.  [`use-package` declaration](#org92e533a)
-5.  [Clipboard Integration](#org01b2cc0)
-    1.  [macOS integration](#org5f28497)
-    2.  [Inter-program paste](#org559fb50)
+1.  [Appearance](#org5063954)
+    1.  [Basic Setup](#org0a99960)
+    2.  [Fullscreen](#orgb4bf4ce)
+    3.  [Interface Cleanup](#org9db530b)
+    4.  [Keystroke Display](#orgda5db7d)
+    5.  [No Title Bars](#org0af0a56)
+    6.  [Fonts](#orgb1c1ca0)
+    7.  [Adjust font size by screen resolution](#org1cd1e0f)
+2.  [Auto-completion](#org4d2f612)
+    1.  [Company](#orgcf3c9c9)
+    2.  [Company Settings](#orgc24bd73)
+3.  [Binding Keys](#org701f7ed)
+    1.  [Custom Prefix](#org6ba54be)
+    2.  [`bind-key`](#org1e42f53)
+4.  [Syntax Checking](#org9f6ac2c)
+    1.  [Flycheck](#org2873af5)
+        1.  [Settings](#org92c38b1)
+        2.  [`use-package` declaration](#orgc6d2ba7)
+5.  [Clipboard Integration](#org427143c)
+    1.  [macOS integration](#org6870dfb)
+    2.  [Inter-program paste](#orgb37bc85)
 
 
 
-<a id="orgbcb69c6"></a>
+<a id="org5063954"></a>
 
 # Appearance
 
 
-<a id="org901d6c1"></a>
+<a id="org0a99960"></a>
 
 ## Basic Setup
 
@@ -39,7 +39,7 @@ theme. Menus, scroll bars, bells, cursors, and so on. See also
 `the-theme`, which customizes the color theme specifically.
 
 
-<a id="org0a075d5"></a>
+<a id="orgb4bf4ce"></a>
 
 ## Fullscreen
 
@@ -53,7 +53,7 @@ any particular harm in having it on, regardless of WM.
     (setq frame-resize-pixelwise t)
 
 
-<a id="org88c6288"></a>
+<a id="org9db530b"></a>
 
 ## Interface Cleanup
 
@@ -67,7 +67,7 @@ nonsense. We'll turn all of that off.
     (blink-cursor-mode -1)
 
 
-<a id="org103d5c3"></a>
+<a id="orgda5db7d"></a>
 
 ## Keystroke Display
 
@@ -79,7 +79,7 @@ entirely.
     (setq echo-keystrokes 1e-6)
 
 
-<a id="org1e553e1"></a>
+<a id="org0af0a56"></a>
 
 ## No Title Bars
 
@@ -92,7 +92,7 @@ versions, patches exist to get the same effect.
         (setq default-frame-alist '((undecorated . t))))
 
 
-<a id="org595dc44"></a>
+<a id="orgb1c1ca0"></a>
 
 ## Fonts
 
@@ -100,7 +100,7 @@ I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 
-<a id="org136e5a9"></a>
+<a id="org1cd1e0f"></a>
 
 ## Adjust font size by screen resolution
 
@@ -128,12 +128,12 @@ of the monitor.
     (call-interactively 'the-fontify-idle)
 
 
-<a id="org2a4f481"></a>
+<a id="org4d2f612"></a>
 
 # Auto-completion
 
 
-<a id="org09852c4"></a>
+<a id="orgcf3c9c9"></a>
 
 ## Company
 
@@ -160,7 +160,7 @@ as a tooltip menu. Company stands for "Complete Anything".
       :delight company-mode)
 
 
-<a id="org256ef81"></a>
+<a id="orgc24bd73"></a>
 
 ## Company Settings
 
@@ -321,12 +321,12 @@ Now that all the bindings are out of the way, we do the following:
       (company-statistics-mode +1))
 
 
-<a id="org17e68e5"></a>
+<a id="org701f7ed"></a>
 
 # Binding Keys
 
 
-<a id="org35c73d7"></a>
+<a id="org6ba54be"></a>
 
 ## Custom Prefix
 
@@ -352,7 +352,7 @@ cells to make the whole thing more customizable.
       (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
 
 
-<a id="org5f8a694"></a>
+<a id="org1e42f53"></a>
 
 ## `bind-key`
 
@@ -363,12 +363,12 @@ in `use-package`,
     (use-package bind-key)
 
 
-<a id="orge936b3f"></a>
+<a id="org9f6ac2c"></a>
 
 # Syntax Checking
 
 
-<a id="org9f490d7"></a>
+<a id="org2873af5"></a>
 
 ## Flycheck
 
@@ -377,7 +377,7 @@ highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 
-<a id="org3e8ffb8"></a>
+<a id="org92c38b1"></a>
 
 ### Settings
 
@@ -396,7 +396,7 @@ number of checkers pre-defined, and other packages define more.
         (setq flycheck-mode-line nil)
 
 
-<a id="org92e533a"></a>
+<a id="orgc6d2ba7"></a>
 
 ### `use-package` declaration
 
@@ -408,12 +408,12 @@ number of checkers pre-defined, and other packages define more.
       )
 
 
-<a id="org01b2cc0"></a>
+<a id="org427143c"></a>
 
 # Clipboard Integration
 
 
-<a id="org5f28497"></a>
+<a id="org6870dfb"></a>
 
 ## macOS integration
 
@@ -475,7 +475,7 @@ modified based on [2](http://emacs.stackexchange.com/q/26471/12534).
         (setq interprogram-cut-function #'the-clipboard-copy)))
 
 
-<a id="org559fb50"></a>
+<a id="orgb37bc85"></a>
 
 ## Inter-program paste
 
