@@ -131,7 +131,8 @@
   (interactive)
   (save-window-excursion
     (find-file-read-only the-doc-source-file)
-    (org-org-export-to-org)))
+    (org-org-export-to-md)
+    (org-export-to-pdf)))
 
 
 (defun the-org-lib-hook ()
