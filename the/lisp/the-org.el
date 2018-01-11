@@ -141,7 +141,7 @@
         (setq-local org-babel-default-header-args:emacs-lisp
                     `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
                       (:noweb . "yes")))
-        (the-update-doc))))
+        (add-hook 'after-save-hook #'the-update-doc))))
 
 (add-hook 'org-mode-hook 'the-org-lib-hook)
 
