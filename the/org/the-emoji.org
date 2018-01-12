@@ -1,0 +1,24 @@
+* Emojis!
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-emoji.el --- Emojis :smile:
+
+  (require 'the-package)
+#+end_src
+
+** =emojify=
+Emojify renders a variety of strings as emojis, as well as providing
+some nice interactive functions to get emojis all over the place.
+
+#+begin_src emacs-lisp
+  (use-package emojify
+    :init
+    (add-hook 'after-init-hook #'global-emojify-mode))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-emoji)
+
+  ;;; the-emoji.el ends here
+#+end_src
