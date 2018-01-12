@@ -1,39 +1,60 @@
 
 # Table of Contents
 
-1.  [Appearance](#org5d352a5)
-    1.  [Basic Setup](#orgc334bed)
-    2.  [Fullscreen](#orgedc3fc3)
-    3.  [Interface Cleanup](#org6779ecc)
-    4.  [Keystroke Display](#orgc373a3d)
-    5.  [No Title Bars](#org3662a2c)
-    6.  [Fonts](#org8e5619d)
-    7.  [Adjust font size by screen resolution](#org8c47625)
-2.  [Auto-completion](#org8fbad2b)
-    1.  [Company Settings](#org844e8c2)
-        1.  [Performance](#orgc870975)
-        2.  [YaSnippet Hack](#org39e0fcb)
-    2.  [Company](#org6091a87)
-    3.  [Company Statistics](#org91983b4)
-3.  [Binding Keys](#orgd696c58)
-    1.  [Custom Prefix](#orgeef2e38)
-    2.  [`bind-key`](#org5e81946)
-4.  [Syntax Checking](#orgb199661)
-    1.  [Flycheck](#org6e57450)
-        1.  [Settings](#orge63f93a)
-        2.  [`use-package` declaration](#org6b8cd77)
-5.  [Clipboard Integration](#org5237bd9)
-    1.  [macOS integration](#org2a731cb)
-    2.  [Inter-program paste](#org2f1fb68)
+1.  [Appearance](#orgea031b5)
+    1.  [Basic Setup](#org5a6e966)
+    2.  [Fullscreen](#org2443221)
+    3.  [Interface Cleanup](#orgebb5fb1)
+    4.  [Keystroke Display](#org3e0a865)
+    5.  [No Title Bars](#orga7cf95b)
+    6.  [Fonts](#org40abb4e)
+    7.  [Adjust font size by screen resolution](#org5107705)
+2.  [Auto-completion](#orgaa52a7c)
+    1.  [Company Settings](#org424f369)
+        1.  [Performance](#org33747e8)
+        2.  [YaSnippet Hack](#orgdfdeb95)
+    2.  [Company](#orge72131f)
+    3.  [Company Statistics](#orgda39c1b)
+3.  [Binding Keys](#org0335dcc)
+    1.  [Custom Prefix](#org26a7b27)
+    2.  [`bind-key`](#org36646dd)
+4.  [Syntax Checking](#orged10095)
+    1.  [Flycheck](#orgf1ea06f)
+        1.  [Settings](#org8a56a93)
+        2.  [`use-package` declaration](#org60a7ddb)
+5.  [Clipboard Integration](#org62734e1)
+    1.  [macOS integration](#org09927fc)
+    2.  [Inter-program paste](#org3a704ce)
+6.  [Emojis!](#orgd279293)
+    1.  [`emojify`](#org66406fd)
+7.  [Sensible Defaults](#org6dbf275)
+    1.  [Default Directory](#org4e44e2b)
+    2.  [Treat Camel-Case Words as separate words](#org8615399)
+    3.  [Increase GC threshold](#org3062dd5)
+    4.  [Make Scripts Executable By Default](#org46afe4a)
+    5.  [Transient Mark Mode](#org6edcf5e)
+    6.  [Short Confirmations](#orga740eb2)
+    7.  [macOS settings](#org8e61d15)
+8.  [Org Mode Customization](#orgf8bf9f5)
+    1.  [Global Outline Mode](#orgaf67172)
+    2.  [Org](#orgce4c31d)
+        1.  [Setup](#orgeab9766)
+        2.  [`use-package` declaration](#orgf94043b)
+    3.  [Org Agenda](#org32695b5)
+        1.  [Setup](#orgf092906)
+        2.  [`use-package` declaration](#org4594f48)
+    4.  [Extra Export Packages](#org81c35f3)
+        1.  [`htmlize`](#org9239cba)
+    5.  [Org-mode Config Settings](#orgf88a3b0)
 
 
 
-<a id="org5d352a5"></a>
+<a id="orgea031b5"></a>
 
 # Appearance
 
 
-<a id="orgc334bed"></a>
+<a id="org5a6e966"></a>
 
 ## Basic Setup
 
@@ -42,7 +63,7 @@ theme. Menus, scroll bars, bells, cursors, and so on. See also
 `the-theme`, which customizes the color theme specifically.
 
 
-<a id="orgedc3fc3"></a>
+<a id="org2443221"></a>
 
 ## Fullscreen
 
@@ -56,7 +77,7 @@ any particular harm in having it on, regardless of WM.
     (setq frame-resize-pixelwise t)
 
 
-<a id="org6779ecc"></a>
+<a id="orgebb5fb1"></a>
 
 ## Interface Cleanup
 
@@ -70,7 +91,7 @@ nonsense. We'll turn all of that off.
     (blink-cursor-mode -1)
 
 
-<a id="orgc373a3d"></a>
+<a id="org3e0a865"></a>
 
 ## Keystroke Display
 
@@ -82,7 +103,7 @@ entirely.
     (setq echo-keystrokes 1e-6)
 
 
-<a id="org3662a2c"></a>
+<a id="orga7cf95b"></a>
 
 ## No Title Bars
 
@@ -95,7 +116,7 @@ versions, patches exist to get the same effect.
         (setq default-frame-alist '((undecorated . t))))
 
 
-<a id="org8e5619d"></a>
+<a id="org40abb4e"></a>
 
 ## Fonts
 
@@ -103,7 +124,7 @@ I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 
-<a id="org8c47625"></a>
+<a id="org5107705"></a>
 
 ## Adjust font size by screen resolution
 
@@ -131,12 +152,12 @@ of the monitor.
     (call-interactively 'the-fontify-idle)
 
 
-<a id="org8fbad2b"></a>
+<a id="orgaa52a7c"></a>
 
 # Auto-completion
 
 
-<a id="org844e8c2"></a>
+<a id="org424f369"></a>
 
 ## Company Settings
 
@@ -179,7 +200,7 @@ of the monitor.
     (setq company-dabbrev-ignore-case nil)
 
 
-<a id="orgc870975"></a>
+<a id="org33747e8"></a>
 
 ### Performance
 
@@ -200,7 +221,7 @@ it down.
     (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
 
 
-<a id="org39e0fcb"></a>
+<a id="orgdfdeb95"></a>
 
 ### YaSnippet Hack
 
@@ -276,7 +297,7 @@ completions menu on-screen in the same location.
                   #'the-advice-company-overrides-yasnippet))
 
 
-<a id="org6091a87"></a>
+<a id="orge72131f"></a>
 
 ## Company
 
@@ -305,7 +326,7 @@ as a tooltip menu. Company stands for "Complete Anything".
       :delight company-mode)
 
 
-<a id="org91983b4"></a>
+<a id="orgda39c1b"></a>
 
 ## Company Statistics
 
@@ -332,12 +353,12 @@ It is a goal to replace this package with [`historian`](https://github.com/Pytho
       (company-statistics-mode +1))
 
 
-<a id="orgd696c58"></a>
+<a id="org0335dcc"></a>
 
 # Binding Keys
 
 
-<a id="orgeef2e38"></a>
+<a id="org26a7b27"></a>
 
 ## Custom Prefix
 
@@ -363,7 +384,7 @@ cells to make the whole thing more customizable.
       (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
 
 
-<a id="org5e81946"></a>
+<a id="org36646dd"></a>
 
 ## `bind-key`
 
@@ -374,12 +395,12 @@ in `use-package`,
     (use-package bind-key)
 
 
-<a id="orgb199661"></a>
+<a id="orged10095"></a>
 
 # Syntax Checking
 
 
-<a id="org6e57450"></a>
+<a id="orgf1ea06f"></a>
 
 ## Flycheck
 
@@ -388,7 +409,7 @@ highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 
-<a id="orge63f93a"></a>
+<a id="org8a56a93"></a>
 
 ### Settings
 
@@ -407,7 +428,7 @@ number of checkers pre-defined, and other packages define more.
         (setq flycheck-mode-line nil)
 
 
-<a id="org6b8cd77"></a>
+<a id="org60a7ddb"></a>
 
 ### `use-package` declaration
 
@@ -419,12 +440,12 @@ number of checkers pre-defined, and other packages define more.
       )
 
 
-<a id="org5237bd9"></a>
+<a id="org62734e1"></a>
 
 # Clipboard Integration
 
 
-<a id="org2a731cb"></a>
+<a id="org09927fc"></a>
 
 ## macOS integration
 
@@ -486,7 +507,7 @@ modified based on [2](http://emacs.stackexchange.com/q/26471/12534).
         (setq interprogram-cut-function #'the-clipboard-copy)))
 
 
-<a id="org2f1fb68"></a>
+<a id="org3a704ce"></a>
 
 ## Inter-program paste
 
@@ -498,3 +519,450 @@ previously on the system clipboard is pushed into the kill ring. This
 way, you can paste it with `yank-pop`.
 
     (setq save-interprogram-paste-before-kill t)
+
+
+<a id="orgd279293"></a>
+
+# Emojis!
+
+
+<a id="org66406fd"></a>
+
+## `emojify`
+
+Emojify renders a variety of strings as emojis, as well as providing
+some nice interactive functions to get emojis all over the place.
+
+    (use-package emojify
+      :init
+      (add-hook 'after-init-hook #'global-emojify-mode))
+
+
+<a id="org6dbf275"></a>
+
+# Sensible Defaults
+
+
+<a id="org4e44e2b"></a>
+
+## Default Directory
+
+When using `find-file`, search from the user's home directory.
+
+    (setq default-directory "~/")
+
+
+<a id="org8615399"></a>
+
+## Treat Camel-Case Words as separate words
+
+    (add-hook 'prog-mode-hook 'subword-mode)
+
+
+<a id="org3062dd5"></a>
+
+## Increase GC threshold
+
+Allow 20MB of memory (instead of 0.76MB) before calling garbage
+collection. This means GC runs less often, which speeds up some
+operations.
+
+    (setq gc-cons-threshold 20000000)
+
+
+<a id="org46afe4a"></a>
+
+## Make Scripts Executable By Default
+
+If your file starts with a shebang, the file will be marked executable
+on save.
+
+    (add-hook 'after-save-hook
+              'executable-make-buffer-file-executable-if-script-p)
+
+
+<a id="org6edcf5e"></a>
+
+## Transient Mark Mode
+
+Transient mark means region highlighting works the way you would
+expect it to coming from other editors.
+
+    (transient-mark-mode t)
+
+
+<a id="orga740eb2"></a>
+
+## Short Confirmations
+
+Typing out `yes` and `no` is irritating. Just use `y` or `n`.
+
+    (fset #'yes-or-no-p #'y-or-n-p)
+
+
+<a id="org8e61d15"></a>
+
+## macOS settings
+
+If you set Emacs as the default file handler for certain types of
+files, double-clicking will open an entire new Emacs frame. This
+setting causes Emacs to reuse the existing one.
+
+    (the-with-operating-system macOS
+      (setq ns-pop-up-frames nil))
+
+
+<a id="orgf8bf9f5"></a>
+
+# Org Mode Customization
+
+
+<a id="orgaf67172"></a>
+
+## Global Outline Mode
+
+Outlines work for just about any structured text imaginable, from code
+to prose. If it's got something that Emacs thinks is a paragraph, it
+works. When you need a high-level overview, it's hard to beat this.
+
+    (define-globalized-minor-mode global-outline-minor-mode
+      outline-minor-mode outline-minor-mode)
+
+    (global-outline-minor-mode +1)
+
+
+<a id="orgce4c31d"></a>
+
+## Org
+
+Org is a hugely expansive framework (a.k.a. collection of hacks) for
+organizing information, notes, tasks, calendars, and anything else
+related to Org-anization.
+
+
+<a id="orgeab9766"></a>
+
+### Setup
+
+1.  Version Hack
+
+    Because `straight.el` runs Org directly from a Git repo, the
+    autoloads Org uses to identify its version are not generated in
+    the way that it expects. This causes it to either a) fail to
+    determine its version at all or b) incorrectly report the version
+    of the built-in Org which ships with Emacs. This causes some
+    issues down the line, so we have to trick Org. This is how we do it.
+
+    First, we have to get the Git version, here represented by a short
+    hash of the current commit.
+
+        (defun the-org-git-version ()
+          (let ((git-repo
+                 (f-join user-emacs-directory "straight/repos/org")))
+            (s-trim (git-run "describe"
+                             "--match=release\*"
+                             "--abbrev=6"
+                             "HEAD"))))
+
+        (defun the-org-release ()
+          (let ((git-repo
+                 (f-join user-emacs-directory "straight/repos/org")))
+            (s-trim (s-chop-prefix "release_"
+                                   (git-run "describe"
+                                            "--match=release\*"
+                                            "--abbrev=0"
+                                            "HEAD")))))
+
+    Next, we need to define `org-git-version` and `org-release` eagerly.
+
+        <<org-version>>
+        <<org-release>>
+        (defalias #'org-git-version #'the-org-git-version)
+        (defalias #'org-release #'the-org-release)
+        (provide 'org-version)
+
+2.  `org-tempo`
+
+    In the most recent release of Org, the way easy template expansion
+    (i.e., `<s[TAB]` expands to a `begin_src` block) was changed to use
+    `tempo`, so we need to require this in order to keep this very
+    convenient functionality in place.
+
+        (defun the-fix-easy-templates ()
+          (require 'org-tempo))
+
+        (add-hook 'org-mode-hook 'the-fix-easy-templates)
+
+3.  Todo Sequence
+
+    We use an augmented set of todo states, including TODO, IN-PROGRESS,
+    WAITING, and the done states DONE and CANCELED.
+
+        (setq org-todo-keywords
+              '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+
+4.  Bindings
+
+    First, we want to set up some recommended bindings as specified in the
+    Org manual.
+
+        ("C-c a" . org-agenda)
+        ("C-c c" . org-capture)
+
+    First, we move the Org bindings for `org-shift*` from the `S-` prefix
+    to `C-`.
+
+        ("S-<left>" . nil)
+        ("S-<right>" . nil)
+        ("S-<up>" . nil)
+        ("S-<down>" . nil)
+        ("C-<left>" . org-shiftleft)
+        ("C-<right>" . org-shiftright)
+        ("C-<up>" . org-shiftup)
+        ("C-<down>" . org-shiftdown)
+
+    By default, Org maps `org-(backward/forward)-paragraph`, but only maps
+    it to the keys we overrode for shift up and down. We'll remap all
+    instances so that our existing bindings for those functions will work
+    as expected.
+
+        ([remap backward-paragraph] . org-backward-paragraph)
+        ([remap forward-paragraph] . org-forward-paragraph)
+
+    Finally, we'll set up a convenient binding for inserting headings.
+
+        ("M-RET" . org-insert-heading)
+
+5.  Settings
+
+    `org-insert-headline` will split your content by default, which is
+    pretty dumb. We therefore set it to create a new heading, instead. We
+    also activate `org-indent-mode` for more beautiful documents.
+
+        (setq org-insert-heading-respect-content t)
+        (add-hook 'org-mode-hook #'org-indent-mode)
+
+6.  Default Org Directory
+
+    We stick our Org files in a new directory in the home directory by
+    default.
+
+        (setq org-directory "~/org")
+
+7.  Utilities
+
+    1.  Recursively sort buffer entries alphabetically
+
+            (defun the-org-sort-ignore-errors ()
+              (condition-case x
+                  (org-sort-entries nil ?a)
+                (user-error)))
+
+            (defun the-org-sort-buffer ()
+              "Sort all entries in the Org buffer recursively in alphabetical order."
+              (interactive)
+              (org-map-entries #'the-org-sort-ignore-errors))
+
+    2.  Archive dead tasks
+
+        If tasks are marked DONE, and either have no deadline or the deadline
+        has passed, archive it.
+
+            (defun the-org-past-entries ()
+              (when (and (string= (org-get-todo-state) "DONE")
+                         (let ((deadline (org-entry-get (point) "DEADLINE")))
+                           (or (null deadline)
+                               (time-less-p (org-time-string-to-time deadline)
+                                            (current-time)))))
+                (org-archive-subtree)
+                (setq org-map-continue-from (line-beginning-position))))
+
+
+            (defun the-org-archive-past ()
+              "Archive DONE items with deadlines either missing or in the past."
+              (interactive)
+              (org-map-entries #'the-org-past-entries))
+
+    3.  Pretty bullets
+
+        We use `org-bullets` to make our outlines prettier. There's some minor
+        alignment weirdness with my font, so I may need to specify the bullet
+        codepoints, later.
+
+            (use-package org-bullets
+              :init
+              (add-hook 'org-mode-hook 'org-bullets-mode))
+
+    4.  Dropbox integration
+
+        If `~/org/` doesn't exist, but `~/Dropbox/org` does, symlink the
+        latter to the former.
+
+            (if (and
+                 (not (f-exists? org-directory))
+                 (f-directory? "~/Dropbox/org"))
+                (f-symlink "~/Dropbox/org" org-directory))
+
+
+<a id="orgf94043b"></a>
+
+### `use-package` declaration
+
+    (use-package org
+      :straight org-plus-contrib
+      :bind (
+             <<basic-bindings>>
+             :map org-mode-map
+             <<org-mode-bindings>>
+             <<org-mode-remaps>>
+             <<org-mode-heading>>
+             )
+      :init
+      <<org-version-definitions>>
+      <<org-dir>>
+      :config
+      <<org-requires>>
+      <<org-bullets>>
+      <<org-settings>>
+      <<org-sort-buffer>>
+      <<org-archive-past>>
+      <<todo-states>>
+      <<org-dropbox>>
+      :delight
+      (org-indent-mode)
+      )
+
+
+<a id="org32695b5"></a>
+
+## Org Agenda
+
+Org Agenda is for generating a more useful consolidated summary of all
+or some of your tasks, according to their metadata.
+
+
+<a id="orgf092906"></a>
+
+### Setup
+
+1.  Bindings
+
+    Analogously to our bindings for regular org files, we'll also move
+    things off of `S-` and onto `C-`.
+
+        ("S-<up>" . nil)
+        ("S-<down>" . nil)
+        ("S-<left>" . nil)
+        ("S-<right>" . nil)
+        ("C-<left>" . org-agenda-do-date-earlier)
+        ("C-<right>" . org-agenda-do-date-later)
+
+2.  Window Splitting
+
+    We want Org Agenda to split the window into two tall windows, rather
+    than two wide windows stacked.
+
+        (defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
+          "Make `org-agenda' split horizontally, not vertically, by default.
+          This is an `:around' advice for `org-agenda'. It commutes with
+          `the--advice-org-agenda-default-directory'."
+          (let ((split-height-threshold nil))
+            (apply org-agenda args)))
+
+        (advice-add #'org-agenda :around
+                    #'the--advice-org-agenda-split-horizontally)
+
+3.  Default Directory
+
+    If `org-directory` exists, set `default-directory` to its value in the
+    agenda so that things like `find-file` work sensibly.
+
+        (defun the--advice-org-agenda-default-directory
+            (org-agenda &rest args)
+          "If `org-directory' exists, set `default-directory' to it in the agenda.
+          This is an `:around' advice for `org-agenda'. It commutes with
+          `the--advice-org-agenda-split-horizontally'."
+          (let ((default-directory (if (f-exists? org-directory)
+                                       org-directory
+                                     default-directory)))
+            (apply org-agenda args)))
+
+        (advice-add #'org-agenda :around
+                    #'the--advice-org-agenda-default-directory)
+
+
+<a id="org4594f48"></a>
+
+### `use-package` declaration
+
+    (use-package org-agenda
+      :straight org-plus-contrib
+      :bind (:map org-agenda-mode-map
+             <<org-agenda-bindings>>
+             )
+      :config
+      <<agenda-window-split>>
+      <<agenda-default-directory>>
+      )
+
+
+<a id="org81c35f3"></a>
+
+## Extra Export Packages
+
+In order to correctly export Org files to certain formats, we need
+some additional tools.
+
+
+<a id="org9239cba"></a>
+
+### `htmlize`
+
+Used to convert symbols and such to HTML equivalents.
+
+    (use-package htmlize)
+
+
+<a id="orgf88a3b0"></a>
+
+## Org-mode Config Settings
+
+Our config files live in `the-lib-directory`, but our org source files
+live in `the-org-lib-directory`. Unless I decide to start loading org
+files directly (which is doable if a touch annoying, at times), for
+now I want the `:tangle` attribute set for me automatically as long as
+I'm working on one of THE's lib files.
+
+Additionally, I'd like to regenerate the documentation on save so
+things will always be up to date.
+
+    (defun the-in-the-org-lib-p ()
+      (and (f-this-file)
+           (f-child-of? (f-this-file) the-org-lib-directory)))
+
+    (defun the-update-doc ()
+      "Update the readme."
+      (interactive)
+      (save-window-excursion
+        (progn
+          (find-file the-doc-source-file)
+          (org-md-export-to-markdown)
+          (org-latex-export-to-pdf))))
+
+
+    (defun the-org-lib-hook ()
+      (if (the-in-the-org-lib-p)
+          (progn
+            (setq-local org-babel-default-header-args:emacs-lisp
+                        `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
+                          (:noweb . "yes"))))))
+
+      (add-hook 'org-mode-hook 'the-org-lib-hook)
+
+Finally, I'd like to automatically tangle the files on save.
+
+    (defun the-org-lib-tangle-hook ()
+      (if (the-in-the-org-lib-p)
+          (org-babel-tangle)))
+
+    (add-hook 'after-save-hook 'the-org-lib-tangle-hook)

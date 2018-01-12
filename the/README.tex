@@ -1,4 +1,4 @@
-% Created 2018-01-11 Thu 09:22
+% Created 2018-01-12 Fri 13:16
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -31,15 +31,15 @@
 
 
 \section{Appearance}
-\label{sec:org2c601f1}
+\label{sec:org4445b0c}
 \subsection{Basic Setup}
-\label{sec:orga7dcfe7}
+\label{sec:org34c87b2}
 This file has appearance tweaks that are unrelated to the color
 theme. Menus, scroll bars, bells, cursors, and so on. See also
 \texttt{the-theme}, which customizes the color theme specifically.
 
 \subsection{Fullscreen}
-\label{sec:org1110216}
+\label{sec:org90428d1}
 I use \texttt{chunkwm} to manage most windows, including Emacs, so the native
 fullscreen mode is unnecessary. It's also necessary to set pixelwise
 frame resizing non-nil for a variety of window managers. I don't see
@@ -52,7 +52,7 @@ any particular harm in having it on, regardless of WM.
 \end{verbatim}
 
 \subsection{Interface Cleanup}
-\label{sec:org7473f87}
+\label{sec:orgd06f8a5}
 Emacs defaults are a nightmare of toolbars and scrollbars and such
 nonsense. We'll turn all of that off.
 
@@ -65,7 +65,7 @@ nonsense. We'll turn all of that off.
 \end{verbatim}
 
 \subsection{Keystroke Display}
-\label{sec:orgf279716}
+\label{sec:orge73894c}
 Display keystrokes in the echo area immediately, not after one
 second. We can't set the delay to zero because somebody thought it
 would be a good idea to have that value suppress keystroke display
@@ -76,7 +76,7 @@ entirely.
 \end{verbatim}
 
 \subsection{No Title Bars}
-\label{sec:orgbcd6a96}
+\label{sec:orgf6b5591}
 I put a lot of effort into purging title bars from most of the
 software I use on a regular basis (what a waste of real estate), and
 in Emacs 26 (might really be 26.2 or so) this is built in. For earlier
@@ -88,12 +88,12 @@ versions, patches exist to get the same effect.
 \end{verbatim}
 
 \subsection{Fonts}
-\label{sec:orgb1aeb44}
+\label{sec:org1f8014a}
 I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 \subsection{Adjust font size by screen resolution}
-\label{sec:org14309ac}
+\label{sec:org4c04a64}
 The biggest issue I have with multiple monitors is that the font size
 is all over the place. The functions below just set up some reasonable
 defaults and machinery to change the size depending on the resolution
@@ -119,39 +119,9 @@ of the monitor.
 (call-interactively 'the-fontify-idle)
 \end{verbatim}
 \section{Auto-completion}
-\label{sec:org2efb629}
-\subsection{Company}
-\label{sec:orge2153e4}
-\texttt{company} provides an in-buffer autocompletion framework. It
-allows for packages to define backends that supply completion
-candidates, as well as optional documentation and source code. Then
-Company allows for multiple frontends to display the candidates, such
-as a tooltip menu. Company stands for "Complete Anything".
-
-\begin{verbatim}
-(defvar the-company-backends-global
-  '(company-capf
-    company-files
-    (company-dabbrev-code company-keywords)
-    company-dabbrev)
-  "Values for `company-backends' used everywhere.
-If `company-backends' is overridden by The, then these
-backends will still be included.")
-\end{verbatim}
-
-\begin{verbatim}
-(use-package company
-  :demand t
-  :init (company-tng-configure-default)
-  :config
-  <<company-config>>
-  :delight company-mode)
-\end{verbatim}
-
-
+\label{sec:org7dc198e}
 \subsection{Company Settings}
-\label{sec:orgdb2a272}
-Now that all the bindings are out of the way, we do the following:
+\label{sec:org6357983}
 \begin{itemize}
 \item Show completions instantly, rather than after half a second.
 \item Show completions after typing three characters.
@@ -183,113 +153,146 @@ have domain-specific words that have particular casing.
 \end{itemize}
 
 \begin{verbatim}
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 3)
-  (setq company-tooltip-limit 10)
-  (setq company-tooltip-minimum company-tooltip-limit)
-  (setq company-show-numbers t)
-  (setq company-auto-complete-chars nil)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-other-buffers nil)
-
-
-  (setq company-dabbrev-ignore-case nil)
-
-  ;; Register `company' in `the-slow-autocomplete-mode'.
-
-  (defun the-company-toggle-slow ()
-    "Slow down `company' by turning up the delays before completion starts.
-This is done in `the-slow-autocomplete-mode'."
-    (if the-slow-autocomplete-mode
-        (progn
-          (setq-local company-idle-delay 1)
-          (setq-local company-minimum-prefix-length 3))
-      (kill-local-variable 'company-idle-delay)
-      (kill-local-variable 'company-minimum-prefix-length)))
-
-  (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
-
-  ;; Make it so that Company's keymap overrides Yasnippet's keymap
-  ;; when a snippet is active. This way, you can TAB to complete a
-  ;; suggestion for the current field in a snippet, and then TAB to
-  ;; move to the next field. Plus, C-g will dismiss the Company
-  ;; completions menu rather than cancelling the snippet and moving
-  ;; the cursor while leaving the completions menu on-screen in the
-  ;; same location.
-  (with-eval-after-load 'yasnippet
-    ;; FIXME: this is all a horrible hack, can it be done with
-    ;; `bind-key' instead?
-    ;;
-    ;; This function translates the "event types" I get from
-    ;; `map-keymap' into things that I can pass to `lookup-key'
-    ;; and `define-key'. It's a hack, and I'd like to find a
-    ;; built-in function that accomplishes the same thing while
-    ;; taking care of any edge cases I might have missed in this
-    ;; ad-hoc solution.
-    (defun the-normalize-event (event)
-      "This function is a complete hack, do not use.
-But in principle, it translates what we get from `map-keymap'
-into what `lookup-key' and `define-key' want."
-      (if (vectorp event)
-          event
-        (vector event)))
-
-    ;; Here we define a hybrid keymap that delegates first to
-    ;; `company-active-map' and then to `yas-keymap'.
-    (setq the-yas-company-keymap
-          ;; It starts out as a copy of `yas-keymap', and then we
-          ;; merge in all of the bindings from
-          ;; `company-active-map'.
-          (let ((keymap (copy-keymap yas-keymap)))
-            (map-keymap
-             (lambda (event company-cmd)
-               (let* ((event (the-normalize-event event))
-                      (yas-cmd (lookup-key yas-keymap event)))
-                 ;; Here we use an extended menu item with the
-                 ;; `:filter' option, which allows us to
-                 ;; dynamically decide which command we want to
-                 ;; run when a key is pressed.
-                 (define-key keymap event
-                   `(menu-item
-                     nil ,company-cmd :filter
-                     (lambda (cmd)
-                       ;; There doesn't seem to be any obvious
-                       ;; function from Company to tell whether or
-                       ;; not a completion is in progress (à la
-                       ;; `company-explicit-action-p'), so I just
-                       ;; check whether or not `company-my-keymap'
-                       ;; is defined, which seems to be good
-                       ;; enough.
-                       (if company-my-keymap
-                           ',company-cmd
-                         ',yas-cmd))))))
-             company-active-map)
-            keymap))
-
-    ;; The function `yas--make-control-overlay' uses the current
-    ;; value of `yas-keymap' to build the Yasnippet overlay, so to
-    ;; override the Yasnippet keymap we only need to dynamically
-    ;; rebind `yas-keymap' for the duration of that function.
-    (defun the-advice-company-overrides-yasnippet
-        (yas--make-control-overlay &rest args)
-      "Allow `company' to override `yasnippet'.
-This is an `:around' advice for `yas--make-control-overlay'."
-      (let ((yas-keymap the-yas-company-keymap))
-        (apply yas--make-control-overlay args)))
-
-    (advice-add #'yas--make-control-overlay :around
-                #'the-advice-company-overrides-yasnippet))
-
-  ;; Turn on Company everywhere.
-  (global-company-mode +1)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 3)
+(setq company-tooltip-limit 10)
+(setq company-tooltip-minimum company-tooltip-limit)
+(setq company-show-numbers t)
+(setq company-auto-complete-chars nil)
+(setq company-dabbrev-downcase nil)
+(setq company-dabbrev-other-buffers nil)
+(setq company-dabbrev-ignore-case nil)
 \end{verbatim}
 
-;; Package `company-statistics' adds usage-based sorting to Company
-;; completions. It is a goal to replace this package with `historian'
-;; or `prescient'. See [1] and [2].
-;;
-;; [1]: \url{https://github.com/PythonNut/historian.el}
-;; [2]: \url{https://github.com/raxod502/prescient.el}
+\subsubsection{Performance}
+\label{sec:org6713120}
+In case autocompletion is making Emacs drag, we add a toggle to slow
+it down.
+
+\begin{verbatim}
+
+(defun the-company-toggle-slow ()
+  "Slow down `company' by turning up the delays before completion starts.
+This is done in `the-slow-autocomplete-mode'."
+  (if the-slow-autocomplete-mode
+      (progn
+        (setq-local company-idle-delay 1)
+        (setq-local company-minimum-prefix-length 3))
+    (kill-local-variable 'company-idle-delay)
+    (kill-local-variable 'company-minimum-prefix-length)))
+
+(add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
+\end{verbatim}
+
+\subsubsection{YaSnippet Hack}
+\label{sec:orgdd78636}
+Make it so that Company's keymap overrides Yasnippet's keymap when a
+snippet is active. This way, you can TAB to complete a suggestion for
+the current field in a snippet, and then TAB to move to the next
+field. Plus, C-g will dismiss the Company completions menu rather than
+cancelling the snippet and moving the cursor while leaving the
+completions menu on-screen in the same location.
+
+\begin{verbatim}
+(with-eval-after-load 'yasnippet
+  ;; FIXME: this is all a horrible hack, can it be done with
+  ;; `bind-key' instead?
+  ;;
+  ;; This function translates the "event types" I get from
+  ;; `map-keymap' into things that I can pass to `lookup-key'
+  ;; and `define-key'. It's a hack, and I'd like to find a
+  ;; built-in function that accomplishes the same thing while
+  ;; taking care of any edge cases I might have missed in this
+  ;; ad-hoc solution.
+  (defun the-normalize-event (event)
+    "This function is a complete hack, do not use.
+  But in principle, it translates what we get from `map-keymap'
+  into what `lookup-key' and `define-key' want."
+    (if (vectorp event)
+        event
+      (vector event)))
+
+  ;; Here we define a hybrid keymap that delegates first to
+  ;; `company-active-map' and then to `yas-keymap'.
+  (setq the-yas-company-keymap
+        ;; It starts out as a copy of `yas-keymap', and then we
+        ;; merge in all of the bindings from
+        ;; `company-active-map'.
+        (let ((keymap (copy-keymap yas-keymap)))
+          (map-keymap
+           (lambda (event company-cmd)
+             (let* ((event (the-normalize-event event))
+                    (yas-cmd (lookup-key yas-keymap event)))
+               ;; Here we use an extended menu item with the
+               ;; `:filter' option, which allows us to
+               ;; dynamically decide which command we want to
+               ;; run when a key is pressed.
+               (define-key keymap event
+                 `(menu-item
+                   nil ,company-cmd :filter
+                   (lambda (cmd)
+                     ;; There doesn't seem to be any obvious
+                     ;; function from Company to tell whether or
+                     ;; not a completion is in progress (à la
+                     ;; `company-explicit-action-p'), so I just
+                     ;; check whether or not `company-my-keymap'
+                     ;; is defined, which seems to be good
+                     ;; enough.
+                     (if company-my-keymap
+                         ',company-cmd
+                       ',yas-cmd))))))
+           company-active-map)
+          keymap))
+
+  ;; The function `yas--make-control-overlay' uses the current
+  ;; value of `yas-keymap' to build the Yasnippet overlay, so to
+  ;; override the Yasnippet keymap we only need to dynamically
+  ;; rebind `yas-keymap' for the duration of that function.
+  (defun the-advice-company-overrides-yasnippet
+      (yas--make-control-overlay &rest args)
+    "Allow `company' to override `yasnippet'.
+  This is an `:around' advice for `yas--make-control-overlay'."
+    (let ((yas-keymap the-yas-company-keymap))
+      (apply yas--make-control-overlay args)))
+
+  (advice-add #'yas--make-control-overlay :around
+              #'the-advice-company-overrides-yasnippet))
+\end{verbatim}
+
+\subsection{Company}
+\label{sec:orgcb56371}
+\texttt{company} provides an in-buffer autocompletion framework. It
+allows for packages to define backends that supply completion
+candidates, as well as optional documentation and source code. Then
+Company allows for multiple frontends to display the candidates, such
+as a tooltip menu. Company stands for "Complete Anything".
+
+\begin{verbatim}
+(defvar the-company-backends-global
+  '(company-capf
+    company-files
+    (company-dabbrev-code company-keywords)
+    company-dabbrev)
+  "Values for `company-backends' used everywhere.
+If `company-backends' is overridden by The, then these
+backends will still be included.")
+\end{verbatim}
+
+\begin{verbatim}
+(use-package company
+  :demand t
+  :config
+  (company-tng-configure-default)
+  <<company-config>>
+  <<company-slow>>
+  (global-company-mode +1)
+  :delight company-mode)
+\end{verbatim}
+
+\subsection{Company Statistics}
+\label{sec:org6e02863}
+\texttt{company-statistics} adds usage-based sorting to Company completions.
+It is a goal to replace this package with \href{https://github.com/PythonNut/historian.el}{\texttt{historian}} or \href{https://github.com/raxod502/prescient.el}{\texttt{prescient}}.
 
 \begin{verbatim}
 (use-package company-statistics
@@ -312,10 +315,10 @@ This is an `:around' advice for `yas--make-control-overlay'."
   (company-statistics-mode +1))
 \end{verbatim}
 \section{Binding Keys}
-\label{sec:org1bbe8c2}
+\label{sec:org8ed077c}
 
 \subsection{Custom Prefix}
-\label{sec:orgd165ada}
+\label{sec:orgda7d98c}
 There's a lot of room for keybindings, but we rely on a common prefix
 for discoverability and to leave room for extension. This also makes
 creating modal bindings later quite a bit easier.
@@ -343,7 +346,7 @@ cells to make the whole thing more customizable.
 
 
 \subsection{\texttt{bind-key}}
-\label{sec:orga173d2a}
+\label{sec:org5d6c4b9}
 \texttt{bind-key} is the prettier cousin of \texttt{define-key} and
 \texttt{global-set-key}, as well as providing the \texttt{:bind} family of keywords
 in \texttt{use-package},
@@ -352,18 +355,18 @@ in \texttt{use-package},
 (use-package bind-key)
 \end{verbatim}
 \section{Syntax Checking}
-\label{sec:org1e8b7d3}
+\label{sec:org59b6cd6}
 \subsection{Flycheck}
-\label{sec:orgafdea54}
+\label{sec:orgd66adf0}
 Flycheck provides a framework for in-buffer error and warning
 highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 \subsubsection{Settings}
-\label{sec:orgacdc45e}
+\label{sec:orgef4a8b4}
 \begin{enumerate}
 \item Enable Flycheck Globally
-\label{sec:orge6ca2d5}
+\label{sec:org71686dc}
 Enable Flycheck in all buffers, but also allow for disabling it
 per-buffer.
 
@@ -373,7 +376,7 @@ per-buffer.
 \end{verbatim}
 
 \item Disable Flycheck in the modeline
-\label{sec:org27ade91}
+\label{sec:org392c93d}
 It's honestly more distracting than anything,
 
 \begin{verbatim}
@@ -382,7 +385,7 @@ It's honestly more distracting than anything,
 \end{enumerate}
 
 \subsubsection{\texttt{use-package} declaration}
-\label{sec:orgfa5d416}
+\label{sec:org0d7b900}
 \begin{verbatim}
 (use-package flycheck
   :defer 3
@@ -392,9 +395,9 @@ It's honestly more distracting than anything,
   )
 \end{verbatim}
 \section{Clipboard Integration}
-\label{sec:org2cad67e}
+\label{sec:orgc80cfd1}
 \subsection{macOS integration}
-\label{sec:org426ecc6}
+\label{sec:org1c450e2}
 Like mouse integration, clipboard integration
 works properly in windowed Emacs but not in terminal Emacs (at
 least by default). This code was originally based on \href{https://gist.github.com/the-kenny/267162}{1}, and then
@@ -455,7 +458,7 @@ This is used to prevent duplicate entries in the kill ring.")
 \end{verbatim}
 
 \subsection{Inter-program paste}
-\label{sec:org08c7c7b}
+\label{sec:org2ba161d}
 If you have something on the system clipboard, and then kill something
 in Emacs, then by default whatever you had on the system clipboard is
 gone and there is no way to get it back. Setting the following option
@@ -464,5 +467,442 @@ previously on the system clipboard is pushed into the kill ring. This
 way, you can paste it with \texttt{yank-pop}.
 \begin{verbatim}
 (setq save-interprogram-paste-before-kill t)
+\end{verbatim}
+\section{Emojis!}
+\label{sec:orgffebb3e}
+\subsection{\texttt{emojify}}
+\label{sec:orge5211b3}
+Emojify renders a variety of strings as emojis, as well as providing
+some nice interactive functions to get emojis all over the place.
+
+\begin{verbatim}
+(use-package emojify
+  :init
+  (add-hook 'after-init-hook #'global-emojify-mode))
+\end{verbatim}
+\section{Sensible Defaults}
+\label{sec:orgfdfd6f7}
+\subsection{Default Directory}
+\label{sec:orgb0d7d00}
+When using \texttt{find-file}, search from the user's home directory.
+\begin{verbatim}
+(setq default-directory "~/")
+\end{verbatim}
+
+\subsection{Treat Camel-Case Words as separate words}
+\label{sec:orgb61e7e7}
+\begin{verbatim}
+(add-hook 'prog-mode-hook 'subword-mode)
+\end{verbatim}
+
+\subsection{Increase GC threshold}
+\label{sec:org2db022e}
+Allow 20MB of memory (instead of 0.76MB) before calling garbage
+collection. This means GC runs less often, which speeds up some
+operations.
+\begin{verbatim}
+(setq gc-cons-threshold 20000000)
+\end{verbatim}
+
+\subsection{Make Scripts Executable By Default}
+\label{sec:orgef92526}
+If your file starts with a shebang, the file will be marked executable
+on save.
+\begin{verbatim}
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+\end{verbatim}
+
+\subsection{Transient Mark Mode}
+\label{sec:org1301117}
+Transient mark means region highlighting works the way you would
+expect it to coming from other editors.
+\begin{verbatim}
+(transient-mark-mode t)
+\end{verbatim}
+
+\subsection{Short Confirmations}
+\label{sec:org0b4499e}
+Typing out \texttt{yes} and \texttt{no} is irritating. Just use \texttt{y} or \texttt{n}.
+\begin{verbatim}
+(fset #'yes-or-no-p #'y-or-n-p)
+\end{verbatim}
+
+\subsection{macOS settings}
+\label{sec:org729c06b}
+If you set Emacs as the default file handler for certain types of
+files, double-clicking will open an entire new Emacs frame. This
+setting causes Emacs to reuse the existing one.
+\begin{verbatim}
+(the-with-operating-system macOS
+  (setq ns-pop-up-frames nil))
+\end{verbatim}
+\section{Org Mode Customization}
+\label{sec:orgca3d158}
+\subsection{Global Outline Mode}
+\label{sec:orgfcc564f}
+Outlines work for just about any structured text imaginable, from code
+to prose. If it's got something that Emacs thinks is a paragraph, it
+works. When you need a high-level overview, it's hard to beat this.
+
+\begin{verbatim}
+(define-globalized-minor-mode global-outline-minor-mode
+  outline-minor-mode outline-minor-mode)
+
+(global-outline-minor-mode +1)
+\end{verbatim}
+
+\subsection{Org}
+\label{sec:org7c598b9}
+Org is a hugely expansive framework (a.k.a. collection of hacks) for
+organizing information, notes, tasks, calendars, and anything else
+related to Org-anization.
+
+\subsubsection{Setup}
+\label{sec:org5ccedd6}
+\begin{enumerate}
+\item Version Hack
+\label{sec:org199e446}
+Because \texttt{straight.el} runs Org directly from a Git repo, the
+autoloads Org uses to identify its version are not generated in
+the way that it expects. This causes it to either a) fail to
+determine its version at all or b) incorrectly report the version
+of the built-in Org which ships with Emacs. This causes some
+issues down the line, so we have to trick Org. This is how we do it.
+
+First, we have to get the Git version, here represented by a short
+hash of the current commit.
+
+\begin{verbatim}
+(defun the-org-git-version ()
+  (let ((git-repo
+         (f-join user-emacs-directory "straight/repos/org")))
+    (s-trim (git-run "describe"
+                     "--match=release\*"
+                     "--abbrev=6"
+                     "HEAD"))))
+\end{verbatim}
+
+\begin{verbatim}
+(defun the-org-release ()
+  (let ((git-repo
+         (f-join user-emacs-directory "straight/repos/org")))
+    (s-trim (s-chop-prefix "release_"
+                           (git-run "describe"
+                                    "--match=release\*"
+                                    "--abbrev=0"
+                                    "HEAD")))))
+\end{verbatim}
+
+Next, we need to define \texttt{org-git-version} and \texttt{org-release} eagerly.
+
+\begin{verbatim}
+<<org-version>>
+<<org-release>>
+(defalias #'org-git-version #'the-org-git-version)
+(defalias #'org-release #'the-org-release)
+(provide 'org-version)
+\end{verbatim}
+
+\item \texttt{org-tempo}
+\label{sec:org334b908}
+In the most recent release of Org, the way easy template expansion
+(i.e., \texttt{<s[TAB]} expands to a \texttt{begin\_src} block) was changed to use
+\texttt{tempo}, so we need to require this in order to keep this very
+convenient functionality in place.
+
+\begin{verbatim}
+(defun the-fix-easy-templates ()
+  (require 'org-tempo))
+
+(add-hook 'org-mode-hook 'the-fix-easy-templates)
+\end{verbatim}
+
+\item Todo Sequence
+\label{sec:org16755ca}
+We use an augmented set of todo states, including TODO, IN-PROGRESS,
+WAITING, and the done states DONE and CANCELED.
+\begin{verbatim}
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+\end{verbatim}
+\item Bindings
+\label{sec:orgc1a62c3}
+
+First, we want to set up some recommended bindings as specified in the
+Org manual.
+
+\begin{verbatim}
+("C-c a" . org-agenda)
+("C-c c" . org-capture)
+\end{verbatim}
+
+First, we move the Org bindings for \texttt{org-shift*} from the \texttt{S-} prefix
+to \texttt{C-}.
+
+\begin{verbatim}
+("S-<left>" . nil)
+("S-<right>" . nil)
+("S-<up>" . nil)
+("S-<down>" . nil)
+("C-<left>" . org-shiftleft)
+("C-<right>" . org-shiftright)
+("C-<up>" . org-shiftup)
+("C-<down>" . org-shiftdown)
+\end{verbatim}
+
+By default, Org maps \texttt{org-(backward/forward)-paragraph}, but only maps
+it to the keys we overrode for shift up and down. We'll remap all
+instances so that our existing bindings for those functions will work
+as expected.
+
+\begin{verbatim}
+([remap backward-paragraph] . org-backward-paragraph)
+([remap forward-paragraph] . org-forward-paragraph)
+\end{verbatim}
+
+Finally, we'll set up a convenient binding for inserting headings.
+
+\begin{verbatim}
+("M-RET" . org-insert-heading)
+\end{verbatim}
+
+\item Settings
+\label{sec:org07138bc}
+\texttt{org-insert-headline} will split your content by default, which is
+pretty dumb. We therefore set it to create a new heading, instead. We
+also activate \texttt{org-indent-mode} for more beautiful documents.
+
+\begin{verbatim}
+(setq org-insert-heading-respect-content t)
+(add-hook 'org-mode-hook #'org-indent-mode)
+\end{verbatim}
+
+\item Default Org Directory
+\label{sec:org2416bfb}
+We stick our Org files in a new directory in the home directory by
+default.
+\begin{verbatim}
+(setq org-directory "~/org")
+\end{verbatim}
+\item Utilities
+\label{sec:org30bdf74}
+\begin{enumerate}
+\item Recursively sort buffer entries alphabetically
+\label{sec:org1823f13}
+\begin{verbatim}
+(defun the-org-sort-ignore-errors ()
+  (condition-case x
+      (org-sort-entries nil ?a)
+    (user-error)))
+
+(defun the-org-sort-buffer ()
+  "Sort all entries in the Org buffer recursively in alphabetical order."
+  (interactive)
+  (org-map-entries #'the-org-sort-ignore-errors))
+\end{verbatim}
+
+\item Archive dead tasks
+\label{sec:org9ca83d0}
+If tasks are marked DONE, and either have no deadline or the deadline
+has passed, archive it.
+
+\begin{verbatim}
+(defun the-org-past-entries ()
+  (when (and (string= (org-get-todo-state) "DONE")
+             (let ((deadline (org-entry-get (point) "DEADLINE")))
+               (or (null deadline)
+                   (time-less-p (org-time-string-to-time deadline)
+                                (current-time)))))
+    (org-archive-subtree)
+    (setq org-map-continue-from (line-beginning-position))))
+
+
+(defun the-org-archive-past ()
+  "Archive DONE items with deadlines either missing or in the past."
+  (interactive)
+  (org-map-entries #'the-org-past-entries))
+\end{verbatim}
+
+\item Pretty bullets
+\label{sec:orgf750f48}
+We use \texttt{org-bullets} to make our outlines prettier. There's some minor
+alignment weirdness with my font, so I may need to specify the bullet
+codepoints, later.
+\begin{verbatim}
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+\end{verbatim}
+
+\item Dropbox integration
+\label{sec:orgf193aa7}
+If \texttt{\textasciitilde{}/org/} doesn't exist, but \texttt{\textasciitilde{}/Dropbox/org} does, symlink the
+latter to the former.
+\begin{verbatim}
+(if (and
+     (not (f-exists? org-directory))
+     (f-directory? "~/Dropbox/org"))
+    (f-symlink "~/Dropbox/org" org-directory))
+\end{verbatim}
+\end{enumerate}
+\end{enumerate}
+\subsubsection{\texttt{use-package} declaration}
+\label{sec:orgbb56904}
+
+\begin{verbatim}
+(use-package org
+  :straight org-plus-contrib
+  :bind (
+         <<basic-bindings>>
+         :map org-mode-map
+         <<org-mode-bindings>>
+         <<org-mode-remaps>>
+         <<org-mode-heading>>
+         )
+  :init
+  <<org-version-definitions>>
+  <<org-dir>>
+  :config
+  <<org-requires>>
+  <<org-bullets>>
+  <<org-settings>>
+  <<org-sort-buffer>>
+  <<org-archive-past>>
+  <<todo-states>>
+  <<org-dropbox>>
+  :delight
+  (org-indent-mode)
+  )
+\end{verbatim}
+
+\subsection{Org Agenda}
+\label{sec:org81de1bc}
+Org Agenda is for generating a more useful consolidated summary of all
+or some of your tasks, according to their metadata.
+
+\subsubsection{Setup}
+\label{sec:org0858f07}
+\begin{enumerate}
+\item Bindings
+\label{sec:org77c540c}
+Analogously to our bindings for regular org files, we'll also move
+things off of \texttt{S-} and onto \texttt{C-}.
+
+\begin{verbatim}
+("S-<up>" . nil)
+("S-<down>" . nil)
+("S-<left>" . nil)
+("S-<right>" . nil)
+("C-<left>" . org-agenda-do-date-earlier)
+("C-<right>" . org-agenda-do-date-later)
+\end{verbatim}
+
+\item Window Splitting
+\label{sec:org3bf1620}
+We want Org Agenda to split the window into two tall windows, rather
+than two wide windows stacked.
+
+\begin{verbatim}
+(defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
+  "Make `org-agenda' split horizontally, not vertically, by default.
+  This is an `:around' advice for `org-agenda'. It commutes with
+  `the--advice-org-agenda-default-directory'."
+  (let ((split-height-threshold nil))
+    (apply org-agenda args)))
+
+(advice-add #'org-agenda :around
+            #'the--advice-org-agenda-split-horizontally)
+\end{verbatim}
+
+\item Default Directory
+\label{sec:orgd4e019d}
+If \texttt{org-directory} exists, set \texttt{default-directory} to its value in the
+agenda so that things like \texttt{find-file} work sensibly.
+
+\begin{verbatim}
+(defun the--advice-org-agenda-default-directory
+    (org-agenda &rest args)
+  "If `org-directory' exists, set `default-directory' to it in the agenda.
+  This is an `:around' advice for `org-agenda'. It commutes with
+  `the--advice-org-agenda-split-horizontally'."
+  (let ((default-directory (if (f-exists? org-directory)
+                               org-directory
+                             default-directory)))
+    (apply org-agenda args)))
+
+(advice-add #'org-agenda :around
+            #'the--advice-org-agenda-default-directory)
+\end{verbatim}
+\end{enumerate}
+
+\subsubsection{\texttt{use-package} declaration}
+\label{sec:org788b1d5}
+\begin{verbatim}
+(use-package org-agenda
+  :straight org-plus-contrib
+  :bind (:map org-agenda-mode-map
+         <<org-agenda-bindings>>
+         )
+  :config
+  <<agenda-window-split>>
+  <<agenda-default-directory>>
+  )
+\end{verbatim}
+
+\subsection{Extra Export Packages}
+\label{sec:org6cfff20}
+In order to correctly export Org files to certain formats, we need
+some additional tools.
+\subsubsection{\texttt{htmlize}}
+\label{sec:orga1bc077}
+Used to convert symbols and such to HTML equivalents.
+\begin{verbatim}
+(use-package htmlize)
+\end{verbatim}
+\subsection{Org-mode Config Settings}
+\label{sec:org5c41c3e}
+Our config files live in \texttt{the-lib-directory}, but our org source files
+live in \texttt{the-org-lib-directory}. Unless I decide to start loading org
+files directly (which is doable if a touch annoying, at times), for
+now I want the \texttt{:tangle} attribute set for me automatically as long as
+I'm working on one of THE's lib files.
+
+Additionally, I'd like to regenerate the documentation on save so
+things will always be up to date.
+
+\begin{verbatim}
+(defun the-in-the-org-lib-p ()
+  (and (f-this-file)
+       (f-child-of? (f-this-file) the-org-lib-directory)))
+
+(defun the-update-doc ()
+  "Update the readme."
+  (interactive)
+  (save-window-excursion
+    (progn
+      (find-file the-doc-source-file)
+      (org-md-export-to-markdown)
+      (org-latex-export-to-pdf))))
+
+
+(defun the-org-lib-hook ()
+  (if (the-in-the-org-lib-p)
+      (progn
+        (setq-local org-babel-default-header-args:emacs-lisp
+                    `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
+                      (:noweb . "yes"))))))
+
+  (add-hook 'org-mode-hook 'the-org-lib-hook)
+\end{verbatim}
+
+Finally, I'd like to automatically tangle the files on save.
+
+\begin{verbatim}
+(defun the-org-lib-tangle-hook ()
+  (if (the-in-the-org-lib-p)
+      (org-babel-tangle)))
+
+(add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 \end{verbatim}
 \end{document}

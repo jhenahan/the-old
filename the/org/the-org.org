@@ -90,6 +90,14 @@ convenient functionality in place.
   (add-hook 'org-mode-hook 'the-fix-easy-templates)
 #+end_src
 
+**** Todo Sequence
+We use an augmented set of todo states, including TODO, IN-PROGRESS,
+WAITING, and the done states DONE and CANCELED.
+#+NAME: todo-states
+#+begin_src emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+#+end_src
 **** Bindings
 
 First, we want to set up some recommended bindings as specified in the
@@ -145,6 +153,13 @@ also activate =org-indent-mode= for more beautiful documents.
   (add-hook 'org-mode-hook #'org-indent-mode)
 #+end_src
 
+**** Default Org Directory
+We stick our Org files in a new directory in the home directory by
+default.
+#+NAME: org-dir
+#+begin_src emacs-lisp
+  (setq org-directory "~/org")
+#+end_src
 **** Utilities
 ***** Recursively sort buffer entries alphabetically
 #+NAME: org-sort-buffer
@@ -192,12 +207,22 @@ codepoints, later.
     :init
     (add-hook 'org-mode-hook 'org-bullets-mode))
 #+end_src
+
+***** Dropbox integration
+If =~/org/= doesn't exist, but =~/Dropbox/org= does, symlink the
+latter to the former.
+#+NAME: org-dropbox
+#+begin_src emacs-lisp
+  (if (and
+       (not (f-exists? org-directory))
+       (f-directory? "~/Dropbox/org"))
+      (f-symlink "~/Dropbox/org" org-directory))
+#+end_src
 *** =use-package= declaration
 
 #+begin_src emacs-lisp
   (use-package org
     :straight org-plus-contrib
-    :demand t
     :bind (
            <<basic-bindings>>
            :map org-mode-map
@@ -207,12 +232,15 @@ codepoints, later.
            )
     :init
     <<org-version-definitions>>
+    <<org-dir>>
     :config
     <<org-requires>>
     <<org-bullets>>
     <<org-settings>>
     <<org-sort-buffer>>
     <<org-archive-past>>
+    <<todo-states>>
+    <<org-dropbox>>
     :delight
     (org-indent-mode)
     )
@@ -317,9 +345,10 @@ things will always be up to date.
     "Update the readme."
     (interactive)
     (save-window-excursion
-      (find-file-read-only the-doc-source-file)
-      (org-md-export-to-markdown)
-      (org-latex-export-to-pdf)))
+      (progn
+        (find-file the-doc-source-file)
+        (org-md-export-to-markdown)
+        (org-latex-export-to-pdf))))
 
 
   (defun the-org-lib-hook ()
@@ -327,10 +356,9 @@ things will always be up to date.
         (progn
           (setq-local org-babel-default-header-args:emacs-lisp
                       `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
-                        (:noweb . "yes")))
-          (add-hook 'after-save-hook #'the-update-doc))))
+                        (:noweb . "yes"))))))
 
-  (add-hook 'org-mode-hook 'the-org-lib-hook)
+    (add-hook 'org-mode-hook 'the-org-lib-hook)
 #+end_src
 
 Finally, I'd like to automatically tangle the files on save.
@@ -342,7 +370,6 @@ Finally, I'd like to automatically tangle the files on save.
 
   (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 #+end_src
-
 ** Provides                                                        :noexport:
 #+begin_src emacs-lisp
   (provide 'the-org)

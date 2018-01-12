@@ -11,3 +11,6 @@
 #+include: "../org/the-bind-key.org"
 #+include: "../org/the-check.org"
 #+include: "../org/the-clipboard.org"
+#+include: "../org/the-emoji.org"
+#+include: "../org/the-sensible.org"
+#+include: "../org/the-org.org"

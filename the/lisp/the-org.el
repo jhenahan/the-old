@@ -13,7 +13,6 @@
 
 (use-package org
   :straight org-plus-contrib
-  :demand t
   :bind (
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -49,6 +48,7 @@
   (defalias #'org-git-version #'the-org-git-version)
   (defalias #'org-release #'the-org-release)
   (provide 'org-version)
+  (setq org-directory "~/org")
   :config
   (defun the-fix-easy-templates ()
     (require 'org-tempo))
@@ -82,6 +82,12 @@
     "Archive DONE items with deadlines either missing or in the past."
     (interactive)
     (org-map-entries #'the-org-past-entries))
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+  (if (and
+       (not (f-exists? org-directory))
+       (f-directory? "~/Dropbox/org"))
+      (f-symlink "~/Dropbox/org" org-directory))
   :delight
   (org-indent-mode)
   )
@@ -130,9 +136,10 @@
   "Update the readme."
   (interactive)
   (save-window-excursion
-    (find-file-read-only the-doc-source-file)
-    (org-md-export-to-markdown)
-    (org-latex-export-to-pdf)))
+    (progn
+      (find-file the-doc-source-file)
+      (org-md-export-to-markdown)
+      (org-latex-export-to-pdf))))
 
 
 (defun the-org-lib-hook ()
@@ -140,10 +147,9 @@
       (progn
         (setq-local org-babel-default-header-args:emacs-lisp
                     `((:tangle . ,(f-expand (f-swap-ext (f-filename (f-this-file)) "el") the-lib-directory))
-                      (:noweb . "yes")))
-        (add-hook 'after-save-hook #'the-update-doc))))
+                      (:noweb . "yes"))))))
 
-(add-hook 'org-mode-hook 'the-org-lib-hook)
+  (add-hook 'org-mode-hook 'the-org-lib-hook)
 
 (defun the-org-lib-tangle-hook ()
   (if (the-in-the-org-lib-p)
