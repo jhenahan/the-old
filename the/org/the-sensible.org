@@ -1,0 +1,61 @@
+* Sensible Defaults
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-sensible.el --- Sensible defaults
+#+end_src
+
+** Default Directory
+When using =find-file=, search from the user's home directory.
+#+begin_src emacs-lisp
+  (setq default-directory "~/")
+#+end_src
+
+** Treat Camel-Case Words as separate words
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'subword-mode)
+#+end_src
+
+** Increase GC threshold
+Allow 20MB of memory (instead of 0.76MB) before calling garbage
+collection. This means GC runs less often, which speeds up some
+operations.
+#+begin_src emacs-lisp
+  (setq gc-cons-threshold 20000000)
+#+end_src
+
+** Make Scripts Executable By Default
+If your file starts with a shebang, the file will be marked executable
+on save.
+#+begin_src emacs-lisp
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
+#+end_src
+
+** Transient Mark Mode
+Transient mark means region highlighting works the way you would
+expect it to coming from other editors.
+#+begin_src emacs-lisp
+  (transient-mark-mode t)
+#+end_src
+
+** Short Confirmations
+Typing out =yes= and =no= is irritating. Just use =y= or =n=.
+#+begin_src emacs-lisp
+  (fset #'yes-or-no-p #'y-or-n-p)
+#+end_src
+
+** macOS settings
+If you set Emacs as the default file handler for certain types of
+files, double-clicking will open an entire new Emacs frame. This
+setting causes Emacs to reuse the existing one.
+#+begin_src emacs-lisp
+  (the-with-operating-system macOS
+    (setq ns-pop-up-frames nil))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-sensible)
+
+  ;;; the-sensible.el ends here
+#+end_src
