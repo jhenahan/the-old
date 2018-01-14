@@ -53,6 +53,13 @@ directory-local variables. CIDER does this in its files, for example.
       (add-hook 'eww-mode-hook 'visual-line-mode)))
 #+end_src
 
+** Steam
+#+begin_src emacs-lisp
+  (use-package steam
+    :straight org-plus-contrib
+    :init
+    (setq steam-username "prooftechnique"))
+#+end_src
 ** Provides                                                       :noexport:
 #+begin_src emacs-lisp
   (provide 'the-network)

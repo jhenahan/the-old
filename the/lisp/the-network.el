@@ -25,6 +25,11 @@
   (progn
     (add-hook 'eww-mode-hook 'visual-line-mode)))
 
+(use-package steam
+  :straight org-plus-contrib
+  :init
+  (setq steam-username "prooftechnique"))
+
 (provide 'the-network)
 
 ;;; the-network.el ends here
