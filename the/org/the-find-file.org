@@ -136,6 +136,19 @@ filename if you'd rather not use the automatically generated one.
   (the-register-dotfile ".config/fish/config.fish" "f c")
 #+end_src
 
+**** ChunkWM
+#+begin_src emacs-lisp
+  (the-register-dotfile ".chunkwmrc" "w m")
+
+  (defun the-reload-chunkwm ()
+    (interactive)
+    (async-shell-command "sh ~/.chunkwmrc"))
+#+end_src
+
+**** SKHD
+#+begin_src emacs-lisp
+  (the-register-dotfile ".skhdrc" "h k")
+#+end_src
 ** Visiting files
 *** Symlinks
 Follow symlinks when opening files. This has the concrete impact, for
@@ -399,98 +412,14 @@ alter the indexing method as a dirlocal.
   )
 #+end_src
 *** Counsel Projectile
-Counsel is everywhere! This integrates Projectile commands and Ivy. We
-use =raxod502='s fork because it has a more sensible setting for =f=.
-**** Setup
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-***** Lazy-load
-#+NAME: counsel-projectile-lazy
-#+begin_src emacs-lisp
-  (el-patch-feature counsel-projectile)
-#+end_src
-***** Projectile Commander Bindings
-The Projectile Commander is an interface in Projectile to run commonly
-used commands with a single key. At some point, these bindings were
-available by default, but they seem to have dropped out, at some
-point.
-#+NAME: projectile-commander
-#+begin_src emacs-lisp
-  (el-patch-defun counsel-projectile-commander-bindings ()
-        (def-projectile-commander-method ?f
-          "Find file in project."
-          (counsel-projectile-find-file))
-        (def-projectile-commander-method ?d
-          "Find directory in project."
-          (counsel-projectile-find-dir))
-        (def-projectile-commander-method ?b
-          "Switch to project buffer."
-          (counsel-projectile-switch-to-buffer))
-        (def-projectile-commander-method ?A
-          (el-patch-swap
-            "Search project files with ag."
-            "Search project files with rg.")
-          (el-patch-swap
-            (counsel-projectile-ag)
-            (counsel-projectile-rg)))
-        (def-projectile-commander-method ?s
-          "Switch project."
-          (counsel-projectile-switch-project)))
-#+end_src
-***** Toggle Ivy commands
-Here, we add the ability to toggle the Counsel bindings, in the event
-that the default Projectile bindings are preferred. We turn it on by
-default. We also prefer =rg= over =ag=, because =rg= is just the best.
-#+NAME: counsel-projectile-toggle
-#+begin_src emacs-lisp
-  (el-patch-defun counsel-projectile-toggle (toggle)
-        "Toggle Ivy version of Projectile commands."
-        (if (> toggle 0)
-            (progn
-              (when (eq projectile-switch-project-action #'projectile-find-file)
-                (setq projectile-switch-project-action
-                      (el-patch-swap
-                        #'counsel-projectile
-                        #'counsel-projectile-find-file)))
-              (define-key projectile-mode-map [remap projectile-find-file] #'counsel-projectile-find-file)
-              (define-key projectile-mode-map [remap projectile-find-dir] #'counsel-projectile-find-dir)
-              (define-key projectile-mode-map [remap projectile-switch-project] #'counsel-projectile-switch-project)
-              (define-key projectile-mode-map [remap projectile-ag]
-                (el-patch-swap #'counsel-projectile-ag #'counsel-projectile-rg))
-              (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'counsel-projectile-switch-to-buffer)
-              (counsel-projectile-commander-bindings))
-          (progn
-            (when (eq projectile-switch-project-action
-                      (el-patch-swap
-                        #'counsel-projectile
-                        #'counsel-projectile-find-file))
-              (setq projectile-switch-project-action #'projectile-find-file))
-            (define-key projectile-mode-map [remap projectile-find-file] nil)
-            (define-key projectile-mode-map [remap projectile-find-dir] nil)
-            (define-key projectile-mode-map [remap projectile-switch-project] nil)
-            (define-key projectile-mode-map (el-patch-swap
-                                              [remap projectile-ag]
-                                              [remap projectile-rg])
-              nil)
-            (define-key projectile-mode-map [remap projectile-switch-to-buffer] nil)
-            (projectile-commander-bindings))))
-
-      (with-eval-after-load 'projectile
-        (counsel-projectile-toggle 1))
-#+end_src
+Counsel is everywhere! This integrates Projectile commands and Ivy.
 **** =use-package= declaration
 #+begin_src emacs-lisp
   (use-package counsel-projectile
-    :straight (:host github
-                     :repo "raxod502/counsel-projectile"
-                     :upstream (:host github
-                                      :repo "ericdanan/counsel-projectile"))
     :init
-    <<counsel-projectile-lazy>>
-    <<projectile-commander>>
-    <<counsel-projectile-toggle>>
-    )
+    (setq projectile-switch-project-action #'counsel-projectile-find-file)
+    :config
+    (counsel-projectile-mode))
 #+end_src
 ** Provides                                                       :noexport:
 #+begin_src emacs-lisp

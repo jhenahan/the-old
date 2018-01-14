@@ -108,6 +108,14 @@ be generated automatically from the basename of FILENAME."
 
 (the-register-dotfile ".config/fish/config.fish" "f c")
 
+(the-register-dotfile ".chunkwmrc" "w m")
+
+(defun the-reload-chunkwm ()
+  (interactive)
+  (async-shell-command "sh ~/.chunkwmrc"))
+
+(the-register-dotfile ".skhdrc" "h k")
+
 (setq find-file-visit-truename t)
 
 (setq find-file-suppress-same-file-warnings t)
@@ -303,67 +311,10 @@ This is a function for `after-save-hook'. Remove
 )
 
 (use-package counsel-projectile
-  :straight (:host github
-                   :repo "raxod502/counsel-projectile"
-                   :upstream (:host github
-                                    :repo "ericdanan/counsel-projectile"))
   :init
-  (el-patch-feature counsel-projectile)
-  (el-patch-defun counsel-projectile-commander-bindings ()
-        (def-projectile-commander-method ?f
-          "Find file in project."
-          (counsel-projectile-find-file))
-        (def-projectile-commander-method ?d
-          "Find directory in project."
-          (counsel-projectile-find-dir))
-        (def-projectile-commander-method ?b
-          "Switch to project buffer."
-          (counsel-projectile-switch-to-buffer))
-        (def-projectile-commander-method ?A
-          (el-patch-swap
-            "Search project files with ag."
-            "Search project files with rg.")
-          (el-patch-swap
-            (counsel-projectile-ag)
-            (counsel-projectile-rg)))
-        (def-projectile-commander-method ?s
-          "Switch project."
-          (counsel-projectile-switch-project)))
-  (el-patch-defun counsel-projectile-toggle (toggle)
-        "Toggle Ivy version of Projectile commands."
-        (if (> toggle 0)
-            (progn
-              (when (eq projectile-switch-project-action #'projectile-find-file)
-                (setq projectile-switch-project-action
-                      (el-patch-swap
-                        #'counsel-projectile
-                        #'counsel-projectile-find-file)))
-              (define-key projectile-mode-map [remap projectile-find-file] #'counsel-projectile-find-file)
-              (define-key projectile-mode-map [remap projectile-find-dir] #'counsel-projectile-find-dir)
-              (define-key projectile-mode-map [remap projectile-switch-project] #'counsel-projectile-switch-project)
-              (define-key projectile-mode-map [remap projectile-ag]
-                (el-patch-swap #'counsel-projectile-ag #'counsel-projectile-rg))
-              (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'counsel-projectile-switch-to-buffer)
-              (counsel-projectile-commander-bindings))
-          (progn
-            (when (eq projectile-switch-project-action
-                      (el-patch-swap
-                        #'counsel-projectile
-                        #'counsel-projectile-find-file))
-              (setq projectile-switch-project-action #'projectile-find-file))
-            (define-key projectile-mode-map [remap projectile-find-file] nil)
-            (define-key projectile-mode-map [remap projectile-find-dir] nil)
-            (define-key projectile-mode-map [remap projectile-switch-project] nil)
-            (define-key projectile-mode-map (el-patch-swap
-                                              [remap projectile-ag]
-                                              [remap projectile-rg])
-              nil)
-            (define-key projectile-mode-map [remap projectile-switch-to-buffer] nil)
-            (projectile-commander-bindings))))
-  
-      (with-eval-after-load 'projectile
-        (counsel-projectile-toggle 1))
-  )
+  (setq projectile-switch-project-action #'counsel-projectile-find-file)
+  :config
+  (counsel-projectile-mode))
 
 (provide 'the-find-file)
 
