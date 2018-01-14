@@ -49,6 +49,18 @@
   (defalias #'org-release #'the-org-release)
   (provide 'org-version)
   (setq org-directory "~/org")
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
+           "* %?\nEntered on %U\n  %i")
+          ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
+           "* TODO %?\n %i\n %a")
+          ("h" "Home" entry (file+headline "~/org/home.org" "Tasks")
+           "* TODO %?\n %i")))
+  
+          (setq org-refile-targets
+                '((org-agenda-files :maxlevel . 3)))
   :config
   (defun the-fix-easy-templates ()
     (require 'org-tempo))
@@ -59,6 +71,7 @@
     (add-hook 'org-mode-hook 'org-bullets-mode))
   (setq org-insert-heading-respect-content t)
   (add-hook 'org-mode-hook #'org-indent-mode)
+  (setq org-export-in-background t)
   (defun the-org-sort-ignore-errors ()
     (condition-case x
         (org-sort-entries nil ?a)
@@ -102,6 +115,8 @@
          ("C-<left>" . org-agenda-do-date-earlier)
          ("C-<right>" . org-agenda-do-date-later)
          )
+  :init
+  (setq org-agenda-files '("~/org"))
   :config
   (defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
     "Make `org-agenda' split horizontally, not vertically, by default.
@@ -125,6 +140,16 @@
   (advice-add #'org-agenda :around
               #'the--advice-org-agenda-default-directory)
   )
+
+(use-package org-projectile
+  :straight org-plus-contrib
+  :bind (("C-c n p" . org-projectile-project-todo-completing-read))
+  :init
+  (setq org-projectile-per-project-filepath "todo.org")
+  (setq org-projectile-projects-file (f-join org-directory "projects.org"))
+  :config
+  (add-to-list 'org-capture-templates org-projectile-todo-entry)
+  (add-to-list 'org-agenda-files 'org-projectile-todo-files))
 
 (use-package htmlize)
 

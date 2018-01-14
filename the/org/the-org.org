@@ -147,10 +147,13 @@ Finally, we'll set up a convenient binding for inserting headings.
 pretty dumb. We therefore set it to create a new heading, instead. We
 also activate =org-indent-mode= for more beautiful documents.
 
+We also set Org exports to occur asynchronously whenever possible.
+
 #+NAME: org-settings
 #+begin_src emacs-lisp
   (setq org-insert-heading-respect-content t)
   (add-hook 'org-mode-hook #'org-indent-mode)
+  (setq org-export-in-background t)
 #+end_src
 
 **** Default Org Directory
@@ -159,6 +162,22 @@ default.
 #+NAME: org-dir
 #+begin_src emacs-lisp
   (setq org-directory "~/org")
+#+end_src
+**** Capture Templates
+#+NAME: org-capture
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
+           "* %?\nEntered on %U\n  %i")
+          ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
+           "* TODO %?\n %i\n %a")
+          ("h" "Home" entry (file+headline "~/org/home.org" "Tasks")
+           "* TODO %?\n %i")))
+
+          (setq org-refile-targets
+                '((org-agenda-files :maxlevel . 3)))
 #+end_src
 **** Utilities
 ***** Recursively sort buffer entries alphabetically
@@ -233,6 +252,7 @@ latter to the former.
     :init
     <<org-version-definitions>>
     <<org-dir>>
+    <<org-capture>>
     :config
     <<org-requires>>
     <<org-bullets>>
@@ -305,6 +325,11 @@ agenda so that things like =find-file= work sensibly.
               #'the--advice-org-agenda-default-directory)
 #+end_src
 
+**** Settings
+#+NAME: agenda-files
+#+begin_src emacs-lisp
+  (setq org-agenda-files '("~/org"))
+#+end_src
 *** =use-package= declaration
 #+begin_src emacs-lisp
   (use-package org-agenda
@@ -312,12 +337,28 @@ agenda so that things like =find-file= work sensibly.
     :bind (:map org-agenda-mode-map
            <<org-agenda-bindings>>
            )
+    :init
+    <<agenda-files>>
     :config
     <<agenda-window-split>>
     <<agenda-default-directory>>
     )
 #+end_src
 
+** Org Projectile
+This package allows us to add project-specific todos and manage them
+in our normal agenda.
+#+begin_src emacs-lisp
+  (use-package org-projectile
+    :straight org-plus-contrib
+    :bind (("C-c n p" . org-projectile-project-todo-completing-read))
+    :init
+    (setq org-projectile-per-project-filepath "todo.org")
+    (setq org-projectile-projects-file (f-join org-directory "projects.org"))
+    :config
+    (add-to-list 'org-capture-templates org-projectile-todo-entry)
+    (add-to-list 'org-agenda-files 'org-projectile-todo-files))
+#+end_src
 ** Extra Export Packages
 In order to correctly export Org files to certain formats, we need
 some additional tools.
