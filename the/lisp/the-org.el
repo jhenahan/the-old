@@ -142,16 +142,6 @@
               #'the--advice-org-agenda-default-directory)
   )
 
-(use-package org-projectile
-  :straight org-plus-contrib
-  :bind (("C-c n p" . org-projectile-project-todo-completing-read))
-  :init
-  (setq org-projectile-per-project-filepath "todo.org")
-  (setq org-projectile-projects-file (f-join org-directory "projects.org"))
-  :config
-  (add-to-list 'org-capture-templates org-projectile-todo-entry)
-  (add-to-list 'org-agenda-files 'org-projectile-todo-files))
-
 (use-package htmlize)
 
 (defun the-in-the-org-lib-p ()

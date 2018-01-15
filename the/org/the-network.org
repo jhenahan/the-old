@@ -56,7 +56,6 @@ directory-local variables. CIDER does this in its files, for example.
 ** Steam
 #+begin_src emacs-lisp
   (use-package steam
-    :straight org-plus-contrib
     :init
     (setq steam-username "prooftechnique"))
 #+end_src

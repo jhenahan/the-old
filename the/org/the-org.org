@@ -346,20 +346,6 @@ agenda so that things like =find-file= work sensibly.
     )
 #+end_src
 
-** Org Projectile
-This package allows us to add project-specific todos and manage them
-in our normal agenda.
-#+begin_src emacs-lisp
-  (use-package org-projectile
-    :straight org-plus-contrib
-    :bind (("C-c n p" . org-projectile-project-todo-completing-read))
-    :init
-    (setq org-projectile-per-project-filepath "todo.org")
-    (setq org-projectile-projects-file (f-join org-directory "projects.org"))
-    :config
-    (add-to-list 'org-capture-templates org-projectile-todo-entry)
-    (add-to-list 'org-agenda-files 'org-projectile-todo-files))
-#+end_src
 ** Extra Export Packages
 In order to correctly export Org files to certain formats, we need
 some additional tools.
