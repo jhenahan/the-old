@@ -107,6 +107,7 @@
 
 (use-package org-agenda
   :straight org-plus-contrib
+  :demand t
   :bind (:map org-agenda-mode-map
          ("S-<up>" . nil)
          ("S-<down>" . nil)
