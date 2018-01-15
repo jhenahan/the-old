@@ -4,6 +4,7 @@ GPL-compliant) garbage. I don't want a bit of it.
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
   ;;; the-startup.el --- Cleaning up Emacs startup
+  (require 'the-libraries)
 #+end_src
 
 ** Disable Startup Message
@@ -28,7 +29,8 @@ instead use our own fancy dashboard.
 #+begin_src emacs-lisp
   (use-package dashboard
     :demand t
-    :init
+    :after (org-agenda projectile)
+    :config
     (setq dashboard-banner-logo-title "REPENT!")
     (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
     (setq dashboard-items '((recents  . 5)
@@ -36,7 +38,6 @@ instead use our own fancy dashboard.
                             (projects . 5)
                             (agenda . 5)
                             (registers . 5)))
-    :config
     (dashboard-setup-startup-hook))
 #+end_src
 

@@ -1,4 +1,5 @@
 ;;; the-startup.el --- Cleaning up Emacs startup
+(require 'the-libraries)
 
 (defalias 'the--advice-inhibit-startup-echo-area-message #'ignore
   "Unconditionally inhibit the startup message in the echo area.
@@ -10,7 +11,8 @@ This is an `:override' advice for
 
 (use-package dashboard
   :demand t
-  :init
+  :after (org-agenda projectile)
+  :config
   (setq dashboard-banner-logo-title "REPENT!")
   (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
   (setq dashboard-items '((recents  . 5)
@@ -18,7 +20,6 @@ This is an `:override' advice for
                           (projects . 5)
                           (agenda . 5)
                           (registers . 5)))
-  :config
   (dashboard-setup-startup-hook))
 
 (setq initial-scratch-message nil)
