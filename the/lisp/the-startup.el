@@ -13,6 +13,7 @@ This is an `:override' advice for
   :demand t
   :after (org-agenda projectile)
   :config
+  (setq recentf-exclude (-map 'f-canonical (org-agenda-files)))
   (setq dashboard-banner-logo-title "REPENT!")
   (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
   (setq dashboard-items '((recents  . 5)
