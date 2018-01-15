@@ -1,0 +1,26 @@
+* Window Management
+Note to self: consider renaming this file in case you actually do some
+windows specific magic later. :smile:
+
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-windows.el --- Managing windows
+  (require 'the-package)
+#+end_src
+
+** Window Balancing
+I used to be a great fan of =golden-ratio=, but it hasn't seen an
+update in 2 years and =zoom= seems quite cool.
+#+begin_src emacs-lisp
+  (use-package zoom
+    :demand t
+    :config
+    (zoom-mode t))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-windows)
+
+  ;;; the-windows.el ends here
+#+end_src
