@@ -386,9 +386,13 @@ within these projects.
 :header-args: :tangle no
 :END:
 ***** Enable projectile globally
+Also, ignore the repos set up by =straight.el=.
 #+NAME: global-projectile
 #+begin_src emacs-lisp
   (projectile-mode +1)
+  (defun the-projectile-ignore-projects (project-root)
+    (f-descendant-of? project-root (f-join user-emacs-directory "straight/repos")))
+  (setq projectile-ignored-project-function #'the-projectile-ignore-projects)
 #+end_src
 ***** Directory-local indexing
 In case your =.projectile= file is pretty hairy, this allows us to

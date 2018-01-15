@@ -302,6 +302,9 @@ This is a function for `after-save-hook'. Remove
   :demand t
   :config
   (projectile-mode +1)
+  (defun the-projectile-ignore-projects (project-root)
+    (f-descendant-of? project-root (f-join user-emacs-directory "straight/repos")))
+  (setq projectile-ignored-project-function #'the-projectile-ignore-projects)
   (defun the-projectile-indexing-method-p (method)
     "Non-nil if METHOD is a safe value for `projectile-indexing-method'."
     (memq method '(native alien)))
