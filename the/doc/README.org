@@ -5,12 +5,69 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+EXPORT_FILE_NAME: ../README
+#+LATEX_HEADER: \usepackage{alphabeta}
 
-#+include: "../org/the-appearance.org"
-#+include: "../org/the-autocomplete.org"
-#+include: "../org/the-bind-key.org"
-#+include: "../org/the-check.org"
-#+include: "../org/the-clipboard.org"
-#+include: "../org/the-emoji.org"
+* Basics
+#+include: "../org/the-libraries.org"
 #+include: "../org/the-sensible.org"
+#+include: "../org/the-command.org"
+#+include: "../org/the-yank.org"
+#+include: "../org/the-startup.org"
+#+include: "../org/the-revert.org"
+#+include: "../org/the-save-file.org"
+* Package Management
+#+include: "../org/the-package.org"
+#+include: "../org/the-patch.org"
+* Customization
+#+include: "../org/the-custom.org"
+* System Integration
+** OS Integration
+#+include: "../org/the-os.org"
+#+include: "../org/the-path.org"
+#+include: "../org/the-clipboard.org"
+** UI Integration
+#+include: "../org/the-windowed.org"
+* Config Management
+#+include: "../org/the-config.org"
+** Emacs
+#+include: "../org/the-emacsd.org"
+* Documentation
+#+include: "../org/the-help.org"
+#+include: "../org/the-eldoc.org"
+* Keybindings
+#+include: "../org/the-bind-key.org"
+#+include: "../org/the-hydra.org"
+* UI
+#+include: "../org/the-appearance.org"
+#+include: "../org/the-theme.org"
+#+include: "../org/the-modeline.org"
+#+include: "../org/the-emoji.org"
+#+include: "../org/the-pragmata.org"
+* Navigation
+#+include: "../org/the-completion.org"
+#+include: "../org/the-find-file.org"
+#+include: "../org/the-navigation.org"
+** Search
+#+include: "../org/the-regexp.org"
+* Writing
 #+include: "../org/the-org.org"
+#+include: "../org/the-prose.org"
+** Formatting
+#+include: "../org/the-formatting.org"
+#+include: "../org/the-indent.org"
+* Reading
+#+include: "../org/the-pdf.org"
+* Version Control
+#+include: "../org/the-git.org"
+* Programming Utilities
+#+include: "../org/the-check.org"
+#+include: "../org/the-autocomplete.org"
+* Languages
+#+include: "../org/the-lisp.org"
+#+include: "../org/the-elisp.org"
+* Performance
+#+include: "../org/the-slow.org"
+* Networking
+#+include: "../org/the-network.org"
+* Etc.
+#+include: "../org/the-util.org"

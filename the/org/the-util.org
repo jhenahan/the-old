@@ -7,6 +7,7 @@
   (require 'the-libraries)
 #+end_src
 
+** Eventually-obsolete Functions
 These functions will become unnecessary in Emacs 26.1, which
 extends =map-put= to have a TESTFN argument.
 
@@ -75,6 +76,7 @@ extends =map-put= to have a TESTFN argument.
     `(setq ,list (the-insert-before ,insert-elt ,after-elt ,list ,testfn)))
 #+end_src
 
+** Framework Identification
 This gives us an easy way to check if the file we're editing is part
 of THE.
 
