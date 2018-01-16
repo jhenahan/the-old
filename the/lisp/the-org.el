@@ -13,9 +13,12 @@
 
 (use-package org
   :straight org-plus-contrib
+  :demand t
   :bind (
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
+         ("C-c l" . org-store-link)
+         ("C-c b" . org-iswitchb)
          :map org-mode-map
          ("S-<left>" . nil)
          ("S-<right>" . nil)
@@ -137,10 +140,24 @@
                                  org-directory
                                default-directory)))
       (apply org-agenda args)))
-  
+
   (advice-add #'org-agenda :around
               #'the--advice-org-agenda-default-directory)
   )
+
+(use-package org-context
+  :demand t
+  :config
+  (setq org-context-capture-shortcut
+        '((todo
+           "t" "Todo"
+           entry (file+headline place-holder "Todos")
+           "* TODO %?\n OPENED: %U by %n\n FILE: %a")
+          (question
+           "q" "Question"
+           entry (file+headline place-holder "Questions")
+           "* QUESTION %?\n OPENED: %U by %n\n FILE: %a")))
+  (org-context-activate))
 
 (use-package htmlize)
 
@@ -172,6 +189,24 @@
       (org-babel-tangle)))
 
 (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
+
+(use-package org-tree-slide
+  :demand t
+  :config
+  (org-tree-slide-presentation-profile)
+  (defun the-presentation-start ()
+    (text-scale-set 5)
+    (setq org-confirm-babel-evaluate nil)
+    (setq ns-use-native-fullscreen t)
+    (toggle-frame-fullscreen))
+  (defun the-presentation-stop ()
+    (text-scale-set 0)
+    (setq org-confirm-babel-evaluate t)
+    (toggle-frame-fullscreen)
+    (setq ns-use-native-fullscreen nil))
+  (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
+  (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)
+  )
 
 (provide 'the-org)
 

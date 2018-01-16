@@ -59,6 +59,11 @@
 (the-which-key-suggestion-generator data)
 )
 
+(let ((data (quote (("org agenda" "SPC o a" "C-c a") ("org capture" "SPC o c" "C-c c") ("org store link" "SPC o l" "C-c l") ("org insert link" "SPC o L" "C-c C-l") ("org iswitchb" "SPC o b" "C-c b") ("org clock in" "SPC o C i" "C-c C-x TAB") ("org clock out" "SPC o C o" "C-c C-x C-o")))))
+(the-which-key-suggestion-generator data)
+(the-modalka-binding-generator data)
+)
+
 (let ((data (quote (("leave modalka" "i" "C-z") ("left" "h" "C-b") ("down" "j" "C-n") ("up" "k" "C-p") ("right" "l" "C-f") ("forward word" "w" "M-f") ("backward word" "b" "M-b") ("smart next item" "n" "M-n") ("smart prev item" "N" "M-p") ("previous paragraph/org element" "{" "M-{") ("next paragraph/org element" "}" "M-}") ("beginning of line" "0" "C-a") ("end of line" "$" "C-e") ("end of buffer" "G" "M->") ("beginning of buffer" "g g" "M-<") ("yank (vim)/kill (emacs)" "y" "M-w") ("paste (vim)/yank (emacs)" "p" "C-y") ("yank pop (paste history)" "P" "M-y") ("delete char" "x" "C-d") ("kill line" "D" "C-k") ("re-center screen" "z" "C-l") ("shell command (async)" "!" "M-&") ("scroll left" "H" "C-x <") ("scroll up" "J" "C-v") ("scroll down" "K" "M-v") ("scroll right" "L" "C-x >") ("backward sentence" "(" "M-a") ("forward sentence" ")" "M-e") ("search" "/" "C-s") ("quit (minibuffer, etc)" "E" "C-g") ("go to line" "g l" "M-g g") ("record macro" "q" "C-x (") ("end macro" "Q" "C-x )") ("set mark (visual mode)" "v" "C-SPC") ("rectangle edit mode (better visual)" "V" "M-T V") ("indent region" "=" "C-M-\\") ("set bookmark" "+" "C-x r m") ("jump to bookmark" "'" "C-x r b") ("compile/lots of other stuff" "\\\\" "C-c C-c")))))
 (the-which-key-suggestion-generator data)
 (the-modalka-binding-generator data)

@@ -107,6 +107,8 @@ Org manual.
 #+begin_src emacs-lisp
   ("C-c a" . org-agenda)
   ("C-c c" . org-capture)
+  ("C-c l" . org-store-link)
+  ("C-c b" . org-iswitchb)
 #+end_src
 
 First, we move the Org bindings for =org-shift*= from the =S-= prefix
@@ -242,6 +244,7 @@ latter to the former.
 #+begin_src emacs-lisp
   (use-package org
     :straight org-plus-contrib
+    :demand t
     :bind (
            <<basic-bindings>>
            :map org-mode-map
@@ -346,6 +349,23 @@ agenda so that things like =find-file= work sensibly.
     )
 #+end_src
 
+** Context-Aware Capture and Agenda
+#+begin_src emacs-lisp
+  (use-package org-context
+    :demand t
+    :after (org projectile)
+    :config
+    (setq org-context-capture-shortcut
+          '((todo
+             "t" "Todo"
+             entry (file+headline place-holder "Todos")
+             "* TODO %?\n OPENED: %U by %n\n FILE: %a")
+            (question
+             "q" "Question"
+             entry (file+headline place-holder "Questions")
+             "* QUESTION %?\n OPENED: %U by %n\n FILE: %a")))
+    (org-context-activate))
+#+end_src
 ** Extra Export Packages
 In order to correctly export Org files to certain formats, we need
 some additional tools.
@@ -397,6 +417,26 @@ Finally, I'd like to automatically tangle the files on save.
         (org-babel-tangle)))
 
   (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
+#+end_src
+** =org-tree-slide=
+#+begin_src emacs-lisp
+  (use-package org-tree-slide
+    :demand t
+    :config
+    (org-tree-slide-presentation-profile)
+    (defun the-presentation-start ()
+      (text-scale-set 5)
+      (setq org-confirm-babel-evaluate nil)
+      (setq ns-use-native-fullscreen t)
+      (toggle-frame-fullscreen))
+    (defun the-presentation-stop ()
+      (text-scale-set 0)
+      (setq org-confirm-babel-evaluate t)
+      (toggle-frame-fullscreen)
+      (setq ns-use-native-fullscreen nil))
+    (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
+    (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)
+    )
 #+end_src
 ** Provides                                                        :noexport:
 #+begin_src emacs-lisp
