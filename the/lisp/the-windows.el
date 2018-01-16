@@ -1,10 +1,10 @@
 ;;; the-windows.el --- Managing windows
 (require 'the-package)
 
-(use-package zoom
+(use-package golden-ratio
   :demand t
   :config
-  (zoom-mode t))
+  (golden-ratio-mode t))
 
 (provide 'the-windows)
 

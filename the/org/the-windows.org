@@ -9,13 +9,12 @@ windows specific magic later. :smile:
 #+end_src
 
 ** Window Balancing
-I used to be a great fan of =golden-ratio=, but it hasn't seen an
-update in 2 years and =zoom= seems quite cool.
+I'm a great fan of =golden-ratio=.
 #+begin_src emacs-lisp
-  (use-package zoom
+  (use-package golden-ratio
     :demand t
     :config
-    (zoom-mode t))
+    (golden-ratio-mode t))
 #+end_src
 
 ** Provides                                                       :noexport:
