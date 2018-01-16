@@ -353,7 +353,6 @@ agenda so that things like =find-file= work sensibly.
 #+begin_src emacs-lisp
   (use-package org-context
     :demand t
-    :after (org projectile)
     :config
     (setq org-context-capture-shortcut
           '((todo
@@ -421,7 +420,6 @@ Finally, I'd like to automatically tangle the files on save.
 ** =org-tree-slide=
 #+begin_src emacs-lisp
   (use-package org-tree-slide
-    :demand t
     :config
     (org-tree-slide-presentation-profile)
     (defun the-presentation-start ()

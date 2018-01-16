@@ -1,163 +1,165 @@
 
 # Table of Contents
 
-1.  [Basics](#org8328532)
-    1.  [Modern Libraries](#org08d75e9)
-        1.  [Libraries](#org45b92b9)
-    2.  [Sensible Defaults](#org27a7853)
-        1.  [Default Directory](#org84830b9)
-        2.  [Treat Camel-Case Words as separate words](#org1f123db)
-        3.  [Increase GC threshold](#orgabba349)
-        4.  [Make Scripts Executable By Default](#orgee22783)
-        5.  [Transient Mark Mode](#org2cb2fee)
-        6.  [Short Confirmations](#org1c7cbf4)
-        7.  [macOS settings](#org9bdef55)
-    3.  [Enable Disabled Commands](#orgcc28373)
-        1.  [Do it](#org8778ada)
-    4.  [Killing and Yanking (copying and pasting)](#orga6f910d)
-        1.  [Settings](#orgdf73485)
-    5.  [Startup](#org5be9737)
-        1.  [Disable Startup Message](#org1fd0bae)
-        2.  [Disable About](#org7eb6b75)
-        3.  [Blank Scratch Buffer](#org44c42e6)
-        4.  [Emacs Server](#org1c46e4e)
-    6.  [Auto-Revert](#org07d792b)
-        1.  [Settings](#orgc5dfe97)
-    7.  [Saving Files](#orge3868ac)
-2.  [Package Management](#org5f55b36)
-    1.  [Package Management](#orga7164f1)
-        1.  [Disable `package.el`](#org9146075)
-        2.  [Bootstrap `straight.el`](#org69d892e)
-        3.  [`use-package`](#org190ec92)
-    2.  [Future-proof patches](#orgeddd98c)
-3.  [Customization](#orge5ecf6a)
-    1.  [Customization Group](#orgd105853)
-        1.  [THE group](#org4b92805)
-4.  [System Integration](#org26c774b)
-    1.  [OS Integration](#org31948d0)
-        1.  [OS-specific Customization](#org95848d5)
-        2.  [Path Settings](#orgb515c19)
-        3.  [Clipboard Integration](#orgc77e827)
-    2.  [UI Integration](#orgf7fd589)
-        1.  [Window System](#org77e5bf6)
-5.  [Config Management](#org645f684)
-    1.  [Config File Utilities](#orgadfb5b6)
-        1.  [Apache configs](#org2187ec3)
-        2.  [Dockerfiles](#orgf2d5b85)
-        3.  [Git files](#org6573931)
-        4.  [SSH configs](#org108756c)
-        5.  [YAML](#org6388ab9)
-        6.  [Jinja2](#org3f0ddd6)
-    2.  [Emacs](#org93dcf43)
-        1.  [emacs.d Organization](#orgca1eecd)
-6.  [Documentation](#org58ca59a)
-    1.  [Better Help](#orge828c46)
-        1.  [Helpful](#org5b6406d)
-    2.  [ElDoc](#org101b97d)
-        1.  [Settings](#orga4b9754)
-7.  [Keybindings](#org246972b)
-    1.  [Binding Keys](#org84ea482)
-        1.  [Custom Prefix](#org912cfe8)
-        2.  [`bind-key`](#orgd44e393)
-    2.  [Hydra](#org28a1c6b)
-        1.  [`use-package` declaration](#org92eb082)
-8.  [UI](#orgee958cd)
-    1.  [Appearance](#org379c2c1)
-        1.  [Basic Setup](#org0dc5c4d)
-        2.  [Fullscreen](#org81bff4b)
-        3.  [Interface Cleanup](#org64733f8)
-        4.  [Keystroke Display](#org3cdcb85)
-        5.  [No Title Bars](#org7f70050)
-        6.  [Fonts](#org36350dc)
-        7.  [Adjust font size by screen resolution](#org5500082)
-    2.  [Theme](#org984f4f0)
-        1.  [Utilities](#orgd7da4dc)
-        2.  [Default Color Scheme](#org325400a)
-        3.  [Leuven Customization](#orga0ace59)
-        4.  [Gruvbox installation](#orga741c92)
-        5.  [Actually load the theme](#orgd9d6a1c)
-    3.  [Modeline Configuration](#org0a988c6)
-        1.  [Diminish](#org65b6155)
-        2.  [Delight](#orgacb3c11)
-        3.  [Nyan!](#orgca26f0c)
-        4.  [Spaceline - All-the-Icons](#org1312a81)
-    4.  [Emojis!](#org4e7cdb7)
-        1.  [`emojify`](#org324d9e0)
-    5.  [Fancy Pragmata Pro ligatures](#org5ca1fe0)
-9.  [Navigation](#org41e857f)
-    1.  [Completion](#org6130c0e)
-        1.  [Packages](#org946cf43)
-    2.  [Finding files](#orgb743580)
-        1.  [Dotfile shortcuts](#orgab2d92d)
-        2.  [Visiting files](#org54164ca)
-        3.  [Projects](#org3efe55d)
-    3.  [Search](#org3ef3ad4)
-        1.  [Regular Expressions](#orgf2eb5c9)
-10. [Writing](#orgd912c04)
-    1.  [Org Mode Customization](#org77d0617)
-        1.  [Global Outline Mode](#orgcc2c471)
-        2.  [Org](#org6ecd6fd)
-        3.  [Org Agenda](#org7e89856)
-        4.  [Extra Export Packages](#org04edfcb)
-        5.  [Org-mode Config Settings](#org506be27)
-    2.  [Editing Prose](#org3638ef9)
-        1.  [Flyspell](#orgfa2dd47)
-    3.  [Formatting](#org0751443)
-        1.  [Formatting Options](#org984459a)
-        2.  [Indentation](#org8c1733f)
-11. [Reading](#org1151b84)
-    1.  [PDF Functionality](#org8e2f814)
-        1.  [`pdf-tools`](#orgd0448ff)
-12. [Version Control](#orgfe38853)
-    1.  [Git integration](#org9243d20)
-        1.  [Direct Interaction](#org1d0543b)
-        2.  [Magit](#org0edcdea)
-13. [Programming Utilities](#org6cc913d)
-    1.  [Syntax Checking](#org7afe1da)
-        1.  [Flycheck](#org93faa11)
-    2.  [Auto-completion](#orge7ad870)
-        1.  [Company Settings](#org4da9c47)
-        2.  [Company](#org41d6d56)
-        3.  [Company Statistics](#orgf74cf5b)
-14. [Languages](#org280be25)
-    1.  [Common Lisp](#orgaedc237)
-        1.  [Aggressive Indent](#org699cb40)
-    2.  [Emacs Lisp](#orgbe00ffe)
-        1.  [Hooks](#org2cf7a0c)
-        2.  [Fixes](#orgcbadf12)
-        3.  [Reloading the Init File](#orgbed318e)
-        4.  [Evaluate an Elisp buffer](#org8f66b2d)
-        5.  [Rebind Find Commands](#orgdfb09f7)
-        6.  [Lisp Interaction Lighter](#org1843594)
-15. [Performance](#org8f3000d)
-    1.  [Performance Mode](#orgc9cf112)
-        1.  [Modes](#org9d81aa2)
-16. [Networking](#orgc6caef9)
-    1.  [Network Services](#orgf55315c)
-        1.  [macOS TLS verification](#org8ce0581)
-        2.  [StackOverflow](#org6e53764)
-        3.  [Bug URL references](#orgc8d85fe)
-        4.  [Pastebin](#org8c60651)
-        5.  [Browsing](#org7bbc417)
-        6.  [Steam](#orgbd1c39c)
-17. [Etc.](#orge386a54)
-    1.  [Miscellaneous Utilities](#orgf5852ac)
-        1.  [Eventually-obsolete Functions](#org23c7966)
-        2.  [Framework Identification](#orgd645e57)
+1.  [Basics](#org7433517)
+    1.  [Modern Libraries](#org7904d3a)
+        1.  [Libraries](#org1ca0f20)
+    2.  [Sensible Defaults](#org6c8333b)
+        1.  [Default Directory](#org94e001f)
+        2.  [Treat Camel-Case Words as separate words](#org957e6f6)
+        3.  [Increase GC threshold](#org503506b)
+        4.  [Make Scripts Executable By Default](#org91ab600)
+        5.  [Transient Mark Mode](#orgc7b2bf1)
+        6.  [Short Confirmations](#org0c0e2dc)
+        7.  [macOS settings](#org294cea5)
+    3.  [Enable Disabled Commands](#org30c842c)
+        1.  [Do it](#org599c3ec)
+    4.  [Killing and Yanking (copying and pasting)](#orgec8252a)
+        1.  [Settings](#orgfd975e3)
+    5.  [Startup](#orgba735d3)
+        1.  [Disable Startup Message](#orgca93ac6)
+        2.  [Disable About](#orgcfe6025)
+        3.  [Blank Scratch Buffer](#orgfb9ef92)
+        4.  [Emacs Server](#org15ed24f)
+    6.  [Auto-Revert](#org7e6a329)
+        1.  [Settings](#org5c59f51)
+    7.  [Saving Files](#orgcd4f016)
+2.  [Package Management](#org904a045)
+    1.  [Package Management](#orgcc206c4)
+        1.  [Disable `package.el`](#orgac13603)
+        2.  [Bootstrap `straight.el`](#orgecd4172)
+        3.  [`use-package`](#org68b59ec)
+    2.  [Future-proof patches](#orgec04559)
+3.  [Customization](#org029f6f8)
+    1.  [Customization Group](#orgc7f75b2)
+        1.  [THE group](#orgd7c0420)
+4.  [System Integration](#org3836706)
+    1.  [OS Integration](#orgfecaa91)
+        1.  [OS-specific Customization](#org2eb9750)
+        2.  [Path Settings](#org6003c58)
+        3.  [Clipboard Integration](#org6b66140)
+    2.  [UI Integration](#org014fcc2)
+        1.  [Window System](#org29c8858)
+5.  [Config Management](#orgf0a5fb2)
+    1.  [Config File Utilities](#org406d1e9)
+        1.  [Apache configs](#orge95107a)
+        2.  [Dockerfiles](#orga43d59c)
+        3.  [Git files](#org2e3214e)
+        4.  [SSH configs](#org7fb2a27)
+        5.  [YAML](#org1beaec2)
+        6.  [Jinja2](#orgc3fb8e2)
+    2.  [Emacs](#org072bbb2)
+        1.  [emacs.d Organization](#orgbb55e66)
+6.  [Documentation](#org8cdf556)
+    1.  [Better Help](#orgab111b5)
+        1.  [Helpful](#org18325df)
+    2.  [ElDoc](#orgf7ae096)
+        1.  [Settings](#org9d15676)
+7.  [Keybindings](#orge236227)
+    1.  [Binding Keys](#org0748dab)
+        1.  [Custom Prefix](#org388939d)
+        2.  [`bind-key`](#org75e7bbc)
+    2.  [Hydra](#orgdc42b30)
+        1.  [`use-package` declaration](#org0f23e5a)
+8.  [UI](#org6f35c03)
+    1.  [Appearance](#org3b0fd2a)
+        1.  [Basic Setup](#org406d696)
+        2.  [Fullscreen](#org3b68f20)
+        3.  [Interface Cleanup](#org240b5f6)
+        4.  [Keystroke Display](#org1757e3a)
+        5.  [No Title Bars](#org213e6ec)
+        6.  [Fonts](#orgaee0cf2)
+        7.  [Adjust font size by screen resolution](#org96e461e)
+    2.  [Theme](#org86393e4)
+        1.  [Utilities](#orgc11bce8)
+        2.  [Default Color Scheme](#org7015a17)
+        3.  [Leuven Customization](#orgf7ea2c8)
+        4.  [Gruvbox installation](#org7612eb7)
+        5.  [Actually load the theme](#org0342422)
+    3.  [Modeline Configuration](#org3e2e5d0)
+        1.  [Diminish](#org73b5c9c)
+        2.  [Delight](#org4fde2ae)
+        3.  [Nyan!](#org8a3afde)
+        4.  [Spaceline - All-the-Icons](#org3d8934a)
+    4.  [Emojis!](#orge542434)
+        1.  [`emojify`](#orgaea133f)
+    5.  [Fancy Pragmata Pro ligatures](#org85dde5e)
+9.  [Navigation](#org2201265)
+    1.  [Completion](#orgc41dc60)
+        1.  [Packages](#orge095084)
+    2.  [Finding files](#orgc0b5bd4)
+        1.  [Dotfile shortcuts](#orgabb7cdc)
+        2.  [Visiting files](#org7431448)
+        3.  [Projects](#org2b33afb)
+    3.  [Search](#org4368fe7)
+        1.  [Regular Expressions](#org33cdd9e)
+10. [Writing](#orgcf639bf)
+    1.  [Org Mode Customization](#org91767dd)
+        1.  [Global Outline Mode](#org54d9222)
+        2.  [Org](#org372b62a)
+        3.  [Org Agenda](#orgbcdc39f)
+        4.  [Context-Aware Capture and Agenda](#org60c1775)
+        5.  [Extra Export Packages](#orgac4c392)
+        6.  [Org-mode Config Settings](#org50a5397)
+        7.  [`org-tree-slide`](#org8f4825c)
+    2.  [Editing Prose](#org8ecbbdc)
+        1.  [Flyspell](#org02faab4)
+    3.  [Formatting](#orgefd0dcf)
+        1.  [Formatting Options](#org3c55ace)
+        2.  [Indentation](#org37492e3)
+11. [Reading](#orge4b7ea6)
+    1.  [PDF Functionality](#org33addd3)
+        1.  [`pdf-tools`](#org1ed0b54)
+12. [Version Control](#org5013894)
+    1.  [Git integration](#org3112db5)
+        1.  [Direct Interaction](#orgac38821)
+        2.  [Magit](#org6934989)
+13. [Programming Utilities](#org14d800d)
+    1.  [Syntax Checking](#orgb6c940b)
+        1.  [Flycheck](#org77cffa7)
+    2.  [Auto-completion](#org227f867)
+        1.  [Company Settings](#org299b0bf)
+        2.  [Company](#orgfcfacfd)
+        3.  [Company Statistics](#orgd9257aa)
+14. [Languages](#orgc76a246)
+    1.  [Common Lisp](#org5022912)
+        1.  [Aggressive Indent](#org5309ff2)
+    2.  [Emacs Lisp](#org225d0c0)
+        1.  [Hooks](#orga80a1b6)
+        2.  [Fixes](#org70e35b4)
+        3.  [Reloading the Init File](#org9e69aff)
+        4.  [Evaluate an Elisp buffer](#orgddf4838)
+        5.  [Rebind Find Commands](#orga85512b)
+        6.  [Lisp Interaction Lighter](#orga04a37f)
+15. [Performance](#orge496ce4)
+    1.  [Performance Mode](#orgc470323)
+        1.  [Modes](#orgd7933ce)
+16. [Networking](#org224005e)
+    1.  [Network Services](#orgc100cdc)
+        1.  [macOS TLS verification](#orgc7500fb)
+        2.  [StackOverflow](#org417e632)
+        3.  [Bug URL references](#org5b3e01a)
+        4.  [Pastebin](#org34e1bde)
+        5.  [Browsing](#orga9db502)
+        6.  [Steam](#org6faa3ee)
+17. [Etc.](#orga3393a5)
+    1.  [Miscellaneous Utilities](#org222ea20)
+        1.  [Eventually-obsolete Functions](#org3fe1392)
+        2.  [Framework Identification](#org2b26ba2)
 
 
 
-<a id="org8328532"></a>
+<a id="org7433517"></a>
 
 # Basics
 
 
-<a id="org08d75e9"></a>
+<a id="org7904d3a"></a>
 
 ## Modern Libraries
 
 
-<a id="org45b92b9"></a>
+<a id="org1ca0f20"></a>
 
 ### Libraries
 
@@ -220,12 +222,12 @@
         (require 'subr-x)
 
 
-<a id="org27a7853"></a>
+<a id="org6c8333b"></a>
 
 ## Sensible Defaults
 
 
-<a id="org84830b9"></a>
+<a id="org94e001f"></a>
 
 ### Default Directory
 
@@ -234,14 +236,14 @@ When using `find-file`, search from the user's home directory.
     (setq default-directory "~/")
 
 
-<a id="org1f123db"></a>
+<a id="org957e6f6"></a>
 
 ### Treat Camel-Case Words as separate words
 
     (add-hook 'prog-mode-hook 'subword-mode)
 
 
-<a id="orgabba349"></a>
+<a id="org503506b"></a>
 
 ### Increase GC threshold
 
@@ -252,7 +254,7 @@ operations.
     (setq gc-cons-threshold 20000000)
 
 
-<a id="orgee22783"></a>
+<a id="org91ab600"></a>
 
 ### Make Scripts Executable By Default
 
@@ -263,7 +265,7 @@ on save.
               'executable-make-buffer-file-executable-if-script-p)
 
 
-<a id="org2cb2fee"></a>
+<a id="orgc7b2bf1"></a>
 
 ### Transient Mark Mode
 
@@ -273,7 +275,7 @@ expect it to coming from other editors.
     (transient-mark-mode t)
 
 
-<a id="org1c7cbf4"></a>
+<a id="org0c0e2dc"></a>
 
 ### Short Confirmations
 
@@ -282,7 +284,7 @@ Typing out `yes` and `no` is irritating. Just use `y` or `n`.
     (fset #'yes-or-no-p #'y-or-n-p)
 
 
-<a id="org9bdef55"></a>
+<a id="org294cea5"></a>
 
 ### macOS settings
 
@@ -294,7 +296,7 @@ setting causes Emacs to reuse the existing one.
       (setq ns-pop-up-frames nil))
 
 
-<a id="orgcc28373"></a>
+<a id="org30c842c"></a>
 
 ## Enable Disabled Commands
 
@@ -302,19 +304,19 @@ It is obvious to anyone that if a function is disabled then it must
 be powerful, or at least interesting. I want them.
 
 
-<a id="org8778ada"></a>
+<a id="org599c3ec"></a>
 
 ### Do it
 
     (setq disabled-command-function nil)
 
 
-<a id="orga6f910d"></a>
+<a id="orgec8252a"></a>
 
 ## Killing and Yanking (copying and pasting)
 
 
-<a id="orgdf73485"></a>
+<a id="orgfd975e3"></a>
 
 ### Settings
 
@@ -343,7 +345,7 @@ be powerful, or at least interesting. I want them.
         (setq kill-do-not-save-duplicates t)
 
 
-<a id="org5be9737"></a>
+<a id="orgba735d3"></a>
 
 ## Startup
 
@@ -351,7 +353,7 @@ By default, Emacs fills your universe with (FSF-approved and
 GPL-compliant) garbage. I don't want a bit of it.
 
 
-<a id="org1fd0bae"></a>
+<a id="orgca93ac6"></a>
 
 ### Disable Startup Message
 
@@ -367,7 +369,7 @@ don't need the "For information about Emacs&#x2026;" message.
                 #'the--advice-inhibit-startup-echo-area-message)
 
 
-<a id="org7eb6b75"></a>
+<a id="orgcfe6025"></a>
 
 ### Disable About
 
@@ -390,7 +392,7 @@ instead use our own fancy dashboard.
       (dashboard-setup-startup-hook))
 
 
-<a id="org44c42e6"></a>
+<a id="orgfb9ef92"></a>
 
 ### Blank Scratch Buffer
 
@@ -399,7 +401,7 @@ I know what a scratch buffer is. Hush.
     (setq initial-scratch-message nil)
 
 
-<a id="org1c46e4e"></a>
+<a id="org15ed24f"></a>
 
 ### Emacs Server
 
@@ -409,12 +411,12 @@ and get that fast response time the Vim people are so smug about.
     (server-start)
 
 
-<a id="org07d792b"></a>
+<a id="org7e6a329"></a>
 
 ## Auto-Revert
 
 
-<a id="orgc5dfe97"></a>
+<a id="org5c59f51"></a>
 
 ### Settings
 
@@ -534,22 +536,22 @@ Don't show it in the mode line.
     (setq auto-revert-mode-text nil)
 
 
-<a id="orge3868ac"></a>
+<a id="orgcd4f016"></a>
 
 ## Saving Files
 
 
-<a id="org5f55b36"></a>
+<a id="org904a045"></a>
 
 # Package Management
 
 
-<a id="orga7164f1"></a>
+<a id="orgcc206c4"></a>
 
 ## Package Management
 
 
-<a id="org9146075"></a>
+<a id="orgac13603"></a>
 
 ### Disable `package.el`
 
@@ -559,7 +561,7 @@ initialize `package.el` unless we tell it not to, so we do so.
     (setq package-enable-at-startup nil)
 
 
-<a id="org69d892e"></a>
+<a id="orgecd4172"></a>
 
 ### Bootstrap `straight.el`
 
@@ -580,7 +582,7 @@ already installed and loaded).
       (load bootstrap-file nil 'nomessage))
 
 
-<a id="org190ec92"></a>
+<a id="org68b59ec"></a>
 
 ### `use-package`
 
@@ -615,22 +617,22 @@ through the use of keyword arguments. See the README.
         (setq use-package-always-defer t)
 
 
-<a id="orgeddd98c"></a>
+<a id="orgec04559"></a>
 
 ## Future-proof patches
 
 
-<a id="orge5ecf6a"></a>
+<a id="org029f6f8"></a>
 
 # Customization
 
 
-<a id="orgd105853"></a>
+<a id="orgc7f75b2"></a>
 
 ## Customization Group
 
 
-<a id="org4b92805"></a>
+<a id="orgd7c0420"></a>
 
 ### THE group
 
@@ -643,17 +645,17 @@ using the Custom interface.
       :group 'emacs)
 
 
-<a id="org26c774b"></a>
+<a id="org3836706"></a>
 
 # System Integration
 
 
-<a id="org31948d0"></a>
+<a id="orgfecaa91"></a>
 
 ## OS Integration
 
 
-<a id="org95848d5"></a>
+<a id="org2eb9750"></a>
 
 ### OS-specific Customization
 
@@ -689,7 +691,7 @@ using the Custom interface.
              ,@body))
 
 
-<a id="orgb515c19"></a>
+<a id="org6003c58"></a>
 
 ### Path Settings
 
@@ -726,7 +728,7 @@ using the Custom interface.
                   (setenv "MANPATH" manpath))))))
 
 
-<a id="orgc77e827"></a>
+<a id="org6b66140"></a>
 
 ### Clipboard Integration
 
@@ -801,12 +803,12 @@ using the Custom interface.
         (setq save-interprogram-paste-before-kill t)
 
 
-<a id="orgf7fd589"></a>
+<a id="org014fcc2"></a>
 
 ## UI Integration
 
 
-<a id="org77e5bf6"></a>
+<a id="org29c8858"></a>
 
 ### Window System
 
@@ -828,31 +830,31 @@ based on the active window system.
              ,@body))
 
 
-<a id="org645f684"></a>
+<a id="orgf0a5fb2"></a>
 
 # Config Management
 
 
-<a id="orgadfb5b6"></a>
+<a id="org406d1e9"></a>
 
 ## Config File Utilities
 
 
-<a id="org2187ec3"></a>
+<a id="orge95107a"></a>
 
 ### Apache configs
 
     (use-package apache-mode)
 
 
-<a id="orgf2d5b85"></a>
+<a id="orga43d59c"></a>
 
 ### Dockerfiles
 
     (use-package dockerfile-mode)
 
 
-<a id="org6573931"></a>
+<a id="org2e3214e"></a>
 
 ### Git files
 
@@ -865,14 +867,14 @@ based on the active window system.
         (use-package gitignore-mode)
 
 
-<a id="org108756c"></a>
+<a id="org7fb2a27"></a>
 
 ### SSH configs
 
     (use-package ssh-config-mode)
 
 
-<a id="org6388ab9"></a>
+<a id="org1beaec2"></a>
 
 ### YAML
 
@@ -894,7 +896,7 @@ it breaks things.
       (add-hook 'yaml-mode-hook #'the--disable-auto-fill-mode))
 
 
-<a id="org3f0ddd6"></a>
+<a id="orgc3fb8e2"></a>
 
 ### Jinja2
 
@@ -904,12 +906,12 @@ basic support here.
     (use-package jinja2-mode)
 
 
-<a id="org93dcf43"></a>
+<a id="org072bbb2"></a>
 
 ## Emacs
 
 
-<a id="orgca1eecd"></a>
+<a id="orgbb55e66"></a>
 
 ### emacs.d Organization
 
@@ -924,17 +926,17 @@ basic support here.
           :demand t)
 
 
-<a id="org58ca59a"></a>
+<a id="org8cdf556"></a>
 
 # Documentation
 
 
-<a id="orge828c46"></a>
+<a id="orgab111b5"></a>
 
 ## Better Help
 
 
-<a id="org5b6406d"></a>
+<a id="org18325df"></a>
 
 ### Helpful
 
@@ -950,12 +952,12 @@ Helpful is a much nicer version of the built-in help.
       (defalias #'describe-symbol #'helpful-symbol))
 
 
-<a id="org101b97d"></a>
+<a id="orgf7ae096"></a>
 
 ## ElDoc
 
 
-<a id="orga4b9754"></a>
+<a id="org9d15676"></a>
 
 ### Settings
 
@@ -986,17 +988,17 @@ Slow down ElDoc if metadata fetching is causing performance issues.
     (add-hook 'the-slow-autocomplete-mode-hook #'the-eldoc-toggle-slow)
 
 
-<a id="org246972b"></a>
+<a id="orge236227"></a>
 
 # Keybindings
 
 
-<a id="org84ea482"></a>
+<a id="org0748dab"></a>
 
 ## Binding Keys
 
 
-<a id="org912cfe8"></a>
+<a id="org388939d"></a>
 
 ### Custom Prefix
 
@@ -1022,7 +1024,7 @@ cells to make the whole thing more customizable.
       (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
 
 
-<a id="orgd44e393"></a>
+<a id="org75e7bbc"></a>
 
 ### `bind-key`
 
@@ -1033,7 +1035,7 @@ in `use-package`,
     (use-package bind-key)
 
 
-<a id="org28a1c6b"></a>
+<a id="orgdc42b30"></a>
 
 ## Hydra
 
@@ -1041,7 +1043,7 @@ Hydras are a really fancy feature that let you create families of
 related bindings with a common prefix.
 
 
-<a id="org92eb082"></a>
+<a id="org0f23e5a"></a>
 
 ### `use-package` declaration
 
@@ -1049,17 +1051,17 @@ related bindings with a common prefix.
       :demand t)
 
 
-<a id="orgee958cd"></a>
+<a id="org6f35c03"></a>
 
 # UI
 
 
-<a id="org379c2c1"></a>
+<a id="org3b0fd2a"></a>
 
 ## Appearance
 
 
-<a id="org0dc5c4d"></a>
+<a id="org406d696"></a>
 
 ### Basic Setup
 
@@ -1068,7 +1070,7 @@ theme. Menus, scroll bars, bells, cursors, and so on. See also
 `the-theme`, which customizes the color theme specifically.
 
 
-<a id="org81bff4b"></a>
+<a id="org3b68f20"></a>
 
 ### Fullscreen
 
@@ -1082,7 +1084,7 @@ any particular harm in having it on, regardless of WM.
     (setq frame-resize-pixelwise t)
 
 
-<a id="org64733f8"></a>
+<a id="org240b5f6"></a>
 
 ### Interface Cleanup
 
@@ -1096,7 +1098,7 @@ nonsense. We'll turn all of that off.
     (blink-cursor-mode -1)
 
 
-<a id="org3cdcb85"></a>
+<a id="org1757e3a"></a>
 
 ### Keystroke Display
 
@@ -1108,7 +1110,7 @@ entirely.
     (setq echo-keystrokes 1e-6)
 
 
-<a id="org7f70050"></a>
+<a id="org213e6ec"></a>
 
 ### No Title Bars
 
@@ -1121,7 +1123,7 @@ versions, patches exist to get the same effect.
         (setq default-frame-alist '((undecorated . t))))
 
 
-<a id="org36350dc"></a>
+<a id="orgaee0cf2"></a>
 
 ### Fonts
 
@@ -1129,7 +1131,7 @@ I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 
-<a id="org5500082"></a>
+<a id="org96e461e"></a>
 
 ### Adjust font size by screen resolution
 
@@ -1157,12 +1159,12 @@ of the monitor.
     (call-interactively 'the-fontify-idle)
 
 
-<a id="org984f4f0"></a>
+<a id="org86393e4"></a>
 
 ## Theme
 
 
-<a id="orgd7da4dc"></a>
+<a id="orgc11bce8"></a>
 
 ### Utilities
 
@@ -1189,7 +1191,7 @@ customizations.
          ,@body))
 
 
-<a id="org325400a"></a>
+<a id="org7015a17"></a>
 
 ### Default Color Scheme
 
@@ -1228,7 +1230,7 @@ weirdness during the processing of the local init-file.
       :type 'boolean)
 
 
-<a id="orga0ace59"></a>
+<a id="orgf7ea2c8"></a>
 
 ### Leuven Customization
 
@@ -1245,7 +1247,7 @@ weirdness during the processing of the local init-file.
           (set-face-underline 'show-paren-mismatch nil))
 
 
-<a id="orga741c92"></a>
+<a id="org7612eb7"></a>
 
 ### Gruvbox installation
 
@@ -1257,7 +1259,7 @@ downloaded if the theme is active.
       (use-package gruvbox-theme))
 
 
-<a id="orgd9d6a1c"></a>
+<a id="org0342422"></a>
 
 ### Actually load the theme
 
@@ -1279,12 +1281,12 @@ Load the appropriate color scheme as specified in
         (load-theme the-color-theme 'no-confirm)))
 
 
-<a id="org0a988c6"></a>
+<a id="org3e2e5d0"></a>
 
 ## Modeline Configuration
 
 
-<a id="org65b6155"></a>
+<a id="org73b5c9c"></a>
 
 ### Diminish
 
@@ -1296,7 +1298,7 @@ many packages.
       :demand t)
 
 
-<a id="orgacb3c11"></a>
+<a id="org4fde2ae"></a>
 
 ### Delight
 
@@ -1323,7 +1325,7 @@ us the `:delight` keyword in our `use-package` declarations.
       )
 
 
-<a id="orgca26f0c"></a>
+<a id="org8a3afde"></a>
 
 ### Nyan!
 
@@ -1339,7 +1341,7 @@ the modeline.
       (nyan-mode 1))
 
 
-<a id="org1312a81"></a>
+<a id="org3d8934a"></a>
 
 ### Spaceline - All-the-Icons
 
@@ -1403,12 +1405,12 @@ appropriate.
           )
 
 
-<a id="org4e7cdb7"></a>
+<a id="orge542434"></a>
 
 ## Emojis!
 
 
-<a id="org324d9e0"></a>
+<a id="orgaea133f"></a>
 
 ### `emojify`
 
@@ -1420,7 +1422,7 @@ some nice interactive functions to get emojis all over the place.
       (add-hook 'after-init-hook #'global-emojify-mode))
 
 
-<a id="org5ca1fe0"></a>
+<a id="org85dde5e"></a>
 
 ## Fancy Pragmata Pro ligatures
 
@@ -1660,17 +1662,17 @@ some nice interactive functions to get emojis all over the place.
     ;;; the-pragmata.el ends here
 
 
-<a id="org41e857f"></a>
+<a id="org2201265"></a>
 
 # Navigation
 
 
-<a id="org6130c0e"></a>
+<a id="orgc41dc60"></a>
 
 ## Completion
 
 
-<a id="org946cf43"></a>
+<a id="orge095084"></a>
 
 ### Packages
 
@@ -1892,12 +1894,12 @@ some nice interactive functions to get emojis all over the place.
           :demand t)
 
 
-<a id="orgb743580"></a>
+<a id="orgc0b5bd4"></a>
 
 ## Finding files
 
 
-<a id="orgab2d92d"></a>
+<a id="orgabb7cdc"></a>
 
 ### Dotfile shortcuts
 
@@ -2034,7 +2036,7 @@ some nice interactive functions to get emojis all over the place.
             (the-register-dotfile ".skhdrc" "h k")
 
 
-<a id="org54164ca"></a>
+<a id="org7431448"></a>
 
 ### Visiting files
 
@@ -2256,7 +2258,7 @@ some nice interactive functions to get emojis all over the place.
                     (kill-buffer (current-buffer))))))
 
 
-<a id="org3efe55d"></a>
+<a id="org2b33afb"></a>
 
 ### Projects
 
@@ -2312,12 +2314,12 @@ some nice interactive functions to get emojis all over the place.
               (counsel-projectile-mode))
 
 
-<a id="org3ef3ad4"></a>
+<a id="org4368fe7"></a>
 
 ## Search
 
 
-<a id="orgf2eb5c9"></a>
+<a id="org33cdd9e"></a>
 
 ### Regular Expressions
 
@@ -2330,17 +2332,17 @@ some nice interactive functions to get emojis all over the place.
         (use-package rx)
 
 
-<a id="orgd912c04"></a>
+<a id="orgcf639bf"></a>
 
 # Writing
 
 
-<a id="org77d0617"></a>
+<a id="org91767dd"></a>
 
 ## Org Mode Customization
 
 
-<a id="orgcc2c471"></a>
+<a id="org54d9222"></a>
 
 ### Global Outline Mode
 
@@ -2354,7 +2356,7 @@ works. When you need a high-level overview, it's hard to beat this.
     (global-outline-minor-mode +1)
 
 
-<a id="org6ecd6fd"></a>
+<a id="org372b62a"></a>
 
 ### Org
 
@@ -2428,6 +2430,8 @@ related to Org-anization.
 
             ("C-c a" . org-agenda)
             ("C-c c" . org-capture)
+            ("C-c l" . org-store-link)
+            ("C-c b" . org-iswitchb)
 
         First, we move the Org bindings for `org-shift*` from the `S-` prefix
         to `C-`.
@@ -2545,6 +2549,7 @@ related to Org-anization.
 
         (use-package org
           :straight org-plus-contrib
+          :demand t
           :bind (
                  <<basic-bindings>>
                  :map org-mode-map
@@ -2569,7 +2574,7 @@ related to Org-anization.
           )
 
 
-<a id="org7e89856"></a>
+<a id="orgbcdc39f"></a>
 
 ### Org Agenda
 
@@ -2643,7 +2648,26 @@ or some of your tasks, according to their metadata.
           )
 
 
-<a id="org04edfcb"></a>
+<a id="org60c1775"></a>
+
+### Context-Aware Capture and Agenda
+
+    (use-package org-context
+      :demand t
+      :config
+      (setq org-context-capture-shortcut
+            '((todo
+               "t" "Todo"
+               entry (file+headline place-holder "Todos")
+               "* TODO %?\n OPENED: %U by %n\n FILE: %a")
+              (question
+               "q" "Question"
+               entry (file+headline place-holder "Questions")
+               "* QUESTION %?\n OPENED: %U by %n\n FILE: %a")))
+      (org-context-activate))
+
+
+<a id="orgac4c392"></a>
 
 ### Extra Export Packages
 
@@ -2657,7 +2681,7 @@ some additional tools.
         (use-package htmlize)
 
 
-<a id="org506be27"></a>
+<a id="org50a5397"></a>
 
 ### Org-mode Config Settings
 
@@ -2702,12 +2726,34 @@ Finally, I'd like to automatically tangle the files on save.
     (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 
 
-<a id="org3638ef9"></a>
+<a id="org8f4825c"></a>
+
+### `org-tree-slide`
+
+    (use-package org-tree-slide
+      :config
+      (org-tree-slide-presentation-profile)
+      (defun the-presentation-start ()
+        (text-scale-set 5)
+        (setq org-confirm-babel-evaluate nil)
+        (setq ns-use-native-fullscreen t)
+        (toggle-frame-fullscreen))
+      (defun the-presentation-stop ()
+        (text-scale-set 0)
+        (setq org-confirm-babel-evaluate t)
+        (toggle-frame-fullscreen)
+        (setq ns-use-native-fullscreen nil))
+      (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
+      (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)
+      )
+
+
+<a id="org8ecbbdc"></a>
 
 ## Editing Prose
 
 
-<a id="orgfa2dd47"></a>
+<a id="org02faab4"></a>
 
 ### Flyspell
 
@@ -2718,12 +2764,12 @@ Flyspell is Flycheck but for spelling. Simple as.
       :diminish (flyspell-mode . "φ"))
 
 
-<a id="org0751443"></a>
+<a id="orgefd0dcf"></a>
 
 ## Formatting
 
 
-<a id="org984459a"></a>
+<a id="org3c55ace"></a>
 
 ### Formatting Options
 
@@ -2850,7 +2896,7 @@ Flyspell is Flycheck but for spelling. Simple as.
                  beg end))))
 
 
-<a id="org8c1733f"></a>
+<a id="org37492e3"></a>
 
 ### Indentation
 
@@ -2901,17 +2947,17 @@ Flyspell is Flycheck but for spelling. Simple as.
               :delight (aggressive-indent-mode "AggrIndent"))
 
 
-<a id="org1151b84"></a>
+<a id="orge4b7ea6"></a>
 
 # Reading
 
 
-<a id="org8e2f814"></a>
+<a id="org33addd3"></a>
 
 ## PDF Functionality
 
 
-<a id="orgd0448ff"></a>
+<a id="org1ed0b54"></a>
 
 ### `pdf-tools`
 
@@ -2927,17 +2973,17 @@ compilation of an external library, though.
       (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
 
 
-<a id="orgfe38853"></a>
+<a id="org5013894"></a>
 
 # Version Control
 
 
-<a id="org9243d20"></a>
+<a id="org3112db5"></a>
 
 ## Git integration
 
 
-<a id="org1d0543b"></a>
+<a id="orgac38821"></a>
 
 ### Direct Interaction
 
@@ -2949,7 +2995,7 @@ interaction library.
       :demand t)
 
 
-<a id="org0edcdea"></a>
+<a id="org6934989"></a>
 
 ### Magit
 
@@ -3034,17 +3080,17 @@ makes interacting with Git intuitive, instructive, and quick.
       (setq git-commit-summary-max-length 50))
 
 
-<a id="org6cc913d"></a>
+<a id="org14d800d"></a>
 
 # Programming Utilities
 
 
-<a id="org7afe1da"></a>
+<a id="orgb6c940b"></a>
 
 ## Syntax Checking
 
 
-<a id="org93faa11"></a>
+<a id="org77cffa7"></a>
 
 ### Flycheck
 
@@ -3078,12 +3124,12 @@ number of checkers pre-defined, and other packages define more.
           )
 
 
-<a id="orge7ad870"></a>
+<a id="org227f867"></a>
 
 ## Auto-completion
 
 
-<a id="org4da9c47"></a>
+<a id="org299b0bf"></a>
 
 ### Company Settings
 
@@ -3217,7 +3263,7 @@ number of checkers pre-defined, and other packages define more.
                       #'the-advice-company-overrides-yasnippet))
 
 
-<a id="org41d6d56"></a>
+<a id="orgfcfacfd"></a>
 
 ### Company
 
@@ -3246,7 +3292,7 @@ as a tooltip menu. Company stands for "Complete Anything".
       :delight company-mode)
 
 
-<a id="orgf74cf5b"></a>
+<a id="orgd9257aa"></a>
 
 ### Company Statistics
 
@@ -3273,17 +3319,17 @@ It is a goal to replace this package with [`historian`](https://github.com/Pytho
       (company-statistics-mode +1))
 
 
-<a id="org280be25"></a>
+<a id="orgc76a246"></a>
 
 # Languages
 
 
-<a id="orgaedc237"></a>
+<a id="org5022912"></a>
 
 ## Common Lisp
 
 
-<a id="org699cb40"></a>
+<a id="org5309ff2"></a>
 
 ### Aggressive Indent
 
@@ -3292,12 +3338,12 @@ Enable aggressive indentation in all Lisp modes.
     (add-hook 'lisp-mode-hook #'aggressive-indent-mode)
 
 
-<a id="orgbe00ffe"></a>
+<a id="org225d0c0"></a>
 
 ## Emacs Lisp
 
 
-<a id="org2cf7a0c"></a>
+<a id="orga80a1b6"></a>
 
 ### Hooks
 
@@ -3310,7 +3356,7 @@ Enable Aggressive Indent for Elisp buffers and the **scratch** buffer.
     (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 
 
-<a id="orgcbadf12"></a>
+<a id="org70e35b4"></a>
 
 ### Fixes
 
@@ -3412,7 +3458,7 @@ Enable Aggressive Indent for Elisp buffers and the **scratch** buffer.
                  (t $else))))))
 
 
-<a id="orgbed318e"></a>
+<a id="org9e69aff"></a>
 
 ### Reloading the Init File
 
@@ -3440,7 +3486,7 @@ key.
     (bind-key the-reload-init-keybinding #'the-reload-init)
 
 
-<a id="org8f66b2d"></a>
+<a id="orgddf4838"></a>
 
 ### Evaluate an Elisp buffer
 
@@ -3464,7 +3510,7 @@ the init file in a bad way.
     (bind-key "C-c C-k" #'the-eval-buffer emacs-lisp-mode-map)
 
 
-<a id="orgdfb09f7"></a>
+<a id="orga85512b"></a>
 
 ### Rebind Find Commands
 
@@ -3490,7 +3536,7 @@ years of Emacsing.
      ("C-h C-o" . find-symbol))
 
 
-<a id="org1843594"></a>
+<a id="orga04a37f"></a>
 
 ### Lisp Interaction Lighter
 
@@ -3504,12 +3550,12 @@ the mode line.
               #'the--rename-lisp-interaction-mode)
 
 
-<a id="org8f3000d"></a>
+<a id="orge496ce4"></a>
 
 # Performance
 
 
-<a id="orgc9cf112"></a>
+<a id="orgc470323"></a>
 
 ## Performance Mode
 
@@ -3517,7 +3563,7 @@ Occasionally features like indentation and autocompletion are
 expensive, so we set up a minor mode to slow them down.
 
 
-<a id="org9d81aa2"></a>
+<a id="orgd7933ce"></a>
 
 ### Modes
 
@@ -3531,17 +3577,17 @@ expensive, so we set up a minor mode to slow them down.
     quickly.")
 
 
-<a id="orgc6caef9"></a>
+<a id="org224005e"></a>
 
 # Networking
 
 
-<a id="orgf55315c"></a>
+<a id="orgc100cdc"></a>
 
 ## Network Services
 
 
-<a id="org8ce0581"></a>
+<a id="orgc7500fb"></a>
 
 ### macOS TLS verification
 
@@ -3555,7 +3601,7 @@ default, so `brew install libressl` and we'll use those.
         (add-to-list 'gnutls-trustfiles "/usr/local/etc/libressl/cert.pem")))
 
 
-<a id="org6e53764"></a>
+<a id="org417e632"></a>
 
 ### StackOverflow
 
@@ -3566,7 +3612,7 @@ overflowing.
     (use-package sx)
 
 
-<a id="orgc8d85fe"></a>
+<a id="org5b3e01a"></a>
 
 ### Bug URL references
 
@@ -3576,7 +3622,7 @@ directory-local variables. CIDER does this in its files, for example.
     (put 'bug-reference-bug-regexp 'safe-local-variable #'stringp)
 
 
-<a id="org8c60651"></a>
+<a id="org34e1bde"></a>
 
 ### Pastebin
 
@@ -3585,7 +3631,7 @@ directory-local variables. CIDER does this in its files, for example.
     (use-package ix)
 
 
-<a id="org7bbc417"></a>
+<a id="orga9db502"></a>
 
 ### Browsing
 
@@ -3602,7 +3648,7 @@ directory-local variables. CIDER does this in its files, for example.
         (add-hook 'eww-mode-hook 'visual-line-mode)))
 
 
-<a id="orgbd1c39c"></a>
+<a id="org6faa3ee"></a>
 
 ### Steam
 
@@ -3611,17 +3657,17 @@ directory-local variables. CIDER does this in its files, for example.
       (setq steam-username "prooftechnique"))
 
 
-<a id="orge386a54"></a>
+<a id="orga3393a5"></a>
 
 # Etc.
 
 
-<a id="orgf5852ac"></a>
+<a id="org222ea20"></a>
 
 ## Miscellaneous Utilities
 
 
-<a id="org23c7966"></a>
+<a id="org3fe1392"></a>
 
 ### Eventually-obsolete Functions
 
@@ -3692,7 +3738,7 @@ extends `map-put` to have a TESTFN argument.
       `(setq ,list (the-insert-before ,insert-elt ,after-elt ,list ,testfn)))
 
 
-<a id="orgd645e57"></a>
+<a id="org2b26ba2"></a>
 
 ### Framework Identification
 

@@ -140,7 +140,7 @@
                                  org-directory
                                default-directory)))
       (apply org-agenda args)))
-
+  
   (advice-add #'org-agenda :around
               #'the--advice-org-agenda-default-directory)
   )
@@ -191,7 +191,6 @@
 (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 
 (use-package org-tree-slide
-  :demand t
   :config
   (org-tree-slide-presentation-profile)
   (defun the-presentation-start ()
