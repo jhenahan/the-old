@@ -5,6 +5,7 @@
 (require 'the-libraries)
 (require 'the-git)
 (require 'the-modeline)
+(require 'the-crypt)
 
 (define-globalized-minor-mode global-outline-minor-mode
   outline-minor-mode outline-minor-mode)
@@ -33,6 +34,7 @@
          ("M-RET" . org-insert-heading)
          )
   :init
+  :config
   (defun the-org-git-version ()
     (let ((git-repo
   	 (f-join user-emacs-directory "straight/repos/org")))
@@ -54,17 +56,16 @@
   (setq org-directory "~/org")
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
+           "* TODO %?\n %T\n  %i\n  %a")
           ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
            "* %?\nEntered on %U\n  %i")
           ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
-           "* TODO %?\n %i\n %a")
+           "* TODO %?\n %T\n %i\n %a")
           ("h" "Home" entry (file+headline "~/org/home.org" "Tasks")
            "* TODO %?\n %i")))
   
           (setq org-refile-targets
                 '((org-agenda-files :maxlevel . 3)))
-  :config
   (defun the-fix-easy-templates ()
     (require 'org-tempo))
   
@@ -75,6 +76,12 @@
   (setq org-insert-heading-respect-content t)
   (add-hook 'org-mode-hook #'org-indent-mode)
   (setq org-export-in-background t)
+  (setq org-refile-use-outline-path t
+        org-outline-path-complete-in-steps nil)
+  (setq org-log-into-drawer t)
+  (setq org-special-ctrl-a/e t
+        org-special-ctrl-k t)
+  (setq org-return-follows-link t)
   (defun the-org-sort-ignore-errors ()
     (condition-case x
         (org-sort-entries nil ?a)
@@ -99,11 +106,62 @@
     (interactive)
     (org-map-entries #'the-org-past-entries))
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+        '((sequence
+           "BACKLOG(b!)"
+           "TODO(t!)"
+           "NEXT(n)"
+           "IN-PROGRESS(i!)"
+           "|"
+           "DONE(d!)")
+          (sequence
+           "WAITING(w@/!)"
+           "HOLD(h@/!)"
+           "|"
+           "CANCELED(c@)")
+          (type
+           "PHONE(p!)"
+           "MEETING(m!)")))
+  
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("IN-PROGRESS" :foreground "red" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold))))
+  
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELED" ("CANCELED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+  
+  (setq org-use-fast-todo-selection t)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+  (setq org-archive-location (f-expand "archive/%s::* Archived Tasks" org-directory))
   (if (and
        (not (f-exists? org-directory))
        (f-directory? "~/Dropbox/org"))
       (f-symlink "~/Dropbox/org" org-directory))
+  (setq org-tag-persistent-alist
+        '((:startgroup . nil)
+          ("@work" . ?w)
+          ("@home" . ?h)
+          ("@phone" . ?p)
+          ("@mail" . ?m)
+          (:endgroup . nil)
+          ("ansible" . ?a)
+          ("epic" . ?e)
+          ("linux" . ?l)
+          ("noexport" . ?n)
+          ("crypt" . ?c)
+          ))
   :delight
   (org-indent-mode)
   )
@@ -121,6 +179,8 @@
          )
   :init
   (setq org-agenda-files '("~/org"))
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t)
   :config
   (defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
     "Make `org-agenda' split horizontally, not vertically, by default.
@@ -144,6 +204,20 @@
   (advice-add #'org-agenda :around
               #'the--advice-org-agenda-default-directory)
   )
+
+(use-package org-crypt
+  :straight org-plus-contrib
+  :demand t
+  :config
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance '("crypt"))
+  (setq org-crypt-key "17F07DF3086C4BBFA5799F38EF21DED4826AAFCF"))
+
+(use-package org-journal
+  :demand t
+  :config
+  (setq org-journal-dir (f-expand "journal" org-directory))
+  (setq org-journal-enable-encryption t))
 
 (use-package org-context
   :demand t
@@ -197,11 +271,14 @@
     (text-scale-set 5)
     (setq org-confirm-babel-evaluate nil)
     (setq ns-use-native-fullscreen t)
+    (disable-theme 'gruvbox)
+    (load-theme 'leuven)
     (toggle-frame-fullscreen))
   (defun the-presentation-stop ()
     (text-scale-set 0)
     (setq org-confirm-babel-evaluate t)
-    (toggle-frame-fullscreen)
+    (disable-theme 'leuven)
+    (load-theme 'gruvbox)
     (setq ns-use-native-fullscreen nil))
   (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
   (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)

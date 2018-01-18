@@ -8,6 +8,7 @@
   (require 'the-libraries)
   (require 'the-git)
   (require 'the-modeline)
+  (require 'the-crypt)
 #+end_src
 
 ** Global Outline Mode
@@ -96,7 +97,45 @@ WAITING, and the done states DONE and CANCELED.
 #+NAME: todo-states
 #+begin_src emacs-lisp
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+        '((sequence
+           "BACKLOG(b!)"
+           "TODO(t!)"
+           "NEXT(n)"
+           "IN-PROGRESS(i!)"
+           "|"
+           "DONE(d!)")
+          (sequence
+           "WAITING(w@/!)"
+           "HOLD(h@/!)"
+           "|"
+           "CANCELED(c@)")
+          (type
+           "PHONE(p!)"
+           "MEETING(m!)")))
+
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("IN-PROGRESS" :foreground "red" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold))))
+
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELED" ("CANCELED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+  (setq org-use-fast-todo-selection t)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+  (setq org-archive-location (f-expand "archive/%s::* Archived Tasks" org-directory))
 #+end_src
 **** Bindings
 
@@ -151,13 +190,40 @@ also activate =org-indent-mode= for more beautiful documents.
 
 We also set Org exports to occur asynchronously whenever possible.
 
+Finally, we set up refile to use outline path completion for easier
+refiling.
+
 #+NAME: org-settings
 #+begin_src emacs-lisp
   (setq org-insert-heading-respect-content t)
   (add-hook 'org-mode-hook #'org-indent-mode)
   (setq org-export-in-background t)
+  (setq org-refile-use-outline-path t
+        org-outline-path-complete-in-steps nil)
+  (setq org-log-into-drawer t)
+  (setq org-special-ctrl-a/e t
+        org-special-ctrl-k t)
+  (setq org-return-follows-link t)
 #+end_src
 
+**** Tags
+We set up some useful tags we'd like available in any Org buffer.
+#+NAME: org-tags
+#+begin_src emacs-lisp
+  (setq org-tag-persistent-alist
+        '((:startgroup . nil)
+          ("@work" . ?w)
+          ("@home" . ?h)
+          ("@phone" . ?p)
+          ("@mail" . ?m)
+          (:endgroup . nil)
+          ("ansible" . ?a)
+          ("epic" . ?e)
+          ("linux" . ?l)
+          ("noexport" . ?n)
+          ("crypt" . ?c)
+          ))
+#+end_src
 **** Default Org Directory
 We stick our Org files in a new directory in the home directory by
 default.
@@ -170,11 +236,11 @@ default.
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
+           "* TODO %?\n %T\n  %i\n  %a")
           ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
            "* %?\nEntered on %U\n  %i")
           ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
-           "* TODO %?\n %i\n %a")
+           "* TODO %?\n %T\n %i\n %a")
           ("h" "Home" entry (file+headline "~/org/home.org" "Tasks")
            "* TODO %?\n %i")))
 
@@ -253,10 +319,10 @@ latter to the former.
            <<org-mode-heading>>
            )
     :init
+    :config
     <<org-version-definitions>>
     <<org-dir>>
     <<org-capture>>
-    :config
     <<org-requires>>
     <<org-bullets>>
     <<org-settings>>
@@ -264,6 +330,7 @@ latter to the former.
     <<org-archive-past>>
     <<todo-states>>
     <<org-dropbox>>
+    <<org-tags>>
     :delight
     (org-indent-mode)
     )
@@ -332,6 +399,8 @@ agenda so that things like =find-file= work sensibly.
 #+NAME: agenda-files
 #+begin_src emacs-lisp
   (setq org-agenda-files '("~/org"))
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t)
 #+end_src
 *** =use-package= declaration
 #+begin_src emacs-lisp
@@ -348,7 +417,27 @@ agenda so that things like =find-file= work sensibly.
     <<agenda-default-directory>>
     )
 #+end_src
-
+** Org Encryption
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :straight org-plus-contrib
+    :demand t
+    :config
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key "17F07DF3086C4BBFA5799F38EF21DED4826AAFCF"))
+#+end_src
+** Org Journal
+Keeping a regular record of what's going on at work (programmer's
+journal) and at home (personal journal) can be a useful habit, so
+let's give it a shot.
+#+begin_src emacs-lisp
+  (use-package org-journal
+    :demand t
+    :config
+    (setq org-journal-dir (f-expand "journal" org-directory))
+    (setq org-journal-enable-encryption t))
+#+end_src
 ** Context-Aware Capture and Agenda
 #+begin_src emacs-lisp
   (use-package org-context
@@ -426,11 +515,14 @@ Finally, I'd like to automatically tangle the files on save.
       (text-scale-set 5)
       (setq org-confirm-babel-evaluate nil)
       (setq ns-use-native-fullscreen t)
+      (disable-theme 'gruvbox)
+      (load-theme 'leuven)
       (toggle-frame-fullscreen))
     (defun the-presentation-stop ()
       (text-scale-set 0)
       (setq org-confirm-babel-evaluate t)
-      (toggle-frame-fullscreen)
+      (disable-theme 'leuven)
+      (load-theme 'gruvbox)
       (setq ns-use-native-fullscreen nil))
     (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
     (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)

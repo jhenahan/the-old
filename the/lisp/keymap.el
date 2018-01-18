@@ -59,7 +59,7 @@
 (the-which-key-suggestion-generator data)
 )
 
-(let ((data (quote (("org agenda" "SPC o a" "C-c a") ("org capture" "SPC o c" "C-c c") ("org store link" "SPC o l" "C-c l") ("org insert link" "SPC o L" "C-c C-l") ("org iswitchb" "SPC o b" "C-c b") ("org clock in" "SPC o C i" "C-c C-x TAB") ("org clock out" "SPC o C o" "C-c C-x C-o")))))
+(let ((data (quote (("org agenda" "SPC o a" "C-c a") ("org capture" "SPC o c" "C-c c") ("org store link" "SPC o l" "C-c l") ("org insert link" "SPC o L" "C-c C-l") ("org iswitchb" "SPC o B" "C-c b") ("org clock in" "SPC o C i" "C-c C-x TAB") ("org clock out" "SPC o C o" "C-c C-x C-o") ("org do something useful" "SPC o RET" "C-c C-c") ("org journal new entry" "SPC o j n" "C-c C-j") ("org forward" "SPC o f" "M-}") ("org backward" "SPC o b" "M-{")))))
 (the-which-key-suggestion-generator data)
 (the-modalka-binding-generator data)
 )

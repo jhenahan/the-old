@@ -1,0 +1,22 @@
+* Encryption Facilities
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-crypt.el --- Encryption in Emacs
+
+  (require 'the-package)
+#+end_src
+
+** EasyPG
+EasyPG is an interface to GPG built into Emacs. Turning it on is
+pretty straightforward.
+#+begin_src emacs-lisp
+  (require 'epa-file)
+  (epa-file-enable)
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-crypt)
+
+  ;;; the-crypt.el ends here
+#+end_src

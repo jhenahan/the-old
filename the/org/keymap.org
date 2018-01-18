@@ -138,15 +138,19 @@ prefixes for classes of bindings.
 ** Org Bindings
 
 #+NAME: org-bindings
-| purpose         | modalka   | emacs       |
-|-----------------+-----------+-------------|
-| org agenda      | SPC o a   | C-c a       |
-| org capture     | SPC o c   | C-c c       |
-| org store link  | SPC o l   | C-c l       |
-| org insert link | SPC o L   | C-c C-l     |
-| org iswitchb    | SPC o b   | C-c b       |
-| org clock in    | SPC o C i | C-c C-x TAB |
-| org clock out   | SPC o C o | C-c C-x C-o |
+| purpose                 | modalka   | emacs       |
+|-------------------------+-----------+-------------|
+| org agenda              | SPC o a   | C-c a       |
+| org capture             | SPC o c   | C-c c       |
+| org store link          | SPC o l   | C-c l       |
+| org insert link         | SPC o L   | C-c C-l     |
+| org iswitchb            | SPC o B   | C-c b       |
+| org clock in            | SPC o C i | C-c C-x TAB |
+| org clock out           | SPC o C o | C-c C-x C-o |
+| org do something useful | SPC o RET | C-c C-c     |
+| org journal new entry   | SPC o j n | C-c C-j     |
+| org forward             | SPC o f   | M-}         |
+| org backward            | SPC o b   | M-{         |
 
 #+NAME: generate org bindings and suggestions
 #+begin_src emacs-lisp :exports none :var data=org-bindings[1:-1]
