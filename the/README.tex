@@ -1,4 +1,4 @@
-% Created 2018-01-15 Mon 23:04
+% Created 2018-01-18 Thu 14:25
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,14 +32,14 @@
 
 
 \section{Basics}
-\label{sec:orgf8e2775}
+\label{sec:org09b90de}
 \subsection{Modern Libraries}
-\label{sec:org007b735}
+\label{sec:orgf7abe6a}
 \subsubsection{Libraries}
-\label{sec:org5e29c70}
+\label{sec:orgf1a6360}
 \begin{enumerate}
 \item Async
-\label{sec:orgc0ff93f}
+\label{sec:orgecfaa45}
 The \texttt{async} library makes writing asynchronous functions easier (since
 async in Emacs is kind of a nightmare, otherwise).
 
@@ -49,7 +49,7 @@ async in Emacs is kind of a nightmare, otherwise).
 \end{verbatim}
 
 \item \texttt{cl-lib}
-\label{sec:org6301f26}
+\label{sec:org931d1cd}
 This library extends the "Lispiness" of Elisp, making it more like
 Common Lisp though I always feel a bit dirty about using it.
 
@@ -59,7 +59,7 @@ Common Lisp though I always feel a bit dirty about using it.
 \end{verbatim}
 
 \item Lists
-\label{sec:orgf8d68ca}
+\label{sec:org42dd0d7}
 The list API in Elisp basically sucks, so there's \texttt{dash}. I'm
 attempting to learn how to use \texttt{seq} properly, though, since it's
 built in and should be just about at parity with \texttt{dash}'s API, if a
@@ -71,7 +71,7 @@ bit more verbose.
 \end{verbatim}
 
 \item Files
-\label{sec:org550a70d}
+\label{sec:org3ee9fe1}
 The file API in Elisp \textbf{also} sucks, so we have \texttt{f.el}.
 
 \begin{verbatim}
@@ -80,7 +80,7 @@ The file API in Elisp \textbf{also} sucks, so we have \texttt{f.el}.
 \end{verbatim}
 
 \item Strings
-\label{sec:orge12be32}
+\label{sec:org46bfe24}
 Keeping up the pattern, the string API in Elisp is hot garbage, so we
 have \texttt{s.el} to make things nice.
 
@@ -90,7 +90,7 @@ have \texttt{s.el} to make things nice.
 \end{verbatim}
 
 \item Hash Tables
-\label{sec:org3bb0380}
+\label{sec:org8c58fdf}
 Elisp's hash table API is based around \texttt{make-hash-table}, which is a
 pretty awful function with five keyword arguments. This might almost
 be worth it for how much faster hash tables are than alists, but
@@ -102,7 +102,7 @@ luckily \texttt{ht.el} means we don't have to choose.
 \end{verbatim}
 
 \item \texttt{subr} extensions
-\label{sec:orgc61ab56}
+\label{sec:orgae920de}
 \texttt{subr-x} provides some built-in equivalents to some of the modern APIs
 above, some implemented in C.
 
@@ -111,22 +111,22 @@ above, some implemented in C.
 \end{verbatim}
 \end{enumerate}
 \subsection{Sensible Defaults}
-\label{sec:orgcc36b62}
+\label{sec:orge19e1f7}
 \subsubsection{Default Directory}
-\label{sec:orgd1154b0}
+\label{sec:org4aee6d9}
 When using \texttt{find-file}, search from the user's home directory.
 \begin{verbatim}
 (setq default-directory "~/")
 \end{verbatim}
 
 \subsubsection{Treat Camel-Case Words as separate words}
-\label{sec:org0d62d32}
+\label{sec:org662737c}
 \begin{verbatim}
 (add-hook 'prog-mode-hook 'subword-mode)
 \end{verbatim}
 
 \subsubsection{Increase GC threshold}
-\label{sec:org5ebfc22}
+\label{sec:org20cff52}
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
 collection. This means GC runs less often, which speeds up some
 operations.
@@ -135,7 +135,7 @@ operations.
 \end{verbatim}
 
 \subsubsection{Make Scripts Executable By Default}
-\label{sec:org2bf9457}
+\label{sec:org5e33bf3}
 If your file starts with a shebang, the file will be marked executable
 on save.
 \begin{verbatim}
@@ -144,7 +144,7 @@ on save.
 \end{verbatim}
 
 \subsubsection{Transient Mark Mode}
-\label{sec:org4160fdf}
+\label{sec:org0f57968}
 Transient mark means region highlighting works the way you would
 expect it to coming from other editors.
 \begin{verbatim}
@@ -152,14 +152,14 @@ expect it to coming from other editors.
 \end{verbatim}
 
 \subsubsection{Short Confirmations}
-\label{sec:orgfbdbad9}
+\label{sec:org2005162}
 Typing out \texttt{yes} and \texttt{no} is irritating. Just use \texttt{y} or \texttt{n}.
 \begin{verbatim}
 (fset #'yes-or-no-p #'y-or-n-p)
 \end{verbatim}
 
 \subsubsection{macOS settings}
-\label{sec:org0991fa5}
+\label{sec:orgb083500}
 If you set Emacs as the default file handler for certain types of
 files, double-clicking will open an entire new Emacs frame. This
 setting causes Emacs to reuse the existing one.
@@ -168,22 +168,22 @@ setting causes Emacs to reuse the existing one.
   (setq ns-pop-up-frames nil))
 \end{verbatim}
 \subsection{Enable Disabled Commands}
-\label{sec:org93074c3}
+\label{sec:orgb18a528}
 It is obvious to anyone that if a function is disabled then it must
 be powerful, or at least interesting. I want them.
 
 \subsubsection{Do it}
-\label{sec:orgad82fbc}
+\label{sec:org0e2c37a}
 \begin{verbatim}
 (setq disabled-command-function nil)
 \end{verbatim}
 \subsection{Killing and Yanking (copying and pasting)}
-\label{sec:org9473544}
+\label{sec:org62067d1}
 \subsubsection{Settings}
-\label{sec:orgd09f55d}
+\label{sec:orge77e724}
 \begin{enumerate}
 \item Delete Selection
-\label{sec:orgf695f33}
+\label{sec:orgab521ae}
 If you start typing when you have something selected, then the
 selection will be deleted. If you press DEL while you have something
 selected, it will be deleted rather than killed. (Otherwise, in both
@@ -196,7 +196,7 @@ is performed.)
 
 \begin{enumerate}
 \item AUCTeX compatibility
-\label{sec:orgd59f83f}
+\label{sec:org85a02db}
 Make delete-selection-mode work properly with AUCTeX.
 \begin{verbatim}
 (with-eval-after-load 'latex
@@ -204,7 +204,7 @@ Make delete-selection-mode work properly with AUCTeX.
 \end{verbatim}
 \end{enumerate}
 \item Eliminate duplicates in kill ring
-\label{sec:org0a609fb}
+\label{sec:org43ed305}
 If you kill the same thing twice, you won't have to use \texttt{yank} twice
 to get past it to older entries in the kill ring.
 \begin{verbatim}
@@ -212,11 +212,11 @@ to get past it to older entries in the kill ring.
 \end{verbatim}
 \end{enumerate}
 \subsection{Startup}
-\label{sec:org2888803}
+\label{sec:orgbb52b0c}
 By default, Emacs fills your universe with (FSF-approved and
 GPL-compliant) garbage. I don't want a bit of it.
 \subsubsection{Disable Startup Message}
-\label{sec:org458502b}
+\label{sec:orga0defe9}
 I like GNU. You maybe like GNU. You're using Emacs. Whatever. You
 don't need the "For information about Emacs\ldots{}" message.
 
@@ -231,7 +231,7 @@ This is an `:override' advice for
 \end{verbatim}
 
 \subsubsection{Disable About}
-\label{sec:org3fc6f9d}
+\label{sec:orgb57cc71}
 If I wanted to know about GNU Emacs, there are dozens of doc
 options. I do not need that buffer on startup. We disable that and
 instead use our own fancy dashboard.
@@ -253,14 +253,14 @@ instead use our own fancy dashboard.
 \end{verbatim}
 
 \subsubsection{Blank Scratch Buffer}
-\label{sec:orgedb2eb7}
+\label{sec:org27cedf1}
 I know what a scratch buffer is. Hush.
 \begin{verbatim}
 (setq initial-scratch-message nil)
 \end{verbatim}
 
 \subsubsection{Emacs Server}
-\label{sec:org3b16cda}
+\label{sec:orgc5b2b2b}
 Start up an Emacs server process so we can attach \texttt{emacsclient} to it
 and get that fast response time the Vim people are so smug about.
 
@@ -268,9 +268,9 @@ and get that fast response time the Vim people are so smug about.
 (server-start)
 \end{verbatim}
 \subsection{Auto-Revert}
-\label{sec:org9dbaed8}
+\label{sec:orge50a4a0}
 \subsubsection{Settings}
-\label{sec:orgca06876}
+\label{sec:org4bba6a3}
 Turn the delay on auto-reloading from 5 seconds down to 1 second. We
 have to do this before turning on \texttt{auto-revert-mode} for the change to
 take effect, unless we do it through \texttt{customize-set-variable} (which
@@ -400,13 +400,13 @@ Don't show it in the mode line.
 (setq auto-revert-mode-text nil)
 \end{verbatim}
 \subsection{Saving Files}
-\label{sec:orged815a8}
+\label{sec:org6917412}
 \section{Package Management}
-\label{sec:orgcf7dfb6}
+\label{sec:orga70b6e6}
 \subsection{Package Management}
-\label{sec:org536d2a3}
+\label{sec:org810cb8f}
 \subsubsection{Disable \texttt{package.el}}
-\label{sec:orgc404154}
+\label{sec:orge9491b3}
 We use \texttt{straight.el} in this household, and like it! Emacs will
 initialize \texttt{package.el} unless we tell it not to, so we do so.
 
@@ -415,7 +415,7 @@ initialize \texttt{package.el} unless we tell it not to, so we do so.
 \end{verbatim}
 
 \subsubsection{Bootstrap \texttt{straight.el}}
-\label{sec:org9b85f2a}
+\label{sec:org2e1ad2c}
 We are using a package manager called straight.el. This code, which is
 taken from \href{https://github.com/raxod502/straight.el}{the README}, bootstraps the system (because obviously the
 package manager is unable to install and load itself, if it is not
@@ -435,7 +435,7 @@ already installed and loaded).
 \end{verbatim}
 
 \subsubsection{\texttt{use-package}}
-\label{sec:org1f6ca47}
+\label{sec:org1929f42}
 To handle a lot of useful tasks related to package configuration, we
 use a library called `use-package', which provides a macro by the same
 name. This macro automates many common tasks, like autoloading
@@ -448,7 +448,7 @@ through the use of keyword arguments. See the README.
 
 \begin{enumerate}
 \item \texttt{straight.el} integration
-\label{sec:orgd305d3c}
+\label{sec:orgac0c798}
 Tell use-package to automatically install packages if they are
 missing. By default, packages are installed via \href{https://github.com/raxod502/straight.el}{\texttt{straight.el}}, which
 draws package installation recipes (short lists explaining where to
@@ -463,7 +463,7 @@ README}.
 \end{verbatim}
 
 \item Lazy-loading
-\label{sec:orga19f303}
+\label{sec:org77b1ba1}
 Tell use-package to always load packages lazily unless told otherwise.
 It's nicer to have this kind of thing be deterministic: if `:demand'
 is present, the loading is eager; otherwise, the loading is lazy. See
@@ -474,13 +474,13 @@ is present, the loading is eager; otherwise, the loading is lazy. See
 \end{verbatim}
 \end{enumerate}
 \subsection{Future-proof patches}
-\label{sec:org435dca3}
+\label{sec:org7f76bbe}
 \section{Customization}
-\label{sec:orgfed9400}
+\label{sec:org518562f}
 \subsection{Customization Group}
-\label{sec:org5c23b5b}
+\label{sec:org36aba03}
 \subsubsection{THE group}
-\label{sec:orgb59b506}
+\label{sec:org3c8a877}
 Here we define a customization group for THE. This allows users
 to customize the variables declared here in a user-friendly way
 using the Custom interface.
@@ -491,14 +491,14 @@ using the Custom interface.
   :group 'emacs)
 \end{verbatim}
 \section{System Integration}
-\label{sec:org6303e59}
+\label{sec:org0f4f36f}
 \subsection{OS Integration}
-\label{sec:org64c6564}
+\label{sec:orgf86f6d0}
 \subsubsection{OS-specific Customization}
-\label{sec:orgc82c542}
+\label{sec:org1069e6c}
 \begin{enumerate}
 \item OS detection
-\label{sec:org3617c2c}
+\label{sec:orga6e8748}
 Ideally, we detect the operating system here, as well as giving the
 option to customize it directly in case we get it wrong.
 \begin{verbatim}
@@ -517,7 +517,7 @@ automatically detected and does not need to be changed."
 \end{verbatim}
 
 \item OS-specific settings
-\label{sec:orgee59c85}
+\label{sec:org780714b}
 This macro allows us to handle things like operating system specific
 clipboard/mouse hacks and other things like that.
 
@@ -532,47 +532,29 @@ which should not be quoted."
 \end{verbatim}
 \end{enumerate}
 \subsubsection{Path Settings}
-\label{sec:orgd8d9fe9}
+\label{sec:orga8f9a3f}
 \begin{enumerate}
 \item Path Fixes
-\label{sec:orgcd18433}
+\label{sec:org1a63be6}
 In the terminal, the mouse and clipboard don't work properly. But in
 windowed Emacsen, the \texttt{PATH} is not necessarily set correctly! You
 can't win.
 
 \begin{verbatim}
-(the-with-operating-system macOS
-  (the-with-windowed-emacs
-    (with-temp-buffer
-      ;; See: man path_helper.
-      (call-process "/usr/libexec/path_helper" nil t nil "-s")
-      (goto-char (point-min))
-      (if (search-forward-regexp "PATH=\"\\(.+\\)\"; export PATH;"
-                                 nil 'noerror)
-          (let ((path (match-string 1)))
-            (setenv "PATH" path)
-            ;; The next two statements are from the code of
-            ;; exec-path-from-shell [1], and I thought they were
-            ;; probably there for a good reason.
-            ;;
-            ;; [1]: https://github.com/purcell/exec-path-from-shell
-            (setq eshell-path-env path)
-            (setq exec-path (append (parse-colon-path path)
-                                    (list exec-directory))))
-        (warn "Could not set $PATH using /usr/libexec/path_helper"))
-      ;; Sometimes path_helper also reports a MANPATH setting, but not
-      ;; always.
-      (when (search-forward-regexp "MANPATH=\"\\(.+\\)\"; export MANPATH;"
-                                   nil 'noerror)
-        (let ((manpath (match-string 1)))
-          (setenv "MANPATH" manpath))))))
+(use-package exec-path-from-shell
+  :demand t
+  :config
+  (the-with-operating-system macOS
+    (exec-path-from-shell-initialize))
+  (the-with-operating-system linux
+    (exec-path-from-shell-initialize)))
 \end{verbatim}
 \end{enumerate}
 \subsubsection{Clipboard Integration}
-\label{sec:org1343d08}
+\label{sec:org93580ad}
 \begin{enumerate}
 \item macOS integration
-\label{sec:org97edce2}
+\label{sec:orgd161866}
 Like mouse integration, clipboard integration
 works properly in windowed Emacs but not in terminal Emacs (at
 least by default). This code was originally based on \href{https://gist.github.com/the-kenny/267162}{1}, and then
@@ -633,7 +615,7 @@ This is used to prevent duplicate entries in the kill ring.")
 \end{verbatim}
 
 \item Inter-program paste
-\label{sec:orgbbefba3}
+\label{sec:orgecd1a5b}
 If you have something on the system clipboard, and then kill something
 in Emacs, then by default whatever you had on the system clipboard is
 gone and there is no way to get it back. Setting the following option
@@ -645,15 +627,15 @@ way, you can paste it with \texttt{yank-pop}.
 \end{verbatim}
 \end{enumerate}
 \subsection{UI Integration}
-\label{sec:org79359d2}
+\label{sec:org1de9f11}
 \subsubsection{Window System}
-\label{sec:orgb6de7c8}
+\label{sec:org61155a9}
 These macros give us a convenient way to conditionally execute code
 based on the active window system.
 
 \begin{enumerate}
 \item Macros
-\label{sec:org0e4edab}
+\label{sec:orge540476}
 \begin{verbatim}
 (defmacro the-with-windowed-emacs (&rest body)
   "Eval BODY if Emacs is windowed, else return nil."
@@ -669,44 +651,44 @@ based on the active window system.
 \end{verbatim}
 \end{enumerate}
 \section{Config Management}
-\label{sec:org178782a}
+\label{sec:org305f947}
 \subsection{Config File Utilities}
-\label{sec:orgc338f15}
+\label{sec:orgd8f2040}
 \subsubsection{Apache configs}
-\label{sec:org66568e7}
+\label{sec:org08cc921}
 \begin{verbatim}
 (use-package apache-mode)
 \end{verbatim}
 \subsubsection{Dockerfiles}
-\label{sec:org1d7bf39}
+\label{sec:org99443aa}
 \begin{verbatim}
 (use-package dockerfile-mode)
 \end{verbatim}
 
 \subsubsection{Git files}
-\label{sec:org4b6e62f}
+\label{sec:org37b5a8f}
 \begin{enumerate}
 \item Git config and modules
-\label{sec:orgc5cd44d}
+\label{sec:org7ea2449}
 \begin{verbatim}
 (use-package gitconfig-mode)
 \end{verbatim}
 
 \item Git ignore files
-\label{sec:org7a8187c}
+\label{sec:org5075d97}
 \begin{verbatim}
 (use-package gitignore-mode)
 \end{verbatim}
 \end{enumerate}
 
 \subsubsection{SSH configs}
-\label{sec:org5acb0eb}
+\label{sec:orgfa9b341}
 \begin{verbatim}
 (use-package ssh-config-mode)
 \end{verbatim}
 
 \subsubsection{YAML}
-\label{sec:orgd28852c}
+\label{sec:orgc94ee5a}
 I edit a lot of YAML files, especially Ansible configs. The current
 version of \texttt{emacs-ansible} has a hard dependency on \texttt{auto-complete},
 which we don't use, so until there's a version without that
@@ -727,19 +709,19 @@ it breaks things.
 \end{verbatim}
 
 \subsubsection{Jinja2}
-\label{sec:org0082b5c}
+\label{sec:orgd9334f0}
 Jinja2 is the template format of record for Ansible, so we just add
 basic support here.
 \begin{verbatim}
 (use-package jinja2-mode)
 \end{verbatim}
 \subsection{Emacs}
-\label{sec:org2ad15bf}
+\label{sec:org819b96c}
 \subsubsection{emacs.d Organization}
-\label{sec:orgb9bcfb8}
+\label{sec:orgab21b47}
 \begin{enumerate}
 \item \texttt{no-littering}
-\label{sec:org944d044}
+\label{sec:org418e2d8}
 A lot of packages (and also a lot of Emacs defaults) throw files all
 over your config directory. \texttt{no-littering} sets a lot of sensible
 defaults for commonly used packages to keep the config directory
@@ -751,11 +733,11 @@ manageable and discoverable.
 \end{verbatim}
 \end{enumerate}
 \section{Documentation}
-\label{sec:org6978800}
+\label{sec:orge4bc69b}
 \subsection{Better Help}
-\label{sec:org480e5ce}
+\label{sec:org24b8be6}
 \subsubsection{Helpful}
-\label{sec:org4d7c821}
+\label{sec:org88d55e4}
 We alias common help methods to their Helpful equivalents because
 Helpful is a much nicer version of the built-in help.
 \begin{verbatim}
@@ -768,9 +750,9 @@ Helpful is a much nicer version of the built-in help.
   (defalias #'describe-symbol #'helpful-symbol))
 \end{verbatim}
 \subsection{ElDoc}
-\label{sec:org374e705}
+\label{sec:orgf0db2f0}
 \subsubsection{Settings}
-\label{sec:org11ee686}
+\label{sec:org3a0c274}
 Show ElDoc messages in the echo area immediately, instead of after 1/2
 a second.
 
@@ -805,12 +787,12 @@ This is done in `the-slow-autocomplete-mode'."
 (add-hook 'the-slow-autocomplete-mode-hook #'the-eldoc-toggle-slow)
 \end{verbatim}
 \section{Keybindings}
-\label{sec:org8e348d2}
+\label{sec:orgef89a06}
 \subsection{Binding Keys}
-\label{sec:orgbe31b6f}
+\label{sec:org9c5d657}
 
 \subsubsection{Custom Prefix}
-\label{sec:org12ff9d4}
+\label{sec:orgc6e4869}
 There's a lot of room for keybindings, but we rely on a common prefix
 for discoverability and to leave room for extension. This also makes
 creating modal bindings later quite a bit easier.
@@ -838,7 +820,7 @@ cells to make the whole thing more customizable.
 
 
 \subsubsection{\texttt{bind-key}}
-\label{sec:orgc6abb09}
+\label{sec:org458ca64}
 \texttt{bind-key} is the prettier cousin of \texttt{define-key} and
 \texttt{global-set-key}, as well as providing the \texttt{:bind} family of keywords
 in \texttt{use-package},
@@ -847,27 +829,27 @@ in \texttt{use-package},
 (use-package bind-key)
 \end{verbatim}
 \subsection{Hydra}
-\label{sec:org6e4b00a}
+\label{sec:orgbba9f4c}
 Hydras are a really fancy feature that let you create families of
 related bindings with a common prefix.
 \subsubsection{\texttt{use-package} declaration}
-\label{sec:orgd4a68af}
+\label{sec:orge2fc42c}
 \begin{verbatim}
 (use-package hydra
   :demand t)
 \end{verbatim}
 \section{UI}
-\label{sec:org0c006f3}
+\label{sec:org3e8a52a}
 \subsection{Appearance}
-\label{sec:org1e3fa31}
+\label{sec:orgf5f6cde}
 \subsubsection{Basic Setup}
-\label{sec:org3b1c56d}
+\label{sec:org4856902}
 This file has appearance tweaks that are unrelated to the color
 theme. Menus, scroll bars, bells, cursors, and so on. See also
 \texttt{the-theme}, which customizes the color theme specifically.
 
 \subsubsection{Fullscreen}
-\label{sec:orgfb6d32a}
+\label{sec:org9915f61}
 I use \texttt{chunkwm} to manage most windows, including Emacs, so the native
 fullscreen mode is unnecessary. It's also necessary to set pixelwise
 frame resizing non-nil for a variety of window managers. I don't see
@@ -880,7 +862,7 @@ any particular harm in having it on, regardless of WM.
 \end{verbatim}
 
 \subsubsection{Interface Cleanup}
-\label{sec:orgc158d51}
+\label{sec:org74c6be6}
 Emacs defaults are a nightmare of toolbars and scrollbars and such
 nonsense. We'll turn all of that off.
 
@@ -893,7 +875,7 @@ nonsense. We'll turn all of that off.
 \end{verbatim}
 
 \subsubsection{Keystroke Display}
-\label{sec:org460e700}
+\label{sec:org55501f4}
 Display keystrokes in the echo area immediately, not after one
 second. We can't set the delay to zero because somebody thought it
 would be a good idea to have that value suppress keystroke display
@@ -904,7 +886,7 @@ entirely.
 \end{verbatim}
 
 \subsubsection{No Title Bars}
-\label{sec:orgf4c981f}
+\label{sec:org654b2ae}
 I put a lot of effort into purging title bars from most of the
 software I use on a regular basis (what a waste of real estate), and
 in Emacs 26 (might really be 26.2 or so) this is built in. For earlier
@@ -916,12 +898,12 @@ versions, patches exist to get the same effect.
 \end{verbatim}
 
 \subsubsection{Fonts}
-\label{sec:org6152276}
+\label{sec:org5e4467b}
 I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 \subsubsection{Adjust font size by screen resolution}
-\label{sec:org8953d2c}
+\label{sec:org4100814}
 The biggest issue I have with multiple monitors is that the font size
 is all over the place. The functions below just set up some reasonable
 defaults and machinery to change the size depending on the resolution
@@ -947,9 +929,9 @@ of the monitor.
 (call-interactively 'the-fontify-idle)
 \end{verbatim}
 \subsection{Theme}
-\label{sec:org59ee468}
+\label{sec:org7b3fe69}
 \subsubsection{Utilities}
-\label{sec:org8645402}
+\label{sec:orge7b083d}
 
 This function is useful for reformatting lispy names (like
 \texttt{deeper-blue}) into user-friendly strings (like "Deeper Blue") for
@@ -977,7 +959,7 @@ The current color theme is determined by consulting
 
 
 \subsubsection{Default Color Scheme}
-\label{sec:orga6dffa1}
+\label{sec:orgf7d8814}
 
 The default color scheme is Gruvbox, but you can set it to whatever
 you like.
@@ -1018,7 +1000,7 @@ loaded."
 \end{verbatim}
 
 \subsubsection{Leuven Customization}
-\label{sec:orgb7c32a5}
+\label{sec:org660bc79}
 \begin{itemize}
 \item Change the highlight color from yellow to blue
 \item Don't underline current search match
@@ -1036,7 +1018,7 @@ loaded."
 \end{itemize}
 
 \subsubsection{Gruvbox installation}
-\label{sec:orgedd4ad0}
+\label{sec:org5dcc27f}
 We register the Gruvbox package with Straight, but it is only
 downloaded if the theme is active.
 \begin{verbatim}
@@ -1046,7 +1028,7 @@ downloaded if the theme is active.
 \end{verbatim}
 
 \subsubsection{Actually load the theme}
-\label{sec:org0c2b676}
+\label{sec:org8929a02}
 Load the appropriate color scheme as specified in
 \texttt{the-color-theme}.
 \begin{verbatim}
@@ -1065,9 +1047,9 @@ If there is an error, report it as a warning."
     (load-theme the-color-theme 'no-confirm)))
 \end{verbatim}
 \subsection{Modeline Configuration}
-\label{sec:org98b5c9a}
+\label{sec:org2fda9a3}
 \subsubsection{Diminish}
-\label{sec:org149b6df}
+\label{sec:orgd134ff5}
 \texttt{diminish} allows us to change the display of minor modes in the
 modeline. I prefer Delight, but \texttt{diminish} is the standard used by
 many packages.
@@ -1076,7 +1058,7 @@ many packages.
   :demand t)
 \end{verbatim}
 \subsubsection{Delight}
-\label{sec:org1550d77}
+\label{sec:org8e184e8}
 \texttt{delight} allows us to change the display of minor and major modes in
 the modeline. Spaceline is gonna do a lot of this work for us, but for
 anything it doesn't catch we'll make our own lighter. This also gives
@@ -1101,7 +1083,7 @@ us the \texttt{:delight} keyword in our \texttt{use-package} declarations.
   )
 \end{verbatim}
 \subsubsection{Nyan!}
-\label{sec:orga8024c8}
+\label{sec:org05bc507}
 Gotta have that cat! This will add a Nyan Cat progress indicator to
 the modeline.
 \begin{verbatim}
@@ -1114,21 +1096,21 @@ the modeline.
   (nyan-mode 1))
 \end{verbatim}
 \subsubsection{Spaceline - All-the-Icons}
-\label{sec:orga64da69}
+\label{sec:org2627ca3}
 We use Spaceline for our modeline, along with a theme called
 \texttt{spaceline-all-the-icons} which uses rich icon fonts where
 appropriate.
 \begin{enumerate}
 \item Setup
-\label{sec:org13a1943}
+\label{sec:org85fe113}
 \begin{enumerate}
 \item Display diminished minor modes
-\label{sec:orga6f8f60}
+\label{sec:org11c864c}
 \begin{verbatim}
 (spaceline-toggle-all-the-icons-minor-modes-on)
 \end{verbatim}
 \item Change modeline color based on Modalka stat
-\label{sec:orgf104698}
+\label{sec:org9ac4338}
 \begin{verbatim}
 (defface the-spaceline-modalka-off
   '((t (:background "chartreuse3"
@@ -1150,13 +1132,13 @@ appropriate.
 (setq spaceline-highlight-face-func #'the-spaceline-modalka-highlight)
 \end{verbatim}
 \item Turn on Nyan Cat
-\label{sec:orgb8e79be}
+\label{sec:orga0abd8f}
 \begin{verbatim}
 (spaceline-toggle-all-the-icons-nyan-cat-on)
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orgd501021}
+\label{sec:org3e4f008}
 \begin{verbatim}
 (use-package spaceline-all-the-icons
   :demand t
@@ -1182,9 +1164,9 @@ appropriate.
 \end{verbatim}
 \end{enumerate}
 \subsection{Emojis!}
-\label{sec:orga95d391}
+\label{sec:org0e41ce7}
 \subsubsection{\texttt{emojify}}
-\label{sec:org65b86f0}
+\label{sec:org36ea3f3}
 Emojify renders a variety of strings as emojis, as well as providing
 some nice interactive functions to get emojis all over the place.
 
@@ -1194,7 +1176,7 @@ some nice interactive functions to get emojis all over the place.
   (add-hook 'after-init-hook #'global-emojify-mode))
 \end{verbatim}
 \subsection{Fancy Pragmata Pro ligatures}
-\label{sec:orgeed50de}
+\label{sec:org8671af3}
 \begin{verbatim}
 ;;; the-pragmata.el --- ligatures for Pragmata Pro
 
@@ -1432,14 +1414,14 @@ some nice interactive functions to get emojis all over the place.
 ;;; the-pragmata.el ends here
 \end{verbatim}
 \section{Navigation}
-\label{sec:org4c04208}
+\label{sec:orge88c333}
 \subsection{Completion}
-\label{sec:orgf191409}
+\label{sec:orgb647243}
 \subsubsection{Packages}
-\label{sec:org7fb4bde}
+\label{sec:org92fcdda}
 \begin{enumerate}
 \item Smex - Frecency for command history
-\label{sec:org3f77bb3}
+\label{sec:orgfc7e87f}
 This package provides a simple mechanism for recording the user's
 command history so that it can be used to sort commands by usage. It
 is automatically used by Ivy. Note, however, that historian.el will
@@ -1451,7 +1433,7 @@ more elegant way. See \href{https://github.com/nonsequitur/smex}{1}, \href{https
 \end{verbatim}
 
 \item flx - Fuzzy command matching
-\label{sec:org89c1610}
+\label{sec:org1ad6147}
 This package provides a framework for sorting choices in a hopefully
 intelligent way based on what the user has typed in, using "fuzzy
 matching" (i.e. "ffap" matches "find-file-at-point"). See \href{https://github.com/lewang/flx}{1}.
@@ -1461,7 +1443,7 @@ matching" (i.e. "ffap" matches "find-file-at-point"). See \href{https://github.c
 \end{verbatim}
 
 \item Ivy - completing-read on steroids
-\label{sec:org75dbe1b}
+\label{sec:org252f4e2}
 Ivy is a completion and narrowing framework. What does this mean?
 By default, Emacs has some basic tab-completion for commands,
 files, and so on. Ivy replaces this interface by showing a list of
@@ -1470,10 +1452,10 @@ way (using smex and flx, if they are installed) as the user inputs
 a query. This is much faster.
 \begin{enumerate}
 \item Setup
-\label{sec:org8ae8b57}
+\label{sec:orgbd85540}
 \begin{enumerate}
 \item Lazy Loading
-\label{sec:org29592c4}
+\label{sec:orgd999f9a}
 We'll be making a few patches, so we want to make sure that the
 patches aren't loaded until \texttt{ivy} is.
 
@@ -1481,7 +1463,7 @@ patches aren't loaded until \texttt{ivy} is.
 (el-patch-feature ivy)
 \end{verbatim}
 \item Keymap
-\label{sec:org6049971}
+\label{sec:org46a6fde}
 We define a keymap for \texttt{ivy-mode} so we can remap buffer switching
 commands when \texttt{ivy} is active.
 \begin{verbatim}
@@ -1495,7 +1477,7 @@ commands when \texttt{ivy} is active.
       "Keymap for `ivy-mode'.")
 \end{verbatim}
 \item Minor Mode Patches
-\label{sec:orgf7ae358}
+\label{sec:org837b139}
 We patch Ivy to be easily toggle-able, and to restore normal
 \texttt{completing-read} functionality if \texttt{ivy-mode} is disabled.
 \begin{verbatim}
@@ -1522,7 +1504,7 @@ We patch Ivy to be easily toggle-able, and to restore normal
     (setq completion-in-region-function 'completion--in-region)))
 \end{verbatim}
 \item Keybindings
-\label{sec:org7d3baa4}
+\label{sec:org232b7a5}
 \texttt{ivy-resume} lets us jump back into the last completion session, which
 is pretty handy.
 
@@ -1531,7 +1513,7 @@ is pretty handy.
 \end{verbatim}
 \begin{enumerate}
 \item Minibuffer bindings
-\label{sec:org41e97a5}
+\label{sec:orgc58fd00}
 The behavior of Ivy in the minibuffer is a bit unintuitive, so we're
 gonna make it a bit more intuitive. In short, tab for navigation,
 return for interaction, and \texttt{C-j} to use the current candidate as is.
@@ -1542,7 +1524,7 @@ return for interaction, and \texttt{C-j} to use the current candidate as is.
 \end{verbatim}
 \end{enumerate}
 \item Fuzzy matching
-\label{sec:orgd37b22d}
+\label{sec:orgfb7a451}
 Fuzzy matching is nice almost everywhere, so we turn it on for all
 \texttt{ivy} completions except for \texttt{swiper} (text search), since fuzzy
 matching for text is weird. We also raise the \texttt{ivy-flx-limit} so that
@@ -1555,7 +1537,7 @@ it will actually be used.
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orga94fe02}
+\label{sec:org39a821d}
 \begin{verbatim}
 (use-package ivy
   :demand t
@@ -1576,17 +1558,17 @@ it will actually be used.
 \end{enumerate}
 
 \item Counsel - Ivy-ized standard Emacs commands
-\label{sec:org62962e8}
+\label{sec:org422059c}
 Ivy is just a general-purpose completion framework. It can be used
 to generate improved versions of many stock Emacs commands. This is
 done by the Counsel library. (It also adds a few new commands, such
 as \texttt{counsel-git-grep}.)
 \begin{enumerate}
 \item Setup
-\label{sec:org88dd1db}
+\label{sec:org9a82365}
 \begin{enumerate}
 \item Bindings
-\label{sec:orga2efc80}
+\label{sec:org76ee6d3}
 Counsel is a set of convenient commands based on Ivy meant to improve
 the built-in Emacs equivalents. We bind them to the normal Emacs keys
 so we can use Ivy nearly everywhere. We also have some other useful
@@ -1614,7 +1596,7 @@ We also bind a key for use in expression buffers (like
 ("C-r" . counsel-expression-history)
 \end{verbatim}
 \item Find file at point
-\label{sec:org78f8908}
+\label{sec:orgd616dcf}
 If there is a valid file at point, \texttt{counsel-find-file} will select
 that file by default.
 \begin{verbatim}
@@ -1622,7 +1604,7 @@ that file by default.
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orgb996d3b}
+\label{sec:org9b79e62}
 \begin{verbatim}
 (use-package counsel
   :bind (;; Use Counsel for common Emacs commands.
@@ -1637,7 +1619,7 @@ that file by default.
 \end{enumerate}
 
 \item Historian - Remember completion choices
-\label{sec:org6922e0b}
+\label{sec:org0e656df}
 Remembers your choices in completion menus.
 
 \begin{verbatim}
@@ -1649,12 +1631,12 @@ Remembers your choices in completion menus.
 
 \begin{enumerate}
 \item \texttt{ivy-historian}
-\label{sec:org544c665}
+\label{sec:org1348526}
 We use Historian to sort Ivy candidates by frecency+flx.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org111dafb}
+\label{sec:org5f495ac}
 The only configuration we do here is to mess around with how Historian
 weights results.
 \begin{verbatim}
@@ -1664,7 +1646,7 @@ weights results.
 \end{verbatim}
 
 \item \texttt{use-package} declaration
-\label{sec:org42fc4a1}
+\label{sec:org4d55978}
 \begin{verbatim}
 (use-package ivy-historian
   :demand t
@@ -1677,7 +1659,7 @@ weights results.
 \end{enumerate}
 
 \item Icicles - Sheesh
-\label{sec:orge8a1abf}
+\label{sec:orgf2e47e4}
 Icicles is steroids for the steroids. I don't even know everything it
 does, so it's not on by default.
 
@@ -1687,12 +1669,12 @@ does, so it's not on by default.
 \end{verbatim}
 \end{enumerate}
 \subsection{Finding files}
-\label{sec:orgbe162c0}
+\label{sec:org8338497}
 \subsubsection{Dotfile shortcuts}
-\label{sec:org6c6761b}
+\label{sec:orge2811ca}
 \begin{enumerate}
 \item Prefix key
-\label{sec:org46694a0}
+\label{sec:orgd3e2255}
 We define a custom prefix to provide shortcuts to edit common
 dotfiles, and another to edit the file in another window.
 
@@ -1713,7 +1695,7 @@ The function `the-register-dotfile' creates a keybinding under
 this prefix, if you ask it to.")
 \end{verbatim}
 \item Registering dotfiles
-\label{sec:orga5731a1}
+\label{sec:orgdcdb73a}
 By providing a filename (relative to your \texttt{\$HOME}), we define a
 function \texttt{the-find-<something>}, where <something> is a cleaned up
 version of the basename of the file. You can also specify a keybinding
@@ -1801,14 +1783,14 @@ be generated automatically from the basename of FILENAME."
 
 \begin{enumerate}
 \item Emacs
-\label{sec:org4e07bed}
+\label{sec:org99ee7be}
 \begin{verbatim}
 (the-register-dotfile ".emacs.d/init.el" "e i")
 (the-register-dotfile ".emacs.d/init.local.el" "e l")
 \end{verbatim}
 
 \item Git
-\label{sec:orgbfa7044}
+\label{sec:orgd187568}
 \begin{verbatim}
 (the-register-dotfile ".gitconfig" "g c")
 (the-register-dotfile ".gitexclude" "g e")
@@ -1816,13 +1798,13 @@ be generated automatically from the basename of FILENAME."
 \end{verbatim}
 
 \item Fish
-\label{sec:org2dcc592}
+\label{sec:org78b0a2c}
 \begin{verbatim}
 (the-register-dotfile ".config/fish/config.fish" "f c")
 \end{verbatim}
 
 \item ChunkWM
-\label{sec:orgcb8f633}
+\label{sec:org4ef7778}
 \begin{verbatim}
 (the-register-dotfile ".chunkwmrc" "w m")
 
@@ -1832,17 +1814,17 @@ be generated automatically from the basename of FILENAME."
 \end{verbatim}
 
 \item SKHD
-\label{sec:orgc297c8f}
+\label{sec:org5489ffa}
 \begin{verbatim}
 (the-register-dotfile ".skhdrc" "h k")
 \end{verbatim}
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Visiting files}
-\label{sec:orgd8a2a1c}
+\label{sec:orgc8fd76a}
 \begin{enumerate}
 \item Symlinks
-\label{sec:orgcdd3551}
+\label{sec:org0af11f4}
 Follow symlinks when opening files. This has the concrete impact, for
 instance, that when you edit init.el with the shortcut provided by
 \texttt{the-register-dotfile} and then later do \texttt{find-file}, you will be in
@@ -1861,7 +1843,7 @@ dangerous, as it will just redirect you to the existing buffer.)
 \end{verbatim}
 
 \item VC nonsense
-\label{sec:org0c6ba95}
+\label{sec:org7692875}
 Disable Emacs' built-in version control handling. This improves
 performance and disables some annoying warning messages and prompts,
 especially regarding symlinks. I only use Magit, and the \texttt{vc}
@@ -1873,7 +1855,7 @@ warnings.
 \end{verbatim}
 
 \item Directory hygiene
-\label{sec:org9fa881d}
+\label{sec:orge7654ac}
 Automatically create any nonexistent parent directories when finding a
 file. If the buffer for the new file is killed without being saved,
 then offer to delete the created directory or directories.
@@ -2029,7 +2011,7 @@ This is a function for `after-save-hook'. Remove
 \end{verbatim}
 
 \item Save place\ldots{}
-\label{sec:org2e18b71}
+\label{sec:org8d84b72}
 When you open a file, position the cursor at the same place as the
 last time you edited the file.
 
@@ -2039,7 +2021,7 @@ last time you edited the file.
 
 \begin{enumerate}
 \item \ldots{}and shut up about it
-\label{sec:org3f9346a}
+\label{sec:orga8ce133}
 Inhibit the message that is usually printed when the `saveplace'
 file is written.
 
@@ -2074,10 +2056,10 @@ file is written.
 \end{enumerate}
 
 \subsubsection{Projects}
-\label{sec:org841e9c9}
+\label{sec:orgae61d22}
 \begin{enumerate}
 \item Projectile
-\label{sec:orgdc7c737}
+\label{sec:org0053928}
 Projectile keeps track of a "project" list, which is automatically
 added to as you visit files in Git repositories, Node.js projects,
 etc. It then provides commands for quickly navigating between and
@@ -2085,10 +2067,10 @@ within these projects.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org58437c3}
+\label{sec:org069ff02}
 \begin{enumerate}
 \item Enable projectile globally
-\label{sec:org566818b}
+\label{sec:org10ef2d1}
 Also, ignore the repos set up by \texttt{straight.el}.
 \begin{verbatim}
 (projectile-mode +1)
@@ -2097,7 +2079,7 @@ Also, ignore the repos set up by \texttt{straight.el}.
 (setq projectile-ignored-project-function #'the-projectile-ignore-projects)
 \end{verbatim}
 \item Directory-local indexing
-\label{sec:org86b2f03}
+\label{sec:org26f71a2}
 In case your \texttt{.projectile} file is pretty hairy, this allows us to
 alter the indexing method as a dirlocal.
 \begin{verbatim}
@@ -2110,7 +2092,7 @@ alter the indexing method as a dirlocal.
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org4201e04}
+\label{sec:org352a873}
 \begin{verbatim}
 (use-package projectile
   :demand t
@@ -2121,11 +2103,11 @@ alter the indexing method as a dirlocal.
 \end{verbatim}
 \end{enumerate}
 \item Counsel Projectile
-\label{sec:orga9baea2}
+\label{sec:org5c34b37}
 Counsel is everywhere! This integrates Projectile commands and Ivy.
 \begin{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org3a5b706}
+\label{sec:org3142970}
 \begin{verbatim}
 (use-package counsel-projectile
   :init
@@ -2136,12 +2118,12 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{enumerate}
 \end{enumerate}
 \subsection{Search}
-\label{sec:org40c7571}
+\label{sec:org4937ad9}
 \subsubsection{Regular Expressions}
-\label{sec:orge09bdf5}
+\label{sec:orgabba8e2}
 \begin{enumerate}
 \item Rx
-\label{sec:orgf5800a2}
+\label{sec:orga4c4a1b}
 A prescription for your regex woes. Don't write obscure regex
 syntax. Describe the regex you want, then generate the bizarre
 incantation you need.
@@ -2151,11 +2133,11 @@ incantation you need.
 \end{verbatim}
 \end{enumerate}
 \section{Writing}
-\label{sec:org49be5a7}
+\label{sec:org0e9497f}
 \subsection{Org Mode Customization}
-\label{sec:org704cb3a}
+\label{sec:orgd8ea1ad}
 \subsubsection{Global Outline Mode}
-\label{sec:org861e2f7}
+\label{sec:org424612b}
 Outlines work for just about any structured text imaginable, from code
 to prose. If it's got something that Emacs thinks is a paragraph, it
 works. When you need a high-level overview, it's hard to beat this.
@@ -2168,17 +2150,17 @@ works. When you need a high-level overview, it's hard to beat this.
 \end{verbatim}
 
 \subsubsection{Org}
-\label{sec:org71fb2d1}
+\label{sec:org0b70a9d}
 Org is a hugely expansive framework (a.k.a. collection of hacks) for
 organizing information, notes, tasks, calendars, and anything else
 related to Org-anization.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgedb378f}
+\label{sec:orgf85f959}
 \begin{enumerate}
 \item Version Hack
-\label{sec:org61df3da}
+\label{sec:org583fe3e}
 Because \texttt{straight.el} runs Org directly from a Git repo, the
 autoloads Org uses to identify its version are not generated in
 the way that it expects. This causes it to either a) fail to
@@ -2221,7 +2203,7 @@ Next, we need to define \texttt{org-git-version} and \texttt{org-release} eagerl
 \end{verbatim}
 
 \item \texttt{org-tempo}
-\label{sec:org1b67df0}
+\label{sec:org6368506}
 In the most recent release of Org, the way easy template expansion
 (i.e., \texttt{<s[TAB]} expands to a \texttt{begin\_src} block) was changed to use
 \texttt{tempo}, so we need to require this in order to keep this very
@@ -2235,15 +2217,53 @@ convenient functionality in place.
 \end{verbatim}
 
 \item Todo Sequence
-\label{sec:orga481218}
+\label{sec:org699f8a4}
 We use an augmented set of todo states, including TODO, IN-PROGRESS,
 WAITING, and the done states DONE and CANCELED.
 \begin{verbatim}
 (setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+      '((sequence
+         "BACKLOG(b!)"
+         "TODO(t!)"
+         "NEXT(n)"
+         "IN-PROGRESS(i!)"
+         "|"
+         "DONE(d!)")
+        (sequence
+         "WAITING(w@/!)"
+         "HOLD(h@/!)"
+         "|"
+         "CANCELED(c@)")
+        (type
+         "PHONE(p!)"
+         "MEETING(m!)")))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("IN-PROGRESS" :foreground "red" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELED" ("CANCELED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+(setq org-use-fast-todo-selection t)
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+(setq org-archive-location (f-expand "archive/%s::* Archived Tasks" org-directory))
 \end{verbatim}
 \item Bindings
-\label{sec:orgcb7de43}
+\label{sec:orgdc570ce}
 
 First, we want to set up some recommended bindings as specified in the
 Org manual.
@@ -2286,36 +2306,63 @@ Finally, we'll set up a convenient binding for inserting headings.
 \end{verbatim}
 
 \item Settings
-\label{sec:org3b4186b}
+\label{sec:orga13aefb}
 \texttt{org-insert-headline} will split your content by default, which is
 pretty dumb. We therefore set it to create a new heading, instead. We
 also activate \texttt{org-indent-mode} for more beautiful documents.
 
 We also set Org exports to occur asynchronously whenever possible.
 
+Finally, we set up refile to use outline path completion for easier
+refiling.
+
 \begin{verbatim}
 (setq org-insert-heading-respect-content t)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (setq org-export-in-background t)
+(setq org-refile-use-outline-path t
+      org-outline-path-complete-in-steps nil)
+(setq org-log-into-drawer t)
+(setq org-special-ctrl-a/e t
+      org-special-ctrl-k t)
+(setq org-return-follows-link t)
 \end{verbatim}
 
+\item Tags
+\label{sec:org77f1c61}
+We set up some useful tags we'd like available in any Org buffer.
+\begin{verbatim}
+(setq org-tag-persistent-alist
+      '((:startgroup . nil)
+        ("@work" . ?w)
+        ("@home" . ?h)
+        ("@phone" . ?p)
+        ("@mail" . ?m)
+        (:endgroup . nil)
+        ("ansible" . ?a)
+        ("epic" . ?e)
+        ("linux" . ?l)
+        ("noexport" . ?n)
+        ("crypt" . ?c)
+        ))
+\end{verbatim}
 \item Default Org Directory
-\label{sec:org0c75c23}
+\label{sec:org97bc7af}
 We stick our Org files in a new directory in the home directory by
 default.
 \begin{verbatim}
 (setq org-directory "~/org")
 \end{verbatim}
 \item Capture Templates
-\label{sec:orga272e31}
+\label{sec:org3a1ba59}
 \begin{verbatim}
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-         "* TODO %?\n  %i\n  %a")
+         "* TODO %?\n %T\n  %i\n  %a")
         ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
          "* %?\nEntered on %U\n  %i")
         ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
-         "* TODO %?\n %i\n %a")
+         "* TODO %?\n %T\n %i\n %a")
         ("h" "Home" entry (file+headline "~/org/home.org" "Tasks")
          "* TODO %?\n %i")))
 
@@ -2323,10 +2370,10 @@ default.
               '((org-agenda-files :maxlevel . 3)))
 \end{verbatim}
 \item Utilities
-\label{sec:orgd5e7540}
+\label{sec:org8355db8}
 \begin{enumerate}
 \item Recursively sort buffer entries alphabetically
-\label{sec:org064a482}
+\label{sec:org904687f}
 \begin{verbatim}
 (defun the-org-sort-ignore-errors ()
   (condition-case x
@@ -2340,7 +2387,7 @@ default.
 \end{verbatim}
 
 \item Archive dead tasks
-\label{sec:orge5cca33}
+\label{sec:org0bd4a7d}
 If tasks are marked DONE, and either have no deadline or the deadline
 has passed, archive it.
 
@@ -2362,7 +2409,7 @@ has passed, archive it.
 \end{verbatim}
 
 \item Pretty bullets
-\label{sec:orgf36e814}
+\label{sec:orgd327f4e}
 We use \texttt{org-bullets} to make our outlines prettier. There's some minor
 alignment weirdness with my font, so I may need to specify the bullet
 codepoints, later.
@@ -2373,7 +2420,7 @@ codepoints, later.
 \end{verbatim}
 
 \item Dropbox integration
-\label{sec:orgb210cf4}
+\label{sec:orgd9075fe}
 If \texttt{\textasciitilde{}/org/} doesn't exist, but \texttt{\textasciitilde{}/Dropbox/org} does, symlink the
 latter to the former.
 \begin{verbatim}
@@ -2385,7 +2432,7 @@ latter to the former.
 \end{enumerate}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orga8eee37}
+\label{sec:orga968b37}
 
 \begin{verbatim}
 (use-package org
@@ -2399,10 +2446,10 @@ latter to the former.
          <<org-mode-heading>>
          )
   :init
+  :config
   <<org-version-definitions>>
   <<org-dir>>
   <<org-capture>>
-  :config
   <<org-requires>>
   <<org-bullets>>
   <<org-settings>>
@@ -2410,6 +2457,7 @@ latter to the former.
   <<org-archive-past>>
   <<todo-states>>
   <<org-dropbox>>
+  <<org-tags>>
   :delight
   (org-indent-mode)
   )
@@ -2417,16 +2465,16 @@ latter to the former.
 \end{enumerate}
 
 \subsubsection{Org Agenda}
-\label{sec:org4e4e697}
+\label{sec:org906c7a3}
 Org Agenda is for generating a more useful consolidated summary of all
 or some of your tasks, according to their metadata.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org6563746}
+\label{sec:orgd021db8}
 \begin{enumerate}
 \item Bindings
-\label{sec:org298c743}
+\label{sec:org64c5683}
 Analogously to our bindings for regular org files, we'll also move
 things off of \texttt{S-} and onto \texttt{C-}.
 
@@ -2440,7 +2488,7 @@ things off of \texttt{S-} and onto \texttt{C-}.
 \end{verbatim}
 
 \item Window Splitting
-\label{sec:orge19533c}
+\label{sec:org552ba3b}
 We want Org Agenda to split the window into two tall windows, rather
 than two wide windows stacked.
 
@@ -2457,7 +2505,7 @@ than two wide windows stacked.
 \end{verbatim}
 
 \item Default Directory
-\label{sec:org43b261d}
+\label{sec:orgce112e4}
 If \texttt{org-directory} exists, set \texttt{default-directory} to its value in the
 agenda so that things like \texttt{find-file} work sensibly.
 
@@ -2477,13 +2525,15 @@ agenda so that things like \texttt{find-file} work sensibly.
 \end{verbatim}
 
 \item Settings
-\label{sec:orgc4e0393}
+\label{sec:org7aaaa9e}
 \begin{verbatim}
 (setq org-agenda-files '("~/org"))
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t)
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org7cceb22}
+\label{sec:orga51040b}
 \begin{verbatim}
 (use-package org-agenda
   :straight org-plus-contrib
@@ -2499,9 +2549,31 @@ agenda so that things like \texttt{find-file} work sensibly.
   )
 \end{verbatim}
 \end{enumerate}
-
+\subsubsection{Org Encryption}
+\label{sec:orge38bed1}
+\begin{verbatim}
+(use-package org-crypt
+  :straight org-plus-contrib
+  :demand t
+  :config
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance '("crypt"))
+  (setq org-crypt-key "17F07DF3086C4BBFA5799F38EF21DED4826AAFCF"))
+\end{verbatim}
+\subsubsection{Org Journal}
+\label{sec:orgd05cb09}
+Keeping a regular record of what's going on at work (programmer's
+journal) and at home (personal journal) can be a useful habit, so
+let's give it a shot.
+\begin{verbatim}
+(use-package org-journal
+  :demand t
+  :config
+  (setq org-journal-dir (f-expand "journal" org-directory))
+  (setq org-journal-enable-encryption t))
+\end{verbatim}
 \subsubsection{Context-Aware Capture and Agenda}
-\label{sec:org896564e}
+\label{sec:org3e9f733}
 \begin{verbatim}
 (use-package org-context
   :demand t
@@ -2518,19 +2590,19 @@ agenda so that things like \texttt{find-file} work sensibly.
   (org-context-activate))
 \end{verbatim}
 \subsubsection{Extra Export Packages}
-\label{sec:org7dbf098}
+\label{sec:orgc6c2166}
 In order to correctly export Org files to certain formats, we need
 some additional tools.
 \begin{enumerate}
 \item \texttt{htmlize}
-\label{sec:org2335609}
+\label{sec:org649007c}
 Used to convert symbols and such to HTML equivalents.
 \begin{verbatim}
 (use-package htmlize)
 \end{verbatim}
 \end{enumerate}
 \subsubsection{Org-mode Config Settings}
-\label{sec:org0701d65}
+\label{sec:orgb256336}
 Our config files live in \texttt{the-lib-directory}, but our org source files
 live in \texttt{the-org-lib-directory}. Unless I decide to start loading org
 files directly (which is doable if a touch annoying, at times), for
@@ -2575,7 +2647,7 @@ Finally, I'd like to automatically tangle the files on save.
 (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 \end{verbatim}
 \subsubsection{\texttt{org-tree-slide}}
-\label{sec:org27296ac}
+\label{sec:orgdfd6f7e}
 \begin{verbatim}
 (use-package org-tree-slide
   :config
@@ -2584,20 +2656,23 @@ Finally, I'd like to automatically tangle the files on save.
     (text-scale-set 5)
     (setq org-confirm-babel-evaluate nil)
     (setq ns-use-native-fullscreen t)
+    (disable-theme 'gruvbox)
+    (load-theme 'leuven)
     (toggle-frame-fullscreen))
   (defun the-presentation-stop ()
     (text-scale-set 0)
     (setq org-confirm-babel-evaluate t)
-    (toggle-frame-fullscreen)
+    (disable-theme 'leuven)
+    (load-theme 'gruvbox)
     (setq ns-use-native-fullscreen nil))
   (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
   (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)
   )
 \end{verbatim}
 \subsection{Editing Prose}
-\label{sec:org94835f2}
+\label{sec:orgd3c4f76}
 \subsubsection{Flyspell}
-\label{sec:org74adffe}
+\label{sec:org565d477}
 Flyspell is Flycheck but for spelling. Simple as.
 \begin{verbatim}
 (use-package flyspell
@@ -2605,15 +2680,15 @@ Flyspell is Flycheck but for spelling. Simple as.
   :diminish (flyspell-mode . "φ"))
 \end{verbatim}
 \subsection{Formatting}
-\label{sec:org390859e}
+\label{sec:orgc8ccd53}
 \subsubsection{Formatting Options}
-\label{sec:org45d1a20}
+\label{sec:org4fa1ad0}
 \begin{enumerate}
 \item Formatting
-\label{sec:orgb6fab00}
+\label{sec:org88f2857}
 \begin{enumerate}
 \item Sanity
-\label{sec:orgada7936}
+\label{sec:org3bb2e1c}
 Don't use tabs for indentation, even in deeply indented lines.
 
 \begin{verbatim}
@@ -2633,7 +2708,7 @@ so cut it out.
 \end{verbatim}
 
 \item Whitespace
-\label{sec:orgfc0b955}
+\label{sec:org7e5e334}
 Trim trailing whitespace on save. This will get rid of end-of-line
 whitespace, and reduce the number of blank lines at the end of the
 file to one.
@@ -2677,7 +2752,7 @@ Finally, always end files with a newline.
 
 \begin{enumerate}
 \item \texttt{long-lines-mode}
-\label{sec:orgb29030d}
+\label{sec:orgb43f72b}
 We define a minor mode for configuring \texttt{whitespace-mode} to highlight
 long lines. Enabling the mode will highlight characters beyond the
 fill column (80 columns, by default).
@@ -2696,7 +2771,7 @@ fill column (80 columns, by default).
 \end{enumerate}
 
 \item Line Wrapping
-\label{sec:org43c3557}
+\label{sec:org1b2faae}
 When editing text (i.e., not code), we want to automatically keep
 lines a reasonable length (<80 columns).
 
@@ -2735,7 +2810,7 @@ lifting it up to a global minor mode.
 \end{verbatim}
 
 \item EditorConfig
-\label{sec:org8cde910}
+\label{sec:orgaa39f5c}
 EditorConfig is a tool for establishing and maintaining consistent
 code style in editors and IDEs which support it (most of the major
 ones have a plugin).
@@ -2745,7 +2820,7 @@ ones have a plugin).
 \end{verbatim}
 
 \item Utilities
-\label{sec:org402b078}
+\label{sec:orgdb132af}
 Like \texttt{reverse-region}, but works characterwise rather than linewise.
 
 \begin{verbatim}
@@ -2761,25 +2836,25 @@ Interactively, reverse the characters in the current region."
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Indentation}
-\label{sec:org46d5168}
+\label{sec:org8d348c0}
 \begin{enumerate}
 \item Aggressive Indent
-\label{sec:org5ebe99c}
+\label{sec:orgfb5bd5a}
 Assuming your indentation is consistent, this will keep it correct
 without any additional work.
 \begin{enumerate}
 \item Setup
-\label{sec:org15b8d03}
+\label{sec:orgf7d7209}
 \begin{enumerate}
 \item Local Variable
-\label{sec:orge1f4101}
+\label{sec:orge537878}
 Here, we set up \texttt{aggressive-indent-mode} as a variable we can set on a
 file- or directory-local level.
 \begin{verbatim}
 (put 'aggressive-indent-mode 'safe-local-variable #'booleanp)
 \end{verbatim}
 \item Slow mode
-\label{sec:org32be66c}
+\label{sec:orge633d33}
 We register \texttt{aggressive-indent} with our slow mode, allowing us to
 disabled reindentation on save for situations in which reindentation
 is expensive. Note that
@@ -2803,7 +2878,7 @@ This is done in `the-slow-indent-mode'."
 \end{verbatim}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orgc908207}
+\label{sec:orga93fc2d}
 \begin{verbatim}
 (use-package aggressive-indent
   :init
@@ -2816,11 +2891,11 @@ This is done in `the-slow-indent-mode'."
 \end{enumerate}
 \end{enumerate}
 \section{Reading}
-\label{sec:orga32b25f}
+\label{sec:org6701158}
 \subsection{PDF Functionality}
-\label{sec:org2d93386}
+\label{sec:org6798fed}
 \subsubsection{\texttt{pdf-tools}}
-\label{sec:org72a8d79}
+\label{sec:org8315d1f}
 DocView is the built-in PDF viewer in Emacs, but it's a bit meh.
 \texttt{pdf-tools} is significantly nicer, with much better support for
 in-document hyperlinks and fancy things like that. It does require
@@ -2834,11 +2909,11 @@ compilation of an external library, though.
   (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
 \end{verbatim}
 \section{Version Control}
-\label{sec:orgc7a9870}
+\label{sec:orgc0b2ec8}
 \subsection{Git integration}
-\label{sec:org8f2f208}
+\label{sec:org810265e}
 \subsubsection{Direct Interaction}
-\label{sec:org6fe763e}
+\label{sec:orgb2598ea}
 For Elisp purposes, we occasionally need to get some piece of
 information from Git. We do this using \texttt{git.el}, a dead-simple git
 interaction library.
@@ -2849,7 +2924,7 @@ interaction library.
 \end{verbatim}
 
 \subsubsection{Magit}
-\label{sec:orge3ff98d}
+\label{sec:orgb8db6e2}
 Magit is one of the Emacs killer apps. It's a Git porcelain which
 makes interacting with Git intuitive, instructive, and quick.
 
@@ -2933,22 +3008,44 @@ makes interacting with Git intuitive, instructive, and quick.
   ;; [1]: http://chris.beams.io/posts/git-commit/
   (setq git-commit-summary-max-length 50))
 \end{verbatim}
+
+\begin{enumerate}
+\item Github Integration
+\label{sec:orgcfa9ef6}
+\begin{verbatim}
+(use-package magithub
+  :demand t
+  :after magit
+  :config (magithub-feature-autoinject t))
+\end{verbatim}
+\end{enumerate}
+
+\subsubsection{Get link to commit or source line}
+\label{sec:orge51a6da}
+Occasionally it's useful to send a link to a specific commit or source
+line on <repo host of choice>, and this package makes that relatively
+easy.
+\begin{verbatim}
+(use-package git-link
+  :demand t
+  :bind (("C-c g l" . git-link)))
+\end{verbatim}
 \section{Programming Utilities}
-\label{sec:orga79788c}
+\label{sec:orgbd1e930}
 \subsection{Syntax Checking}
-\label{sec:org90b8401}
+\label{sec:orgfd3694a}
 \subsubsection{Flycheck}
-\label{sec:orgbc87da2}
+\label{sec:org966d505}
 Flycheck provides a framework for in-buffer error and warning
 highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 \begin{enumerate}
 \item Settings
-\label{sec:orgcef2774}
+\label{sec:org4733101}
 \begin{enumerate}
 \item Enable Flycheck Globally
-\label{sec:org4bc332c}
+\label{sec:org94c90d0}
 Enable Flycheck in all buffers, but also allow for disabling it
 per-buffer.
 
@@ -2958,7 +3055,7 @@ per-buffer.
 \end{verbatim}
 
 \item Disable Flycheck in the modeline
-\label{sec:org27fd7b8}
+\label{sec:org7d4d445}
 It's honestly more distracting than anything,
 
 \begin{verbatim}
@@ -2967,7 +3064,7 @@ It's honestly more distracting than anything,
 \end{enumerate}
 
 \item \texttt{use-package} declaration
-\label{sec:org82bd744}
+\label{sec:org44cf633}
 \begin{verbatim}
 (use-package flycheck
   :defer 3
@@ -2978,9 +3075,9 @@ It's honestly more distracting than anything,
 \end{verbatim}
 \end{enumerate}
 \subsection{Auto-completion}
-\label{sec:org17b8f70}
+\label{sec:org12479bd}
 \subsubsection{Company Settings}
-\label{sec:orga294d14}
+\label{sec:orgfc1ab1d}
 \begin{itemize}
 \item Show completions instantly, rather than after half a second.
 \item Show completions after typing three characters.
@@ -3025,7 +3122,7 @@ have domain-specific words that have particular casing.
 
 \begin{enumerate}
 \item Performance
-\label{sec:org5301520}
+\label{sec:org6866240}
 In case autocompletion is making Emacs drag, we add a toggle to slow
 it down.
 
@@ -3045,7 +3142,7 @@ This is done in `the-slow-autocomplete-mode'."
 \end{verbatim}
 
 \item YaSnippet Hack
-\label{sec:org42b37d8}
+\label{sec:org8a57f84}
 Make it so that Company's keymap overrides Yasnippet's keymap when a
 snippet is active. This way, you can TAB to complete a suggestion for
 the current field in a snippet, and then TAB to move to the next
@@ -3121,7 +3218,7 @@ completions menu on-screen in the same location.
 \end{enumerate}
 
 \subsubsection{Company}
-\label{sec:orgd30acc6}
+\label{sec:org7805a72}
 \texttt{company} provides an in-buffer autocompletion framework. It
 allows for packages to define backends that supply completion
 candidates, as well as optional documentation and source code. Then
@@ -3151,7 +3248,7 @@ backends will still be included.")
 \end{verbatim}
 
 \subsubsection{Company Statistics}
-\label{sec:org28d39a8}
+\label{sec:orga3fec7b}
 \texttt{company-statistics} adds usage-based sorting to Company completions.
 It is a goal to replace this package with \href{https://github.com/PythonNut/historian.el}{\texttt{historian}} or \href{https://github.com/raxod502/prescient.el}{\texttt{prescient}}.
 
@@ -3176,19 +3273,19 @@ It is a goal to replace this package with \href{https://github.com/PythonNut/his
   (company-statistics-mode +1))
 \end{verbatim}
 \section{Languages}
-\label{sec:org133cac0}
+\label{sec:org9cda1fb}
 \subsection{Common Lisp}
-\label{sec:org546fc2f}
+\label{sec:orga5edccc}
 \subsubsection{Aggressive Indent}
-\label{sec:orgfaca040}
+\label{sec:org35ba896}
 Enable aggressive indentation in all Lisp modes.
 \begin{verbatim}
 (add-hook 'lisp-mode-hook #'aggressive-indent-mode)
 \end{verbatim}
 \subsection{Emacs Lisp}
-\label{sec:org14edd79}
+\label{sec:org75ef5c5}
 \subsubsection{Hooks}
-\label{sec:orga8d086b}
+\label{sec:org7ab7aba}
 Enable ElDoc for Elisp buffers and the \textbf{scratch} buffer.
 \begin{verbatim}
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
@@ -3201,10 +3298,10 @@ Enable Aggressive Indent for Elisp buffers and the \textbf{scratch} buffer.
 \end{verbatim}
 
 \subsubsection{Fixes}
-\label{sec:orgf14ca6e}
+\label{sec:orge85cd41}
 \begin{enumerate}
 \item Advised Function Noise
-\label{sec:org3465cc7}
+\label{sec:orgb628fe2}
 Emacs barfs up a bunch of nonsense warnings every time a function is
 advised, and we do that a lot, so we'll just tell it to hush.
 
@@ -3213,7 +3310,7 @@ advised, and we do that a lot, so we'll just tell it to hush.
 \end{verbatim}
 
 \item Keyword lists
-\label{sec:org655ff36}
+\label{sec:orge316b9d}
 Keyword lists are indented kind of stupidly. To wit, by default they
 will be indented like this:
 
@@ -3310,7 +3407,7 @@ Lisp function does not specify a special indentation."
 \end{enumerate}
 
 \subsubsection{Reloading the Init File}
-\label{sec:orgac91ca2}
+\label{sec:org52c6f6d}
 First, we define a customizable keybinding to reload our init file.
 
 \begin{verbatim}
@@ -3339,7 +3436,7 @@ key.
 \end{verbatim}
 
 \subsubsection{Evaluate an Elisp buffer}
-\label{sec:org71ea310}
+\label{sec:org7b043ae}
 Other Lisp interaction modes (like CIDER and Geiser) provide a binding
 for evaluating a whole buffer. We add a similar binding for
 \texttt{eval-buffer}, as well as some sanity-checking so we don't evaluate
@@ -3362,7 +3459,7 @@ the init file in a bad way.
 \end{verbatim}
 
 \subsubsection{Rebind Find Commands}
-\label{sec:org6584f40}
+\label{sec:org9ed2286}
 Add keybindings (\texttt{C-h C-f} and \texttt{C-h C-v}) for jumping to the source of
 Elisp functions and variables. Also, add a keybinding (\texttt{C-h C-o}) that
 performs the functionality of \texttt{M-.} only for Elisp, because the latter
@@ -3387,7 +3484,7 @@ years of Emacsing.
 \end{verbatim}
 
 \subsubsection{Lisp Interaction Lighter}
-\label{sec:orga5bd129}
+\label{sec:orgbc75a23}
 Show `lisp-interaction-mode' as "ξι" instead of "Lisp Interaction" in
 the mode line.
 
@@ -3399,13 +3496,13 @@ the mode line.
           #'the--rename-lisp-interaction-mode)
 \end{verbatim}
 \section{Performance}
-\label{sec:org7b71a33}
+\label{sec:orgd5aee15}
 \subsection{Performance Mode}
-\label{sec:orge0cea94}
+\label{sec:org6f21057}
 Occasionally features like indentation and autocompletion are
 expensive, so we set up a minor mode to slow them down.
 \subsubsection{Modes}
-\label{sec:org4b875f4}
+\label{sec:orgdf502e6}
 \begin{verbatim}
 (define-minor-mode the-slow-indent-mode
   "Minor mode for when the indentation code is slow.
@@ -3417,11 +3514,11 @@ This prevents `company' and `eldoc' from displaying metadata as
 quickly.")
 \end{verbatim}
 \section{Networking}
-\label{sec:org8777bf8}
+\label{sec:org344acf9}
 \subsection{Network Services}
-\label{sec:orge63e172}
+\label{sec:orgbd3155e}
 \subsubsection{macOS TLS verification}
-\label{sec:org53efd6a}
+\label{sec:orgfb8c080}
 TLS certs on macOS don't live anywhere that \texttt{gnutls} can see them, by
 default, so \texttt{brew install libressl} and we'll use those.
 \begin{verbatim}
@@ -3433,7 +3530,7 @@ default, so \texttt{brew install libressl} and we'll use those.
 \end{verbatim}
 
 \subsubsection{StackOverflow}
-\label{sec:orgdb63e85}
+\label{sec:orgf8a9d4a}
 Honestly, probably the most important package here. \texttt{M-x
 sx-authenticate}, provide a username and password, then get to
 overflowing.
@@ -3442,7 +3539,7 @@ overflowing.
 \end{verbatim}
 
 \subsubsection{Bug URL references}
-\label{sec:org7550dc7}
+\label{sec:org7648e65}
 Allow setting the regexp for bug references from file-local or
 directory-local variables. CIDER does this in its files, for example.
 \begin{verbatim}
@@ -3450,14 +3547,14 @@ directory-local variables. CIDER does this in its files, for example.
 \end{verbatim}
 
 \subsubsection{Pastebin}
-\label{sec:orgcdaa0e5}
+\label{sec:org6fb619b}
 \texttt{ix.io} is a slick little pastebin, and now we can use it in Emacs.
 \begin{verbatim}
 (use-package ix)
 \end{verbatim}
 
 \subsubsection{Browsing}
-\label{sec:org7972d56}
+\label{sec:orgf312fb3}
 \texttt{eww} is the wonderfully named Emacs Web Wowser, a text-based browser.
 \begin{verbatim}
 (use-package eww
@@ -3472,18 +3569,18 @@ directory-local variables. CIDER does this in its files, for example.
 \end{verbatim}
 
 \subsubsection{Steam}
-\label{sec:org17ce6f5}
+\label{sec:org73f486b}
 \begin{verbatim}
 (use-package steam
   :init
   (setq steam-username "prooftechnique"))
 \end{verbatim}
 \section{Etc.}
-\label{sec:org7e48ac8}
+\label{sec:org5a12e04}
 \subsection{Miscellaneous Utilities}
-\label{sec:org7f26ff5}
+\label{sec:orgeabef6e}
 \subsubsection{Eventually-obsolete Functions}
-\label{sec:org8bdf7d2}
+\label{sec:org707ea22}
 These functions will become unnecessary in Emacs 26.1, which
 extends \texttt{map-put} to have a TESTFN argument.
 
@@ -3553,7 +3650,7 @@ done with TESTFN, which defaults to `eq'. See also
 \end{verbatim}
 
 \subsubsection{Framework Identification}
-\label{sec:orga7724c3}
+\label{sec:orgb7210dd}
 This gives us an easy way to check if the file we're editing is part
 of THE.
 
