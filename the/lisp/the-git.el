@@ -82,6 +82,15 @@
   ;; [1]: http://chris.beams.io/posts/git-commit/
   (setq git-commit-summary-max-length 50))
 
+(use-package magithub
+  :demand t
+  :after magit
+  :config (magithub-feature-autoinject t))
+
+(use-package git-link
+  :demand t
+  :bind (("C-c g l" . git-link)))
+
 (provide 'the-git)
 
 ;;; the-git.el ends here

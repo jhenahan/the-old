@@ -103,6 +103,24 @@
        (setq git-commit-summary-max-length 50))
    #+end_src
 
+*** Github Integration
+#+begin_src emacs-lisp
+  (use-package magithub
+    :demand t
+    :after magit
+    :config (magithub-feature-autoinject t))
+#+end_src
+
+** Get link to commit or source line
+Occasionally it's useful to send a link to a specific commit or source
+line on <repo host of choice>, and this package makes that relatively
+easy.
+#+begin_src emacs-lisp
+  (use-package git-link
+    :demand t
+    :bind (("C-c g l" . git-link)))
+#+end_src
+
 ** Provides :noexport:
    #+begin_src emacs-lisp
      (provide 'the-git)
