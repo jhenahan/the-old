@@ -1,0 +1,24 @@
+* Undo
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;;; the-undo.el -- Better undo interaction
+  (require 'the-package)
+#+end_src
+
+** Undo Tree
+Emacs undo is extremely powerful, but also extremely hard to grok.
+Undo Tree allows us to visualize the changes we've made and step
+through the tree.
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :demand t
+    :config
+    (global-undo-tree-mode))
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-undo)
+
+  ;;; the-undo.el ends here
+#+end_src
