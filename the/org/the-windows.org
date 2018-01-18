@@ -17,6 +17,22 @@ I'm a great fan of =golden-ratio=.
     (golden-ratio-mode t))
 #+end_src
 
+** Window Selection
+By default, Emacs maintains focus in whatever window you're working
+in, but usually what I intend it to pop a new window or split and
+focus that immediately. With =shackle=, it's easy to set this up.
+#+begin_src emacs-lisp
+  (use-package shackle
+    :demand t
+    :config
+    (setq shackle-rules '(
+                          (compilation-mode :noselect t)
+                          (magit-diff-mode :noselect t)
+                          ("*Warnings*" :noselect t)
+                          )
+          shackle-default-rule '(:select t))
+    (shackle-mode 1))
+#+end_src
 ** Provides                                                       :noexport:
 #+begin_src emacs-lisp
   (provide 'the-windows)
