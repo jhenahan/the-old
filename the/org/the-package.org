@@ -64,6 +64,7 @@ is present, the loading is eager; otherwise, the loading is lazy. See
 
 #+begin_src emacs-lisp
   (setq use-package-always-defer t)
+  (setq use-package-verbose t)
 #+end_src
 
 ** Provides                                                       :noexport:

@@ -18,6 +18,7 @@
 (setq straight-use-package-by-default t)
 
 (setq use-package-always-defer t)
+(setq use-package-verbose t)
 
 (provide 'the-package)
 
