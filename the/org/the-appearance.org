@@ -56,7 +56,9 @@ versions, patches exist to get the same effect.
 
 #+begin_src emacs-lisp
   (if (version<= "26" emacs-version)
-      (setq default-frame-alist '((undecorated . t))))
+      (progn
+        (setq frame-resize-pixelwise t)
+        (setq default-frame-alist '((undecorated . t)))))
 #+end_src
 
 ** Fonts

@@ -18,7 +18,9 @@
 (setq echo-keystrokes 1e-6)
 
 (if (version<= "26" emacs-version)
-    (setq default-frame-alist '((undecorated . t))))
+    (progn
+      (setq frame-resize-pixelwise t)
+      (setq default-frame-alist '((undecorated . t)))))
 
 (defun the-fontify-frame (frame)
   (interactive)
