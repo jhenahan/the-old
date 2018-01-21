@@ -89,7 +89,7 @@
 
 (use-package git-link
   :demand t
-  :bind (("C-c g l" . git-link)))
+  :bind (("C-c C-g l" . git-link)))
 
 (provide 'the-git)
 
