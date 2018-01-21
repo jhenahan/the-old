@@ -5,6 +5,7 @@ GPL-compliant) garbage. I don't want a bit of it.
 #+begin_src emacs-lisp
   ;;; the-startup.el --- Cleaning up Emacs startup
   (require 'the-libraries)
+  (require 'the-org)
 #+end_src
 
 ** Disable Startup Message

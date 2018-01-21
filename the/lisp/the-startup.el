@@ -1,5 +1,6 @@
 ;;; the-startup.el --- Cleaning up Emacs startup
 (require 'the-libraries)
+(require 'the-org)
 
 (defalias 'the--advice-inhibit-startup-echo-area-message #'ignore
   "Unconditionally inhibit the startup message in the echo area.
