@@ -6,6 +6,7 @@
   (require 'the-package)
 #+end_src
 
+** El-Patch
 Occasionally you need to customize a small part of a large function
 defined by another package. This library provides an elegant,
 clear, and robust way of doing so. See [[https://github.com/raxod502/el-patch][the README]].
