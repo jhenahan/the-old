@@ -1,3 +1,4 @@
+;;; -*- no-byte-compile: t -*-
 (defvar the-minimum-emacs-version "25.1"
   "THE does not support any Emacs version below this.")
 
