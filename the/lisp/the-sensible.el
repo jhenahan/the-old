@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-sensible.el --- Sensible defaults
 
 (setq default-directory "~/")

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-git.el --- Interfacing with Git.
 
 (require 'the-appearance)

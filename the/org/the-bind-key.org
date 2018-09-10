@@ -1,14 +1,13 @@
 * Binding Keys
-
 ** Requirements                                                    :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-bind-key.el --- Utility functions for keybindings
 
   (require 'the-custom)
   (require 'the-package)
   (require 'the-libraries)
 #+end_src
-
 ** Custom Prefix
 There's a lot of room for keybindings, but we rely on a common prefix
 for discoverability and to leave room for extension. This also makes
@@ -34,7 +33,6 @@ cells to make the whole thing more customizable.
   \(the--join-keys \"M-P\" \"\" \"e i\") => \"M-P e i\""
     (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
 #+end_src
-
 
 ** =bind-key=
 =bind-key= is the prettier cousin of =define-key= and

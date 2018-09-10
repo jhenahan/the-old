@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-save-file.el --- Saving files
 
 (setq backup-by-copying t)

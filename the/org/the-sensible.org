@@ -1,6 +1,7 @@
 * Sensible Defaults
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-sensible.el --- Sensible defaults
 #+end_src
 

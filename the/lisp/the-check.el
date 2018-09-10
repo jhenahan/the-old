@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-check.el --- On-the-fly syntax and semantics checking
 
 (require 'the-package)

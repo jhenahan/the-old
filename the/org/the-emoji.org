@@ -1,6 +1,7 @@
 * Emojis!
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-emoji.el --- Emojis :smile:
 
   (require 'the-package)

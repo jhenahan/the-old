@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-regexp.el --- Support for regular expressions
 
 (require 'the-package)

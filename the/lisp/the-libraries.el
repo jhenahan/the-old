@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-libraries.el --- Helfpul utility libraries
 
 (require 'the-package)

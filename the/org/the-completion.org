@@ -1,7 +1,7 @@
 * Completion
 ** Requires                                                       :noexport:
-
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-completion.el --- Completion systems
 
   (require 'the-appearance)
@@ -239,8 +239,7 @@ Icicles is steroids for the steroids. I don't even know everything it
 does, so it's not on by default.
 
 #+begin_src emacs-lisp
-  (use-package icicles
-    :demand t)
+  (use-package icicles)
 #+end_src
 
 ** Provides                                                       :noexport:

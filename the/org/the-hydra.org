@@ -3,6 +3,7 @@ Hydras are a really fancy feature that let you create families of
 related bindings with a common prefix.
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-hydra.el --- The many-headed keybinding machine
 
   (require 'the-custom)

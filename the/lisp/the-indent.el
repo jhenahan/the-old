@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-indent.el --- Indentation
 
 (require 'the-package)
@@ -21,7 +22,7 @@
                 nil 'local)))
   
   (add-hook 'the-slow-indent-mode #'the-aggressive-indent-toggle-slow)
-  :delight (aggressive-indent-mode "AggrIndent"))
+  :diminish aggressive-indent-mode)
 
 (provide 'the-indent)
 

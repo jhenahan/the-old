@@ -1,6 +1,7 @@
 * Killing and Yanking (copying and pasting)
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-yank.el --- Killing and yanking
 #+end_src
 

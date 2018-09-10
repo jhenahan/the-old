@@ -1,6 +1,7 @@
 * emacs.d Organization
 ** Requirements                                                       :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-emacsd.el --- Organizing ~/.emacs.d
 
   (require 'the-package)

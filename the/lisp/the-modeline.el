@@ -1,26 +1,31 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-modeline.el --- Modeline configuration
 
 (require 'the-package)
 
 (use-package diminish
-  :demand t)
+  :demand t
+  :config
+  (with-eval-after-load 'subword
+    (diminish 'subword-mode))
+  (diminish 'filladapt-mode)
+  (with-eval-after-load 'outline
+    (diminish 'outline-minor-mode))
+  (diminish 'smerge-mode)
+  (diminish 'whitespace-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'auto-fill-function)
+  (with-eval-after-load 'page-break-lines
+    (diminish 'page-break-lines-mode))
+  (diminish 'visual-line-mode "ω")
+  (diminish 'eldoc-mode "ε")
+  )
 
 (use-package delight
   :demand t
-  :delight
-  (abbrev-mode)
-  (auto-fill-function)
-  (eldoc-mode "ε")
-  (emacs-lisp-mode "ξ")
-  (filladapt-mode)
-  (outline-minor-mode)
-  (smerge-mode)
-  (subword-mode)
-  (undo-tree-mode)
-  (visual-line-mode "ω")
-  (which-key-mode)
-  (whitespace-mode)
-  )
+  :config
+  (delight
+   '((emacs-lisp-mode "ξ" :major))))
 
 (use-package nyan-mode
   :demand t
@@ -30,44 +35,11 @@
   :config
   (nyan-mode 1))
 
-(use-package spaceline-all-the-icons
-  :demand t
+(use-package spaceline
   :init
-  (let ((fonts
-         '("all-the-icons"
-           "file-icons"
-           "FontAwesome"
-           "github-octicons"
-           "Material Icons")))
-    (unless `(and
-              (find-font (font-spec :name ,fonts)))
-      (all-the-icons-install-fonts)))
-  (setq spaceline-all-the-icons-icon-set-modified 'toggle)
-  (setq spaceline-all-the-icons-icon-set-bookmark 'heart)
-  (setq spaceline-all-the-icons-icon-set-flycheck-slim 'dots)
-  (setq spaceline-all-the-icons-hide-long-buffer-path t)
+  (require 'spaceline-config)
   :config
-  (spaceline-all-the-icons-theme)
-  (defface the-spaceline-modalka-off
-    '((t (:background "chartreuse3"
-          :foreground "#3E3D31")))
-    "Modalka inactive face."
-    :group 'the)
-  
-  (defface the-spaceline-modalka-on
-    '((t (:background "DarkGoldenrod2"
-          :foreground "#3E3D31")))
-    "Modalka inactive face."
-    :group 'the)
-  
-  (defun the-spaceline-modalka-highlight ()
-    (if modalka-mode
-        'the-spaceline-modalka-on
-      'the-spaceline-modalka-off))
-  
-  (setq spaceline-highlight-face-func #'the-spaceline-modalka-highlight)
-  (spaceline-toggle-all-the-icons-nyan-cat-on)
-  )
+  (spaceline-spacemacs-theme))
 
 (provide 'the-modeline)
 

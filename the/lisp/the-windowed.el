@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-windowed.el --- Checking the window system
 
 (defmacro the-with-windowed-emacs (&rest body)

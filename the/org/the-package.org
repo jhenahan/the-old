@@ -1,6 +1,7 @@
 * Package Management
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-package.el --- Package management
 #+end_src
 

@@ -1,7 +1,9 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-network.el --- Network and web browsing
 
 (require 'the-os)
 (require 'the-package)
+(require 'the-org)
 
 (the-with-operating-system macOS
   (with-eval-after-load 'gnutls
@@ -24,6 +26,14 @@
   :config
   (progn
     (add-hook 'eww-mode-hook 'visual-line-mode)))
+
+(use-package elfeed
+  :demand t)
+
+(use-package elfeed-org
+  :demand t
+  :config
+  (elfeed-org))
 
 (use-package steam
   :init

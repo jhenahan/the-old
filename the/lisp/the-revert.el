@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-revert.el --- Auto-revert
 
 (require 'the-libraries)

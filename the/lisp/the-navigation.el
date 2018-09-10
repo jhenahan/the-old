@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-navigation.el --- Navigating within a file
 
 (require 'cl-lib)
@@ -153,13 +154,21 @@ nil means no keybinding is established."
 
 ;; This package allows the use of other regexp engines for
 ;; visual-regexp.
-          (use-package visual-regexp-steroids
-            :demand t
-            :after (visual-regexp pcre2el)
-            :config
+(use-package visual-regexp-steroids
+  :demand t
+  :after (visual-regexp pcre2el)
+  :config
 
-            ;; Use Emacs-style regular expressions by default.
-            (setq vr/engine the-regex-engine))
+  ;; Use Emacs-style regular expressions by default.
+  (setq vr/engine the-regex-engine))
+
+(use-package expand-region
+  :demand t)
+
+(use-package vimish-fold
+  :demand t
+  :config
+  (vimish-fold-global-mode 1))
 
 (provide 'the-navigation)
 

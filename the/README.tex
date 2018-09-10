@@ -1,4 +1,4 @@
-% Created 2018-01-18 Thu 14:25
+% Created 2018-09-09 Sun 17:16
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,7 +14,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\usepackage{alphabeta}
+\usepackage{alphabeta} \usepackage[outputdir=..]{minted}
 \author{Jack Henahan}
 \date{\today}
 \title{The Heretic's Emacs config}
@@ -23,7 +23,7 @@
  pdftitle={The Heretic's Emacs config},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 25.3.1 (Org mode 9.1.6)},
+ pdfcreator={Emacs 26.1 (Org mode 9.1.14)},
  pdflang={English}}
 \begin{document}
 
@@ -32,195 +32,195 @@
 
 
 \section{Basics}
-\label{sec:org09b90de}
+\label{sec:orge91006c}
 \subsection{Modern Libraries}
-\label{sec:orgf7abe6a}
+\label{sec:org46d31ff}
 \subsubsection{Libraries}
-\label{sec:orgf1a6360}
+\label{sec:orgd616988}
 \begin{enumerate}
 \item Async
-\label{sec:orgecfaa45}
+\label{sec:orgd7d711c}
 The \texttt{async} library makes writing asynchronous functions easier (since
 async in Emacs is kind of a nightmare, otherwise).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package async
   :commands (async-start))
-\end{verbatim}
+\end{minted}
 
 \item \texttt{cl-lib}
-\label{sec:org931d1cd}
+\label{sec:orgc64bc18}
 This library extends the "Lispiness" of Elisp, making it more like
 Common Lisp though I always feel a bit dirty about using it.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package cl-lib
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \item Lists
-\label{sec:org42dd0d7}
+\label{sec:org7c655ac}
 The list API in Elisp basically sucks, so there's \texttt{dash}. I'm
 attempting to learn how to use \texttt{seq} properly, though, since it's
 built in and should be just about at parity with \texttt{dash}'s API, if a
 bit more verbose.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package dash
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \item Files
-\label{sec:org3ee9fe1}
+\label{sec:org4d61c9b}
 The file API in Elisp \textbf{also} sucks, so we have \texttt{f.el}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package f
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \item Strings
-\label{sec:org46bfe24}
+\label{sec:orgfc8a64b}
 Keeping up the pattern, the string API in Elisp is hot garbage, so we
 have \texttt{s.el} to make things nice.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package s
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \item Hash Tables
-\label{sec:org8c58fdf}
+\label{sec:orgda86af2}
 Elisp's hash table API is based around \texttt{make-hash-table}, which is a
 pretty awful function with five keyword arguments. This might almost
 be worth it for how much faster hash tables are than alists, but
 luckily \texttt{ht.el} means we don't have to choose.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package ht
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \item \texttt{subr} extensions
-\label{sec:orgae920de}
+\label{sec:org2a1179b}
 \texttt{subr-x} provides some built-in equivalents to some of the modern APIs
 above, some implemented in C.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (require 'subr-x)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsection{Sensible Defaults}
-\label{sec:orge19e1f7}
+\label{sec:org643db36}
 \subsubsection{Default Directory}
-\label{sec:org4aee6d9}
+\label{sec:orgc94ff45}
 When using \texttt{find-file}, search from the user's home directory.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq default-directory "~/")
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Treat Camel-Case Words as separate words}
-\label{sec:org662737c}
-\begin{verbatim}
+\label{sec:org720ff75}
+\begin{minted}[]{common-lisp}
 (add-hook 'prog-mode-hook 'subword-mode)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Increase GC threshold}
-\label{sec:org20cff52}
+\label{sec:orgaebcd05}
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
 collection. This means GC runs less often, which speeds up some
 operations.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq gc-cons-threshold 20000000)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Make Scripts Executable By Default}
-\label{sec:org5e33bf3}
+\label{sec:orgf80cc60}
 If your file starts with a shebang, the file will be marked executable
 on save.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Transient Mark Mode}
-\label{sec:org0f57968}
+\label{sec:orgcd2db10}
 Transient mark means region highlighting works the way you would
 expect it to coming from other editors.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (transient-mark-mode t)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Short Confirmations}
-\label{sec:org2005162}
+\label{sec:orgb61741c}
 Typing out \texttt{yes} and \texttt{no} is irritating. Just use \texttt{y} or \texttt{n}.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (fset #'yes-or-no-p #'y-or-n-p)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{macOS settings}
-\label{sec:orgb083500}
+\label{sec:org7c94afa}
 If you set Emacs as the default file handler for certain types of
 files, double-clicking will open an entire new Emacs frame. This
 setting causes Emacs to reuse the existing one.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (the-with-operating-system macOS
   (setq ns-pop-up-frames nil))
-\end{verbatim}
+\end{minted}
 \subsection{Enable Disabled Commands}
-\label{sec:orgb18a528}
+\label{sec:orgfb3e1f5}
 It is obvious to anyone that if a function is disabled then it must
 be powerful, or at least interesting. I want them.
 
 \subsubsection{Do it}
-\label{sec:org0e2c37a}
-\begin{verbatim}
+\label{sec:org3b8d008}
+\begin{minted}[]{common-lisp}
 (setq disabled-command-function nil)
-\end{verbatim}
+\end{minted}
 \subsection{Killing and Yanking (copying and pasting)}
-\label{sec:org62067d1}
+\label{sec:org673bee9}
 \subsubsection{Settings}
-\label{sec:orge77e724}
+\label{sec:org6a39641}
 \begin{enumerate}
 \item Delete Selection
-\label{sec:orgab521ae}
+\label{sec:org71e8f18}
 If you start typing when you have something selected, then the
 selection will be deleted. If you press DEL while you have something
 selected, it will be deleted rather than killed. (Otherwise, in both
 cases the selection is deselected and the normal function of the key
 is performed.)
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (delete-selection-mode 1)
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item AUCTeX compatibility
-\label{sec:org85a02db}
+\label{sec:org4619f12}
 Make delete-selection-mode work properly with AUCTeX.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (with-eval-after-load 'latex
   (put 'LaTeX-insert-left-brace 'delete-selection t))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item Eliminate duplicates in kill ring
-\label{sec:org43ed305}
+\label{sec:org760d6ea}
 If you kill the same thing twice, you won't have to use \texttt{yank} twice
 to get past it to older entries in the kill ring.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq kill-do-not-save-duplicates t)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsection{Startup}
-\label{sec:orgbb52b0c}
+\label{sec:orgdec5a85}
 By default, Emacs fills your universe with (FSF-approved and
 GPL-compliant) garbage. I don't want a bit of it.
 \subsubsection{Disable Startup Message}
-\label{sec:orga0defe9}
+\label{sec:orgab68e45}
 I like GNU. You maybe like GNU. You're using Emacs. Whatever. You
 don't need the "For information about Emacs\ldots{}" message.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defalias 'the--advice-inhibit-startup-echo-area-message #'ignore
   "Unconditionally inhibit the startup message in the echo area.
 This is an `:override' advice for
@@ -228,15 +228,15 @@ This is an `:override' advice for
 
 (advice-add #'display-startup-echo-area-message :override
             #'the--advice-inhibit-startup-echo-area-message)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Disable About}
-\label{sec:orgb57cc71}
+\label{sec:orgb3f6d73}
 If I wanted to know about GNU Emacs, there are dozens of doc
 options. I do not need that buffer on startup. We disable that and
 instead use our own fancy dashboard.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package dashboard
   :demand t
   :after (org-agenda projectile)
@@ -244,48 +244,52 @@ instead use our own fancy dashboard.
   (setq recentf-exclude (-map 'f-canonical (org-agenda-files)))
   (setq dashboard-banner-logo-title "REPENT!")
   (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
-  (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5)
-                          (registers . 5)))
+  (if (f-exists? (f-expand "straight/build-cache.el" user-emacs-directory))
+      (setq dashboard-items '((recents . 5)
+                              (bookmarks . 5)
+                              (projects . 5)
+                              (agenda . 5)
+                              (registers . 5)))
+    (setq dashboard-items '((recents . 5)
+                            (bookmarks . 5)
+                            (registers . 5))))
   (dashboard-setup-startup-hook))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Blank Scratch Buffer}
-\label{sec:org27cedf1}
+\label{sec:orgaca407a}
 I know what a scratch buffer is. Hush.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq initial-scratch-message nil)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Emacs Server}
-\label{sec:orgc5b2b2b}
+\label{sec:org4ccbf40}
 Start up an Emacs server process so we can attach \texttt{emacsclient} to it
 and get that fast response time the Vim people are so smug about.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (server-start)
-\end{verbatim}
+\end{minted}
 \subsection{Auto-Revert}
-\label{sec:orge50a4a0}
+\label{sec:orgcee2881}
 \subsubsection{Settings}
-\label{sec:org4bba6a3}
+\label{sec:org2237989}
 Turn the delay on auto-reloading from 5 seconds down to 1 second. We
 have to do this before turning on \texttt{auto-revert-mode} for the change to
 take effect, unless we do it through \texttt{customize-set-variable} (which
 is slow enough to show up in startup profiling).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq auto-revert-interval 1)
-\end{verbatim}
+\end{minted}
 
 Automatically reload files that were changed on disk, if they have not
 been modified in Emacs since the last time they were saved.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (global-auto-revert-mode 1)
-\end{verbatim}
+\end{minted}
 
 Only automatically revert buffers that are visible. This should
 improve performance (because if you have 200 buffers open\ldots{}). This
@@ -295,7 +299,7 @@ Note that calling \texttt{global-auto-revert-mode} above triggers an
 autoload for \texttt{autorevert}, so there's no need to `require' it again
 here.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (el-patch-defun auto-revert-buffers ()
   "Revert buffers as specified by Auto-Revert and Global Auto-Revert Mode.
 Should `global-auto-revert-mode' be active all file buffers are checked.
@@ -365,63 +369,63 @@ the timer when no buffers need to be checked."
                  (null auto-revert-buffer-list))
         (cancel-timer auto-revert-timer)
         (setq auto-revert-timer nil)))))
-\end{verbatim}
+\end{minted}
 
 Auto-revert all buffers, not only file-visiting buffers. The docstring
 warns about potential performance problems but this should not be an
 issue since we only revert visible buffers.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq global-auto-revert-non-file-buffers t)
-\end{verbatim}
+\end{minted}
 
 Since we automatically revert all visible buffers after one second,
 there's no point in asking the user whether or not they want to do it
 when they find a file. This disables that prompt.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq revert-without-query '(".*"))
-\end{verbatim}
+\end{minted}
 
 Prevent \textbf{Help} buffers from asking for confirmation about reverting.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (with-eval-after-load 'help-mode
   (defun the--advice-disable-help-mode-revert-prompt
       (help-mode-revert-buffer _ignore-auto _noconfirm)
     (funcall help-mode-revert-buffer _ignore-auto 'noconfirm))
   (advice-add #'help-mode-revert-buffer :around
               #'the--advice-disable-help-mode-revert-prompt))
-\end{verbatim}
+\end{minted}
 
 Don't show it in the mode line.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq auto-revert-mode-text nil)
-\end{verbatim}
+\end{minted}
 \subsection{Saving Files}
-\label{sec:org6917412}
+\label{sec:org90623e8}
 \section{Package Management}
-\label{sec:orga70b6e6}
+\label{sec:orga91817a}
 \subsection{Package Management}
-\label{sec:org810cb8f}
+\label{sec:orgdf7a07d}
 \subsubsection{Disable \texttt{package.el}}
-\label{sec:orge9491b3}
+\label{sec:orga6de3c9}
 We use \texttt{straight.el} in this household, and like it! Emacs will
 initialize \texttt{package.el} unless we tell it not to, so we do so.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq package-enable-at-startup nil)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Bootstrap \texttt{straight.el}}
-\label{sec:org2e1ad2c}
+\label{sec:org4a146e0}
 We are using a package manager called straight.el. This code, which is
 taken from \href{https://github.com/raxod502/straight.el}{the README}, bootstraps the system (because obviously the
 package manager is unable to install and load itself, if it is not
 already installed and loaded).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
       (bootstrap-version 3))
   (unless (file-exists-p bootstrap-file)
@@ -432,23 +436,23 @@ already installed and loaded).
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{\texttt{use-package}}
-\label{sec:org1929f42}
+\label{sec:org1aade48}
 To handle a lot of useful tasks related to package configuration, we
 use a library called `use-package', which provides a macro by the same
 name. This macro automates many common tasks, like autoloading
 functions, binding keys, registering major modes, and lazy-loading,
 through the use of keyword arguments. See the README.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (straight-use-package 'use-package)
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item \texttt{straight.el} integration
-\label{sec:orgac0c798}
+\label{sec:orge3d2dca}
 Tell use-package to automatically install packages if they are
 missing. By default, packages are installed via \href{https://github.com/raxod502/straight.el}{\texttt{straight.el}}, which
 draws package installation recipes (short lists explaining where to
@@ -458,50 +462,81 @@ can also specify a recipe manually by putting \texttt{:straight} in the
 \texttt{straight.el}.) Learn more about recipe formatting from the \href{https://github.com/melpa/melpa\#recipe-format}{MELPA
 README}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq straight-use-package-by-default t)
-\end{verbatim}
+\end{minted}
 
 \item Lazy-loading
-\label{sec:org77b1ba1}
+\label{sec:org27ab7d0}
 Tell use-package to always load packages lazily unless told otherwise.
 It's nicer to have this kind of thing be deterministic: if `:demand'
 is present, the loading is eager; otherwise, the loading is lazy. See
 \href{https://github.com/jwiegley/use-package\#notes-about-lazy-loading}{the \texttt{use-package} documentation}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq use-package-always-defer t)
-\end{verbatim}
+(setq use-package-verbose t)
+\end{minted}
 \end{enumerate}
 \subsection{Future-proof patches}
-\label{sec:org7f76bbe}
+\label{sec:org1d65ef9}
+\subsubsection{El-Patch}
+\label{sec:orgebab702}
+Occasionally you need to customize a small part of a large function
+defined by another package. This library provides an elegant,
+clear, and robust way of doing so. See \href{https://github.com/raxod502/el-patch}{the README}.
+
+\begin{minted}[]{common-lisp}
+(use-package el-patch
+  :straight (:host github
+           :repo "raxod502/el-patch"
+           :branch "develop")
+  :config
+
+  ;; When patching variable definitions, override the original values.
+  (setq el-patch-use-aggressive-defvar t)
+
+  ;; Support for deferred installation in `el-patch-validate-all'.
+
+  (defun the-require-with-deferred-install (feature &rest args)
+    "Require FEATURE, installing PACKAGE if necessary.
+\(fn FEATURE &optional PACKAGE)"
+    (let ((package feature))
+      (when args
+        (setq package (car args)))
+      (when package
+        (use-package-install-deferred-package package :el-patch))
+      (require feature)))
+
+  (setq el-patch-require-function #'the-require-with-deferred-install))
+\end{minted}
 \section{Customization}
-\label{sec:org518562f}
+\label{sec:org3df7149}
 \subsection{Customization Group}
-\label{sec:org36aba03}
+\label{sec:org7b60f6c}
 \subsubsection{THE group}
-\label{sec:org3c8a877}
+\label{sec:orgea5a0e7}
 Here we define a customization group for THE. This allows users
 to customize the variables declared here in a user-friendly way
 using the Custom interface.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defgroup the nil
   "Customize your THE experience"
   :group 'emacs)
-\end{verbatim}
+\end{minted}
 \section{System Integration}
-\label{sec:org0f4f36f}
+\label{sec:org36521ff}
 \subsection{OS Integration}
-\label{sec:orgf86f6d0}
+\label{sec:orgba3067d}
 \subsubsection{OS-specific Customization}
-\label{sec:org1069e6c}
+\label{sec:org847f491}
 \begin{enumerate}
 \item OS detection
-\label{sec:orga6e8748}
+\label{sec:org204dfdb}
 Ideally, we detect the operating system here, as well as giving the
 option to customize it directly in case we get it wrong.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-operating-system
   (pcase system-type
     ('darwin 'macOS)
@@ -514,14 +549,14 @@ automatically detected and does not need to be changed."
   :type '(choice (const :tag "macOS" macOS)
                  (const :tag "Windows" windows)
                  (const :tag "Linux" linux)))
-\end{verbatim}
+\end{minted}
 
 \item OS-specific settings
-\label{sec:org780714b}
+\label{sec:org3a1679c}
 This macro allows us to handle things like operating system specific
 clipboard/mouse hacks and other things like that.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defmacro the-with-operating-system (os &rest body)
   "If the operating system is OS, eval BODY.
 See `the-operating-system' for the possible values of OS,
@@ -529,114 +564,70 @@ which should not be quoted."
   (declare (indent 1))
   `(when (eq the-operating-system ',os)
      ,@body))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsubsection{Path Settings}
-\label{sec:orga8f9a3f}
+\label{sec:org9320306}
 \begin{enumerate}
 \item Path Fixes
-\label{sec:org1a63be6}
+\label{sec:org169c73e}
 In the terminal, the mouse and clipboard don't work properly. But in
 windowed Emacsen, the \texttt{PATH} is not necessarily set correctly! You
 can't win.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package exec-path-from-shell
   :demand t
   :config
   (the-with-operating-system macOS
-    (exec-path-from-shell-initialize))
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "RUST_SRC_PATH"))
   (the-with-operating-system linux
     (exec-path-from-shell-initialize)))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsubsection{Clipboard Integration}
-\label{sec:org93580ad}
+\label{sec:orge282e5e}
 \begin{enumerate}
 \item macOS integration
-\label{sec:orgd161866}
+\label{sec:org9f46d3a}
 Like mouse integration, clipboard integration
 works properly in windowed Emacs but not in terminal Emacs (at
 least by default). This code was originally based on \href{https://gist.github.com/the-kenny/267162}{1}, and then
 modified based on \href{http://emacs.stackexchange.com/q/26471/12534}{2}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (the-with-operating-system macOS
-  (the-with-terminal-emacs
-    (defvar the-clipboard-last-copy nil
-      "The last text that was copied to the system clipboard.
-This is used to prevent duplicate entries in the kill ring.")
-
-    (defun the-clipboard-paste ()
-      "Return the contents of the macOS clipboard, as a string."
-      (let* (;; Setting `default-directory' to a directory that is
-             ;; sure to exist means that this code won't error out
-             ;; when the directory for the current buffer does not
-             ;; exist.
-             (default-directory "/")
-             ;; Command pbpaste returns the clipboard contents as a
-             ;; string.
-             (text (shell-command-to-string "pbpaste")))
-        ;; If this function returns nil then the system clipboard is
-        ;; ignored and the first element in the kill ring (which, if
-        ;; the system clipboard has not been modified since the last
-        ;; kill, will be the same). Including this `unless' clause
-        ;; prevents you from getting the same text yanked the first
-        ;; time you run `yank-pop'. (Of course, this is less relevant
-        ;; due to `counsel-yank-pop', but still arguably the correct
-        ;; behavior.)
-        (unless (string= text the-clipboard-last-copy)
-          text)))
-
-    (defun the-clipboard-copy (text)
-      "Set the contents of the macOS clipboard to given TEXT string."
-      (let* (;; Setting `default-directory' to a directory that is
-             ;; sure to exist means that this code won't error out
-             ;; when the directory for the current buffer does not
-             ;; exist.
-             (default-directory "/")
-             ;; Setting `process-connection-type' makes Emacs use a pipe to
-             ;; communicate with pbcopy, rather than a pty (which is
-             ;; overkill).
-             (process-connection-type nil)
-             ;; The nil argument tells Emacs to discard stdout and
-             ;; stderr. Note, we aren't using `call-process' here
-             ;; because we want this command to be asynchronous.
-             ;;
-             ;; Command pbcopy writes stdin to the clipboard until it
-             ;; receives EOF.
-             (proc (start-process "pbcopy" nil "pbcopy")))
-        (process-send-string proc text)
-        (process-send-eof proc))
-      (setq the-clipboard-last-copy text))
-
-    (setq interprogram-paste-function #'the-clipboard-paste)
-    (setq interprogram-cut-function #'the-clipboard-copy)))
-\end{verbatim}
+  (use-package osx-clipboard
+    :demand t
+    :diminish
+    :config
+    (osx-clipboard-mode +1)))
+\end{minted}
 
 \item Inter-program paste
-\label{sec:orgecd1a5b}
+\label{sec:org905ca5d}
 If you have something on the system clipboard, and then kill something
 in Emacs, then by default whatever you had on the system clipboard is
 gone and there is no way to get it back. Setting the following option
 makes it so that when you kill something in Emacs, whatever was
 previously on the system clipboard is pushed into the kill ring. This
 way, you can paste it with \texttt{yank-pop}.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq save-interprogram-paste-before-kill t)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsection{UI Integration}
-\label{sec:org1de9f11}
+\label{sec:org505d5fa}
 \subsubsection{Window System}
-\label{sec:org61155a9}
+\label{sec:org87720eb}
 These macros give us a convenient way to conditionally execute code
 based on the active window system.
 
 \begin{enumerate}
 \item Macros
-\label{sec:orge540476}
-\begin{verbatim}
+\label{sec:orgadb2c76}
+\begin{minted}[]{common-lisp}
 (defmacro the-with-windowed-emacs (&rest body)
   "Eval BODY if Emacs is windowed, else return nil."
   (declare (indent defun))
@@ -648,47 +639,47 @@ based on the active window system.
   (declare (indent defun))
   `(unless (display-graphic-p)
      ,@body))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \section{Config Management}
-\label{sec:org305f947}
+\label{sec:orgb275226}
 \subsection{Config File Utilities}
-\label{sec:orgd8f2040}
+\label{sec:org39235de}
 \subsubsection{Apache configs}
-\label{sec:org08cc921}
-\begin{verbatim}
+\label{sec:org986b4b4}
+\begin{minted}[]{common-lisp}
 (use-package apache-mode)
-\end{verbatim}
+\end{minted}
 \subsubsection{Dockerfiles}
-\label{sec:org99443aa}
-\begin{verbatim}
+\label{sec:org46b7d70}
+\begin{minted}[]{common-lisp}
 (use-package dockerfile-mode)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Git files}
-\label{sec:org37b5a8f}
+\label{sec:orgb21e5d4}
 \begin{enumerate}
 \item Git config and modules
-\label{sec:org7ea2449}
-\begin{verbatim}
+\label{sec:orgd506add}
+\begin{minted}[]{common-lisp}
 (use-package gitconfig-mode)
-\end{verbatim}
+\end{minted}
 
 \item Git ignore files
-\label{sec:org5075d97}
-\begin{verbatim}
+\label{sec:org2f3fea2}
+\begin{minted}[]{common-lisp}
 (use-package gitignore-mode)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \subsubsection{SSH configs}
-\label{sec:orgfa9b341}
-\begin{verbatim}
+\label{sec:org8811996}
+\begin{minted}[]{common-lisp}
 (use-package ssh-config-mode)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{YAML}
-\label{sec:orgc94ee5a}
+\label{sec:orgd2de083}
 I edit a lot of YAML files, especially Ansible configs. The current
 version of \texttt{emacs-ansible} has a hard dependency on \texttt{auto-complete},
 which we don't use, so until there's a version without that
@@ -696,7 +687,7 @@ dependency, we just turn \texttt{yaml-mode} on whenever we think we're in an
 Ansible file. \texttt{auto-fill} is also turned off in YAML buffers because
 it breaks things.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package yaml-mode
   :init
   (setq the--ansible-filename-re ".*\\(main\.yml\\|site\.yml\\|encrypted\.yml\\|roles/.+\.yml\\|group_vars/.+\\|host_vars/.+\\)")
@@ -706,41 +697,41 @@ it breaks things.
     (auto-fill-mode -1))
 
   (add-hook 'yaml-mode-hook #'the--disable-auto-fill-mode))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Jinja2}
-\label{sec:orgd9334f0}
+\label{sec:orgc7038b1}
 Jinja2 is the template format of record for Ansible, so we just add
 basic support here.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package jinja2-mode)
-\end{verbatim}
+\end{minted}
 \subsection{Emacs}
-\label{sec:org819b96c}
+\label{sec:org0bae0e7}
 \subsubsection{emacs.d Organization}
-\label{sec:orgab21b47}
+\label{sec:org6f0e682}
 \begin{enumerate}
 \item \texttt{no-littering}
-\label{sec:org418e2d8}
+\label{sec:orga43f69f}
 A lot of packages (and also a lot of Emacs defaults) throw files all
 over your config directory. \texttt{no-littering} sets a lot of sensible
 defaults for commonly used packages to keep the config directory
 manageable and discoverable.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package no-littering
   :demand t)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \section{Documentation}
-\label{sec:orge4bc69b}
+\label{sec:org8915f29}
 \subsection{Better Help}
-\label{sec:org24b8be6}
+\label{sec:orgac4673a}
 \subsubsection{Helpful}
-\label{sec:org88d55e4}
+\label{sec:org89fb176}
 We alias common help methods to their Helpful equivalents because
 Helpful is a much nicer version of the built-in help.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package helpful
   :demand t
   :config
@@ -748,35 +739,35 @@ Helpful is a much nicer version of the built-in help.
   (defalias #'describe-function #'helpful-callable)
   (defalias #'describe-variable #'helpful-variable)
   (defalias #'describe-symbol #'helpful-symbol))
-\end{verbatim}
+\end{minted}
 \subsection{ElDoc}
-\label{sec:orgf0db2f0}
+\label{sec:orgb1b2a91}
 \subsubsection{Settings}
-\label{sec:org3a0c274}
+\label{sec:orgfd9f62b}
 Show ElDoc messages in the echo area immediately, instead of after 1/2
 a second.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq eldoc-idle-delay 0)
-\end{verbatim}
+\end{minted}
 
 Always truncate ElDoc messages to one line. This prevents the echo
 area from resizing itself unexpectedly when point is on a variable
 with a multiline docstring.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq eldoc-echo-area-use-multiline-p nil)
-\end{verbatim}
+\end{minted}
 
 Don't show ElDoc in the mode line.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq eldoc-minor-mode-string nil)
-\end{verbatim}
+\end{minted}
 
 Slow down ElDoc if metadata fetching is causing performance issues.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-eldoc-toggle-slow ()
   "Slow down `eldoc' by turning up the delay before metadata is shown.
 This is done in `the-slow-autocomplete-mode'."
@@ -785,131 +776,140 @@ This is done in `the-slow-autocomplete-mode'."
     (kill-local-variable 'eldoc-idle-delay)))
 
 (add-hook 'the-slow-autocomplete-mode-hook #'the-eldoc-toggle-slow)
-\end{verbatim}
+\end{minted}
 \section{Keybindings}
-\label{sec:orgef89a06}
+\label{sec:org15ee967}
 \subsection{Binding Keys}
-\label{sec:org9c5d657}
-
+\label{sec:org6f142d5}
 \subsubsection{Custom Prefix}
-\label{sec:orgc6e4869}
+\label{sec:orgebe2af7}
 There's a lot of room for keybindings, but we rely on a common prefix
 for discoverability and to leave room for extension. This also makes
 creating modal bindings later quite a bit easier.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-prefix "M-T"
   "Prefix key sequence for The-related keybindings.
 This is a string as would be passed to `kbd'."
   :group 'the
   :type 'string)
-\end{verbatim}
+\end{minted}
 
 For convenience, we also have a function that will create binding
 strings using our prefix. This mainly gets used in bind-key
 declarations until I can figure out how to evaluate code in org-table
 cells to make the whole thing more customizable.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-join-keys (&rest keys)
   "Join key sequences. Empty strings and nils are discarded.
 \(the--join-keys \"M-P e\" \"e i\") => \"M-P e e i\"
 \(the--join-keys \"M-P\" \"\" \"e i\") => \"M-P e i\""
   (string-join (remove "" (mapcar #'string-trim (remove nil keys))) " "))
-\end{verbatim}
-
+\end{minted}
 
 \subsubsection{\texttt{bind-key}}
-\label{sec:org458ca64}
+\label{sec:org54e2ce7}
 \texttt{bind-key} is the prettier cousin of \texttt{define-key} and
 \texttt{global-set-key}, as well as providing the \texttt{:bind} family of keywords
 in \texttt{use-package},
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package bind-key)
-\end{verbatim}
+\end{minted}
 \subsection{Hydra}
-\label{sec:orgbba9f4c}
+\label{sec:orgf3e768e}
 Hydras are a really fancy feature that let you create families of
 related bindings with a common prefix.
 \subsubsection{\texttt{use-package} declaration}
-\label{sec:orge2fc42c}
-\begin{verbatim}
+\label{sec:orgc942cdf}
+\begin{minted}[]{common-lisp}
 (use-package hydra
   :demand t)
-\end{verbatim}
+\end{minted}
 \section{UI}
-\label{sec:org3e8a52a}
+\label{sec:orgdb8a438}
 \subsection{Appearance}
-\label{sec:orgf5f6cde}
+\label{sec:org48e7165}
 \subsubsection{Basic Setup}
-\label{sec:org4856902}
+\label{sec:orgeb19d9b}
 This file has appearance tweaks that are unrelated to the color
 theme. Menus, scroll bars, bells, cursors, and so on. See also
 \texttt{the-theme}, which customizes the color theme specifically.
 
 \subsubsection{Fullscreen}
-\label{sec:org9915f61}
+\label{sec:org62eb808}
 I use \texttt{chunkwm} to manage most windows, including Emacs, so the native
 fullscreen mode is unnecessary. It's also necessary to set pixelwise
 frame resizing non-nil for a variety of window managers. I don't see
 any particular harm in having it on, regardless of WM.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (the-with-operating-system macOS
   (setq ns-use-native-fullscreen nil))
 (setq frame-resize-pixelwise t)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Interface Cleanup}
-\label{sec:org74c6be6}
+\label{sec:org02de84b}
 Emacs defaults are a nightmare of toolbars and scrollbars and such
 nonsense. We'll turn all of that off.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (menu-bar-mode -1)
 (setq ring-bell-function #'ignore)
 (scroll-bar-mode -1)
+(defun the-disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'the-disable-scroll-bars)
 (tool-bar-mode -1)
 (blink-cursor-mode -1)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Keystroke Display}
-\label{sec:org55501f4}
+\label{sec:orge3fdc25}
 Display keystrokes in the echo area immediately, not after one
 second. We can't set the delay to zero because somebody thought it
 would be a good idea to have that value suppress keystroke display
 entirely.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq echo-keystrokes 1e-6)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{No Title Bars}
-\label{sec:org654b2ae}
+\label{sec:org6b2588b}
 I put a lot of effort into purging title bars from most of the
 software I use on a regular basis (what a waste of real estate), and
 in Emacs 26 (might really be 26.2 or so) this is built in. For earlier
 versions, patches exist to get the same effect.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (if (version<= "26" emacs-version)
-    (setq default-frame-alist '((undecorated . t))))
-\end{verbatim}
+    (progn
+      (setq frame-resize-pixelwise t)
+      (setq default-frame-scroll-bars 'none)
+      (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+      (add-to-list 'default-frame-alist '(ns-appearance . dark))
+                                        ;(setq default-frame-alist '((undecorated . t)))
+      ))
+\end{minted}
 
 \subsubsection{Fonts}
-\label{sec:org5e4467b}
+\label{sec:org9369804}
 I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 \subsubsection{Adjust font size by screen resolution}
-\label{sec:org4100814}
+\label{sec:org2daedb1}
 The biggest issue I have with multiple monitors is that the font size
 is all over the place. The functions below just set up some reasonable
 defaults and machinery to change the size depending on the resolution
 of the monitor.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-fontify-frame (frame)
   (interactive)
   (the-with-windowed-emacs
@@ -927,26 +927,40 @@ of the monitor.
   (run-with-idle-timer 1 t 'the-fontify-this-frame))
 
 (call-interactively 'the-fontify-idle)
-\end{verbatim}
+\end{minted}
+
+\subsubsection{Fancy nonsense}
+\label{sec:orgd9c2127}
+Transparency and whatnot.
+\begin{minted}[]{common-lisp}
+(defcustom the-fancy-stuff nil
+  "Non-nil means turn on a bunch of weird appearance tweaks like
+transparency."
+  :group 'the
+  :type 'boolean)
+
+(if the-fancy-stuff
+    (add-to-list 'default-frame-alist '(alpha . (85 . 50))))
+\end{minted}
 \subsection{Theme}
-\label{sec:org7b3fe69}
+\label{sec:org6c588bb}
 \subsubsection{Utilities}
-\label{sec:orge7b083d}
+\label{sec:org7a82235}
 
 This function is useful for reformatting lispy names (like
 \texttt{deeper-blue}) into user-friendly strings (like "Deeper Blue") for
 the Custom interface.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--unlispify (name)
   "Converts \"deep-blue\" to \"Deep Blue\"."
   (capitalize
    (replace-regexp-in-string
     "-" " " name)))
-\end{verbatim}
+\end{minted}
 
 This is a handy macro for conditionally enabling color theme
 customizations.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defmacro the-with-color-theme (theme &rest body)
   "If the current color theme is THEME, eval BODY; else return nil.
 The current color theme is determined by consulting
@@ -955,16 +969,15 @@ The current color theme is determined by consulting
   ;; `theme' should be a symbol so we can use `eq'.
   `(when (eq ',theme the-color-theme)
      ,@body))
-\end{verbatim}
-
+\end{minted}
 
 \subsubsection{Default Color Scheme}
-\label{sec:orgf7d8814}
+\label{sec:org71874d7}
 
 The default color scheme is Gruvbox, but you can set it to whatever
 you like.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-color-theme 'gruvbox
   "Specifies the color theme used by The.
 You can use anything listed by `custom-available-themes'. If you
@@ -985,53 +998,53 @@ wish to use your own color theme, you can set this to nil."
                               '(leuven
                                 gruvbox))
                              #'string-lessp)))))
-\end{verbatim}
+\end{minted}
 
 Defer color theme loading until after init, which helps to avoid
 weirdness during the processing of the local init-file.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-defer-color-theme t
   "Non-nil means defer loading the color theme until after init.
 Otherwise, the color theme is loaded whenever `the-theme' is
 loaded."
   :group 'the
   :type 'boolean)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Leuven Customization}
-\label{sec:org660bc79}
+\label{sec:org6cda84b}
 \begin{itemize}
 \item Change the highlight color from yellow to blue
 \item Don't underline current search match
 \item Lighten the search highlight face and remove the underline
 \item Don't underline mismatched parens
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (the-with-color-theme leuven
   (set-face-background 'highlight "#B1EAFC")
   (set-face-underline 'isearch nil)
   (set-face-background 'lazy-highlight "#B1EAFC")
   (set-face-underline 'lazy-highlight nil)
   (set-face-underline 'show-paren-mismatch nil))
-\end{verbatim}
+\end{minted}
 \end{itemize}
 
 \subsubsection{Gruvbox installation}
-\label{sec:org5dcc27f}
+\label{sec:org3b35143}
 We register the Gruvbox package with Straight, but it is only
 downloaded if the theme is active.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (straight-register-package 'gruvbox-theme)
 (the-with-color-theme gruvbox
   (use-package gruvbox-theme))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Actually load the theme}
-\label{sec:org8929a02}
+\label{sec:org78211fe}
 Load the appropriate color scheme as specified in
 \texttt{the-color-theme}.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (when the-color-theme
   (if the-defer-color-theme
       (progn
@@ -1045,48 +1058,52 @@ If there is an error, report it as a warning."
                            (error-message-string error-data))))))
         (add-hook 'after-init-hook #'the-load-color-theme))
     (load-theme the-color-theme 'no-confirm)))
-\end{verbatim}
+\end{minted}
 \subsection{Modeline Configuration}
-\label{sec:org2fda9a3}
+\label{sec:orgb64f408}
 \subsubsection{Diminish}
-\label{sec:orgd134ff5}
+\label{sec:org715eaf5}
 \texttt{diminish} allows us to change the display of minor modes in the
 modeline. I prefer Delight, but \texttt{diminish} is the standard used by
 many packages.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package diminish
-  :demand t)
-\end{verbatim}
+  :demand t
+  :config
+  (with-eval-after-load 'subword
+    (diminish 'subword-mode))
+  (diminish 'filladapt-mode)
+  (with-eval-after-load 'outline
+    (diminish 'outline-minor-mode))
+  (diminish 'smerge-mode)
+  (diminish 'whitespace-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'auto-fill-function)
+  (with-eval-after-load 'page-break-lines
+    (diminish 'page-break-lines-mode))
+  (diminish 'visual-line-mode "ω")
+  (diminish 'eldoc-mode "ε")
+  )
+\end{minted}
 \subsubsection{Delight}
-\label{sec:org8e184e8}
+\label{sec:org1fd138d}
 \texttt{delight} allows us to change the display of minor and major modes in
 the modeline. Spaceline is gonna do a lot of this work for us, but for
 anything it doesn't catch we'll make our own lighter. This also gives
 us the \texttt{:delight} keyword in our \texttt{use-package} declarations.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package delight
   :demand t
-  :delight
-  (abbrev-mode)
-  (auto-fill-function)
-  (eldoc-mode "ε")
-  (emacs-lisp-mode "ξ")
-  (filladapt-mode)
-  (outline-minor-mode)
-  (smerge-mode)
-  (subword-mode)
-  (undo-tree-mode)
-  (visual-line-mode "ω")
-  (which-key-mode)
-  (whitespace-mode)
-  )
-\end{verbatim}
+  :config
+  (delight
+   '((emacs-lisp-mode "ξ" :major))))
+\end{minted}
 \subsubsection{Nyan!}
-\label{sec:org05bc507}
+\label{sec:orgcd563ff}
 Gotta have that cat! This will add a Nyan Cat progress indicator to
 the modeline.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package nyan-mode
   :demand t
   :init
@@ -1094,90 +1111,32 @@ the modeline.
         nyan-wavy-trail t)
   :config
   (nyan-mode 1))
-\end{verbatim}
-\subsubsection{Spaceline - All-the-Icons}
-\label{sec:org2627ca3}
-We use Spaceline for our modeline, along with a theme called
-\texttt{spaceline-all-the-icons} which uses rich icon fonts where
-appropriate.
-\begin{enumerate}
-\item Setup
-\label{sec:org85fe113}
-\begin{enumerate}
-\item Display diminished minor modes
-\label{sec:org11c864c}
-\begin{verbatim}
-(spaceline-toggle-all-the-icons-minor-modes-on)
-\end{verbatim}
-\item Change modeline color based on Modalka stat
-\label{sec:org9ac4338}
-\begin{verbatim}
-(defface the-spaceline-modalka-off
-  '((t (:background "chartreuse3"
-        :foreground "#3E3D31")))
-  "Modalka inactive face."
-  :group 'the)
-
-(defface the-spaceline-modalka-on
-  '((t (:background "DarkGoldenrod2"
-        :foreground "#3E3D31")))
-  "Modalka inactive face."
-  :group 'the)
-
-(defun the-spaceline-modalka-highlight ()
-  (if modalka-mode
-      'the-spaceline-modalka-on
-    'the-spaceline-modalka-off))
-
-(setq spaceline-highlight-face-func #'the-spaceline-modalka-highlight)
-\end{verbatim}
-\item Turn on Nyan Cat
-\label{sec:orga0abd8f}
-\begin{verbatim}
-(spaceline-toggle-all-the-icons-nyan-cat-on)
-\end{verbatim}
-\end{enumerate}
-\item \texttt{use-package} declaration
-\label{sec:org3e4f008}
-\begin{verbatim}
-(use-package spaceline-all-the-icons
-  :demand t
+\end{minted}
+\subsubsection{{\bfseries\sffamily TODO} Custom Modeline}
+\label{sec:org5bd5a61}
+\begin{minted}[]{common-lisp}
+(use-package spaceline
   :init
-  (let ((fonts
-         '("all-the-icons"
-           "file-icons"
-           "FontAwesome"
-           "github-octicons"
-           "Material Icons")))
-    (unless `(and
-              (find-font (font-spec :name ,fonts)))
-      (all-the-icons-install-fonts)))
-  (setq spaceline-all-the-icons-icon-set-modified 'toggle)
-  (setq spaceline-all-the-icons-icon-set-bookmark 'heart)
-  (setq spaceline-all-the-icons-icon-set-flycheck-slim 'dots)
-  (setq spaceline-all-the-icons-hide-long-buffer-path t)
+  (require 'spaceline-config)
   :config
-  (spaceline-all-the-icons-theme)
-  <<spaceline-modalka>>
-  <<nyan>>
-  )
-\end{verbatim}
-\end{enumerate}
+  (spaceline-spacemacs-theme))
+\end{minted}
 \subsection{Emojis!}
-\label{sec:org0e41ce7}
+\label{sec:org7e45c4e}
 \subsubsection{\texttt{emojify}}
-\label{sec:org36ea3f3}
+\label{sec:orgbf5582d}
 Emojify renders a variety of strings as emojis, as well as providing
 some nice interactive functions to get emojis all over the place.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package emojify
   :init
   (add-hook 'after-init-hook #'global-emojify-mode))
-\end{verbatim}
+\end{minted}
 \subsection{Fancy Pragmata Pro ligatures}
-\label{sec:org8671af3}
-\begin{verbatim}
+\label{sec:org1fad614}
+\begin{minted}[]{common-lisp}
+;; -*- lexical-binding: t; -*-
 ;;; the-pragmata.el --- ligatures for Pragmata Pro
 
 (setq prettify-symbols-unprettify-at-point 'right-edge)
@@ -1412,38 +1371,38 @@ some nice interactive functions to get emojis all over the place.
 (provide 'the-pragmata)
 
 ;;; the-pragmata.el ends here
-\end{verbatim}
+\end{minted}
 \section{Navigation}
-\label{sec:orge88c333}
+\label{sec:org40c8018}
 \subsection{Completion}
-\label{sec:orgb647243}
+\label{sec:orgdf9d381}
 \subsubsection{Packages}
-\label{sec:org92fcdda}
+\label{sec:org1125ddf}
 \begin{enumerate}
 \item Smex - Frecency for command history
-\label{sec:orgfc7e87f}
+\label{sec:org6e5552a}
 This package provides a simple mechanism for recording the user's
 command history so that it can be used to sort commands by usage. It
 is automatically used by Ivy. Note, however, that historian.el will
 hopefully replace smex soon, since it provides more functionality in a
 more elegant way. See \href{https://github.com/nonsequitur/smex}{1}, \href{https://github.com/PythonNut/historian.el}{2}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package smex)
-\end{verbatim}
+\end{minted}
 
 \item flx - Fuzzy command matching
-\label{sec:org1ad6147}
+\label{sec:orgc599a65}
 This package provides a framework for sorting choices in a hopefully
 intelligent way based on what the user has typed in, using "fuzzy
 matching" (i.e. "ffap" matches "find-file-at-point"). See \href{https://github.com/lewang/flx}{1}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package flx)
-\end{verbatim}
+\end{minted}
 
 \item Ivy - completing-read on steroids
-\label{sec:org252f4e2}
+\label{sec:org36a5c95}
 Ivy is a completion and narrowing framework. What does this mean?
 By default, Emacs has some basic tab-completion for commands,
 files, and so on. Ivy replaces this interface by showing a list of
@@ -1452,21 +1411,21 @@ way (using smex and flx, if they are installed) as the user inputs
 a query. This is much faster.
 \begin{enumerate}
 \item Setup
-\label{sec:orgbd85540}
+\label{sec:org046320d}
 \begin{enumerate}
 \item Lazy Loading
-\label{sec:orgd999f9a}
+\label{sec:org2a3cc32}
 We'll be making a few patches, so we want to make sure that the
 patches aren't loaded until \texttt{ivy} is.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (el-patch-feature ivy)
-\end{verbatim}
+\end{minted}
 \item Keymap
-\label{sec:org46a6fde}
+\label{sec:orgf790130}
 We define a keymap for \texttt{ivy-mode} so we can remap buffer switching
 commands when \texttt{ivy} is active.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (el-patch-defvar ivy-mode-map
       (let ((map (make-sparse-keymap)))
         (define-key map [remap switch-to-buffer]
@@ -1475,12 +1434,12 @@ commands when \texttt{ivy} is active.
           'ivy-switch-buffer-other-window)
         map)
       "Keymap for `ivy-mode'.")
-\end{verbatim}
+\end{minted}
 \item Minor Mode Patches
-\label{sec:org837b139}
+\label{sec:org1411fd3}
 We patch Ivy to be easily toggle-able, and to restore normal
 \texttt{completing-read} functionality if \texttt{ivy-mode} is disabled.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (el-patch-define-minor-mode ivy-mode
   "Toggle Ivy mode on or off.
   Turn Ivy mode on if ARG is positive, off otherwise.
@@ -1502,43 +1461,43 @@ We patch Ivy to be easily toggle-able, and to restore normal
             (setq completion-in-region-function 'ivy-completion-in-region))))
     (setq completing-read-function 'completing-read-default)
     (setq completion-in-region-function 'completion--in-region)))
-\end{verbatim}
+\end{minted}
 \item Keybindings
-\label{sec:org232b7a5}
+\label{sec:org813c9b6}
 \texttt{ivy-resume} lets us jump back into the last completion session, which
 is pretty handy.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("C-x C-r" . ivy-resume)
-\end{verbatim}
+\end{minted}
 \begin{enumerate}
 \item Minibuffer bindings
-\label{sec:orgc58fd00}
+\label{sec:org803e6a9}
 The behavior of Ivy in the minibuffer is a bit unintuitive, so we're
 gonna make it a bit more intuitive. In short, tab for navigation,
 return for interaction, and \texttt{C-j} to use the current candidate as is.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("TAB" . ivy-alt-done)
 ("<tab>" . ivy-alt-done)
 ("C-j" . ivy-immediate-done)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item Fuzzy matching
-\label{sec:orgfb7a451}
+\label{sec:org705b6d1}
 Fuzzy matching is nice almost everywhere, so we turn it on for all
 \texttt{ivy} completions except for \texttt{swiper} (text search), since fuzzy
 matching for text is weird. We also raise the \texttt{ivy-flx-limit} so that
 it will actually be used.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq ivy-re-builders-alist
       '((swiper . ivy--regex-plus)
         (t . ivy--regex-fuzzy)))
 (setq ivy-flx-limit 2000)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org39a821d}
-\begin{verbatim}
+\label{sec:org028dbc7}
+\begin{minted}[]{common-lisp}
 (use-package ivy
   :demand t
   :init
@@ -1554,27 +1513,27 @@ it will actually be used.
   :config
   <<ivy-fuzzy>>
   :delight ivy-mode)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \item Counsel - Ivy-ized standard Emacs commands
-\label{sec:org422059c}
+\label{sec:orgf33876b}
 Ivy is just a general-purpose completion framework. It can be used
 to generate improved versions of many stock Emacs commands. This is
 done by the Counsel library. (It also adds a few new commands, such
 as \texttt{counsel-git-grep}.)
 \begin{enumerate}
 \item Setup
-\label{sec:org9a82365}
+\label{sec:org54ad16e}
 \begin{enumerate}
 \item Bindings
-\label{sec:org76ee6d3}
+\label{sec:org06beef1}
 Counsel is a set of convenient commands based on Ivy meant to improve
 the built-in Emacs equivalents. We bind them to the normal Emacs keys
 so we can use Ivy nearly everywhere. We also have some other useful
 commands for finding and searching within Git repos, and a visual kill
 ring for yanking.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("M-x" . counsel-M-x)
 ("C-x C-f" . counsel-find-file)
 ("C-h f" . counsel-describe-function)
@@ -1587,25 +1546,25 @@ ring for yanking.
 ("C-c j" . counsel-git-grep)
 ("C-c k" . counsel-rg)
 ("M-y" . counsel-yank-pop)
-\end{verbatim}
+\end{minted}
 
 We also bind a key for use in expression buffers (like
 \texttt{eval-expression}) to give us history search.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("C-r" . counsel-expression-history)
-\end{verbatim}
+\end{minted}
 \item Find file at point
-\label{sec:orgd616dcf}
+\label{sec:org9dcbb14}
 If there is a valid file at point, \texttt{counsel-find-file} will select
 that file by default.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq counsel-find-file-at-point t)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org9b79e62}
-\begin{verbatim}
+\label{sec:orgd522a07}
+\begin{minted}[]{common-lisp}
 (use-package counsel
   :bind (;; Use Counsel for common Emacs commands.
          <<counsel-bindings>>
@@ -1615,70 +1574,69 @@ that file by default.
   :config
   <<counsel-ffap>>
 )
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \item Historian - Remember completion choices
-\label{sec:org0e656df}
+\label{sec:org9f1f777}
 Remembers your choices in completion menus.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package historian
   :demand t
   :config
   (historian-mode 1))
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item \texttt{ivy-historian}
-\label{sec:org1348526}
+\label{sec:org17b248c}
 We use Historian to sort Ivy candidates by frecency+flx.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org5f495ac}
+\label{sec:orgea6b8d6}
 The only configuration we do here is to mess around with how Historian
 weights results.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq ivy-historian-freq-boost-factor 500)
 (setq ivy-historian-recent-boost 500)
 (setq ivy-historian-recent-decrement 50)
-\end{verbatim}
+\end{minted}
 
 \item \texttt{use-package} declaration
-\label{sec:org4d55978}
-\begin{verbatim}
+\label{sec:org65dae1f}
+\begin{minted}[]{common-lisp}
 (use-package ivy-historian
   :demand t
   :after ivy
   :config
   <<ivy-historian-weights>>
   (ivy-historian-mode 1))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 
 \item Icicles - Sheesh
-\label{sec:orgf2e47e4}
+\label{sec:org0d8914b}
 Icicles is steroids for the steroids. I don't even know everything it
 does, so it's not on by default.
 
-\begin{verbatim}
-(use-package icicles
-  :demand t)
-\end{verbatim}
+\begin{minted}[]{common-lisp}
+(use-package icicles)
+\end{minted}
 \end{enumerate}
 \subsection{Finding files}
-\label{sec:org8338497}
+\label{sec:orgd07158d}
 \subsubsection{Dotfile shortcuts}
-\label{sec:orge2811ca}
+\label{sec:orge6a6e66}
 \begin{enumerate}
 \item Prefix key
-\label{sec:orgd3e2255}
+\label{sec:orgc18a5f0}
 We define a custom prefix to provide shortcuts to edit common
 dotfiles, and another to edit the file in another window.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-find-dotfile-prefix
   (the-join-keys the-prefix "e")
   "Prefix key sequence for opening dotfiles.
@@ -1693,16 +1651,16 @@ dotfiles, and another to edit the file in another window.
   "Prefix key sequencing for opening dotfiles in another window.
 The function `the-register-dotfile' creates a keybinding under
 this prefix, if you ask it to.")
-\end{verbatim}
+\end{minted}
 \item Registering dotfiles
-\label{sec:orgdcdb73a}
+\label{sec:orgdea0ad1}
 By providing a filename (relative to your \texttt{\$HOME}), we define a
 function \texttt{the-find-<something>}, where <something> is a cleaned up
 version of the basename of the file. You can also specify a keybinding
 to be appended to the end of \texttt{the-find-*-prefix}, as well as a pretty
 filename if you'd rather not use the automatically generated one.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defmacro the-register-dotfile
     (filename &optional keybinding pretty-filename)
   "Establish functions and keybindings to open a dotfile.
@@ -1779,88 +1737,88 @@ be generated automatically from the basename of FILENAME."
                . ,defun-other-window-name))))
        ;; Return the symbols for the two functions defined.
        (list ',defun-name ',defun-other-window-name))))
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item Emacs
-\label{sec:org99ee7be}
-\begin{verbatim}
+\label{sec:org7bb5ba9}
+\begin{minted}[]{common-lisp}
 (the-register-dotfile ".emacs.d/init.el" "e i")
 (the-register-dotfile ".emacs.d/init.local.el" "e l")
-\end{verbatim}
+\end{minted}
 
 \item Git
-\label{sec:orgd187568}
-\begin{verbatim}
+\label{sec:org408b2fd}
+\begin{minted}[]{common-lisp}
 (the-register-dotfile ".gitconfig" "g c")
 (the-register-dotfile ".gitexclude" "g e")
 (the-register-dotfile ".gitconfig.local" "g l")
-\end{verbatim}
+\end{minted}
 
 \item Fish
-\label{sec:org78b0a2c}
-\begin{verbatim}
+\label{sec:orgd81c923}
+\begin{minted}[]{common-lisp}
 (the-register-dotfile ".config/fish/config.fish" "f c")
-\end{verbatim}
+\end{minted}
 
 \item ChunkWM
-\label{sec:org4ef7778}
-\begin{verbatim}
+\label{sec:org7ecb7c6}
+\begin{minted}[]{common-lisp}
 (the-register-dotfile ".chunkwmrc" "w m")
 
 (defun the-reload-chunkwm ()
   (interactive)
   (async-shell-command "sh ~/.chunkwmrc"))
-\end{verbatim}
+\end{minted}
 
 \item SKHD
-\label{sec:org5489ffa}
-\begin{verbatim}
+\label{sec:orga519407}
+\begin{minted}[]{common-lisp}
 (the-register-dotfile ".skhdrc" "h k")
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Visiting files}
-\label{sec:orgc8fd76a}
+\label{sec:org649d7cc}
 \begin{enumerate}
 \item Symlinks
-\label{sec:org0af11f4}
+\label{sec:orgc36b97f}
 Follow symlinks when opening files. This has the concrete impact, for
 instance, that when you edit init.el with the shortcut provided by
 \texttt{the-register-dotfile} and then later do \texttt{find-file}, you will be in
 the THE repository instead of your home directory.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq find-file-visit-truename t)
-\end{verbatim}
+\end{minted}
 
 Disable the warning "X and Y are the same file" which normally appears
 when you visit a symlinked file by the same name. (Doing this isn't
 dangerous, as it will just redirect you to the existing buffer.)
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq find-file-suppress-same-file-warnings t)
-\end{verbatim}
+\end{minted}
 
 \item VC nonsense
-\label{sec:org7692875}
+\label{sec:org73ee282}
 Disable Emacs' built-in version control handling. This improves
 performance and disables some annoying warning messages and prompts,
 especially regarding symlinks. I only use Magit, and the \texttt{vc}
 machinery does all kinds of annoying stuff with performance and
 warnings.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq vc-handled-backends nil)
-\end{verbatim}
+\end{minted}
 
 \item Directory hygiene
-\label{sec:orge7654ac}
+\label{sec:org342fd54}
 Automatically create any nonexistent parent directories when finding a
 file. If the buffer for the new file is killed without being saved,
 then offer to delete the created directory or directories.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--advice-find-file-automatically-create-directory
     (original-function filename &rest args)
   "Automatically create and delete parent directories of files.
@@ -1949,8 +1907,8 @@ created directories if they kill the buffer without saving it."
             #'the--advice-find-file-automatically-create-directory)
 
 ;; Also enable it for `write-file' (C-x C-w).
-(advice-add #'write-file :around
-            #'the--advice-find-file-automatically-create-directory)
+;(advice-add #'write-file :around
+;            #'the--advice-find-file-automatically-create-directory)
 
 (defun the--kill-buffer-delete-directory-if-appropriate ()
   "Delete parent directories if appropriate.
@@ -2008,24 +1966,24 @@ This is a function for `after-save-hook'. Remove
   (remove-hook 'after-save-hook
                #'the--remove-kill-buffer-delete-directory-hook
                'local))
-\end{verbatim}
+\end{minted}
 
 \item Save place\ldots{}
-\label{sec:org8d84b72}
+\label{sec:org352298a}
 When you open a file, position the cursor at the same place as the
 last time you edited the file.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (save-place-mode 1)
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item \ldots{}and shut up about it
-\label{sec:orga8ce133}
+\label{sec:org5ab925a}
 Inhibit the message that is usually printed when the `saveplace'
 file is written.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (el-patch-defun save-place-alist-to-file ()
   (let ((file (expand-file-name save-place-file))
         (coding-system-for-write 'utf-8))
@@ -2051,15 +2009,15 @@ file is written.
                           (el-patch-add nil 'nomsg))
           (file-error (message "Saving places: can't write %s" file)))
         (kill-buffer (current-buffer))))))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 
 \subsubsection{Projects}
-\label{sec:orgae61d22}
+\label{sec:org93f2124}
 \begin{enumerate}
 \item Projectile
-\label{sec:org0053928}
+\label{sec:org27461e4}
 Projectile keeps track of a "project" list, which is automatically
 added to as you visit files in Git repositories, Node.js projects,
 etc. It then provides commands for quickly navigating between and
@@ -2067,100 +2025,297 @@ within these projects.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org069ff02}
+\label{sec:orgd981b09}
 \begin{enumerate}
 \item Enable projectile globally
-\label{sec:org10ef2d1}
+\label{sec:org83fa034}
 Also, ignore the repos set up by \texttt{straight.el}.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (projectile-mode +1)
 (defun the-projectile-ignore-projects (project-root)
   (f-descendant-of? project-root (f-join user-emacs-directory "straight/repos")))
 (setq projectile-ignored-project-function #'the-projectile-ignore-projects)
-\end{verbatim}
+\end{minted}
 \item Directory-local indexing
-\label{sec:org26f71a2}
+\label{sec:org2bfe6cf}
 In case your \texttt{.projectile} file is pretty hairy, this allows us to
 alter the indexing method as a dirlocal.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-projectile-indexing-method-p (method)
   "Non-nil if METHOD is a safe value for `projectile-indexing-method'."
   (memq method '(native alien)))
 
 (put 'projectile-indexing-method 'safe-local-variable
      #'the-projectile-indexing-method-p)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org352a873}
-\begin{verbatim}
+\label{sec:org099bc57}
+\begin{minted}[]{common-lisp}
 (use-package projectile
   :demand t
   :config
+  (setq projectile-mode-line
+        '(:eval (format "π[%s]" (projectile-project-name))))
   <<global-projectile>>
   <<projectile-index>>
-)
-\end{verbatim}
+  )
+\end{minted}
 \end{enumerate}
 \item Counsel Projectile
-\label{sec:org5c34b37}
+\label{sec:org32871b9}
 Counsel is everywhere! This integrates Projectile commands and Ivy.
 \begin{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org3142970}
-\begin{verbatim}
+\label{sec:orged73989}
+\begin{minted}[]{common-lisp}
 (use-package counsel-projectile
   :init
   (setq projectile-switch-project-action #'counsel-projectile-find-file)
   :config
   (counsel-projectile-mode))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
+\subsection{Navigation}
+\label{sec:org5afaaa4}
+\subsubsection{Mark Ring Navigation}
+\label{sec:org35e3d5f}
+\begin{minted}[]{common-lisp}
+;; Make it so that if you provide a negative prefix argument to
+;; C-SPC (i.e. like M-- C-SPC), then it will step forwards in the mark
+;; ring (whereas C-u C-SPC steps backwards). Based on [1].
+;;
+;; [1]: http://stackoverflow.com/a/14539202/3538165
+
+(defun the--advice-allow-unpopping-mark
+    (set-mark-command &optional arg)
+  (interactive "P")
+  (if (< (prefix-numeric-value arg) 0)
+      ;; If we don't have any marks set, no-op.
+      (when mark-ring
+        ;; I can't remember how this code works. Sorry.
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+        (when (null (mark t)) (ding))
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (marker-position (car (last mark-ring)))))
+    ;; If no prefix argument, or prefix argument is nonnegative, defer
+    ;; to the original behavior.
+    (funcall set-mark-command arg)))
+
+(advice-add #'set-mark-command :around
+            #'the--advice-allow-unpopping-mark)
+
+;; Make it so that if you provide a prefix argument to C-x C-SPC, then
+;; it will step forwards in the global mark ring, instead of
+;; backwards. Tweaked from the implementation of `pop-global-mark'.
+
+(defun the--advice-allow-unpopping-global-mark
+    (pop-global-mark &optional arg)
+  (interactive "P")
+  (if arg
+      (progn
+        (or global-mark-ring
+            (error "No global mark set"))
+        ;; We need to do this earlier than `pop-global-mark' does the
+        ;; corresponding action in order to properly undo its
+        ;; behavior.
+        (setq global-mark-ring (nconc (list (car (last global-mark-ring)))
+                                      (butlast global-mark-ring)))
+        (while (and global-mark-ring (not (marker-buffer (car (last global-mark-ring)))))
+          (setq global-mark-ring (butlast global-mark-ring)))
+        (let* ((marker (car (last global-mark-ring)))
+               (buffer (marker-buffer marker))
+               (position (marker-position marker)))
+          (set-buffer buffer)
+          (or (and (>= position (point-min))
+                   (<= position (point-max)))
+              (if widen-automatically
+                  (widen)
+                (error "Global mark position is outside accessible part of buffer")))
+          (goto-char position)
+          (switch-to-buffer buffer)))
+    (funcall pop-global-mark)))
+
+(advice-add #'pop-global-mark :around
+            #'the--advice-allow-unpopping-global-mark)
+\end{minted}
+
+\subsubsection{Confirm Reference Jump}
+\label{sec:orgc3e47fd}
+\begin{minted}[]{common-lisp}
+;; When using M-. and friends, always prompt for the identifier (it
+;; defaults to the identifier at point). This behavior is more
+;; consistent and predictable than the default, which is to jump
+;; immediately if there is a valid symbol at point.
+(setq xref-prompt-for-identifier t)
+\end{minted}
+
+\subsubsection{Faster search highlight}
+\label{sec:org63ed860}
+\begin{minted}[]{common-lisp}
+;; Eliminate the quarter-second delay before I-search matches are
+;; highlighted, because delays suck.
+(setq lazy-highlight-initial-delay 0)
+\end{minted}
+
+\subsubsection{Better search}
+\label{sec:orgdd18a22}
+\begin{minted}[]{common-lisp}
+;; This package provides an enhanced version of Isearch that uses Ivy
+;; to display a preview of the results.
+(use-package swiper
+  :bind (("C-s" . swiper)
+         ("C-r" . swiper)))
+\end{minted}
+
+\subsubsection{Jump to characters, words, etc.}
+\label{sec:org1785d61}
+\begin{minted}[]{common-lisp}
+;; This package allows you to jump quickly to characters and words
+;; visible onscreen.
+(use-package avy
+  :init
+
+  ;; Create keybindings for common avy commands.
+
+  (defcustom the-avy-prefix
+    (the-join-keys the-prefix "g")
+    "Prefix key sequence for Avy commands.
+Avy keybindings are placed under this prefix by default. nil
+means no keybindings are established by default."
+    :group 'the
+    :type 'string)
+
+  (defmacro the--establish-avy-bindings (&rest specs)
+    `(progn
+       ,@(cl-mapcan
+          (lambda (spec)
+            (cl-destructuring-bind (key . command-name) spec
+              (let ((custom-name (intern (format "the-%S-keybinding"
+                                                 command-name))))
+                `((defcustom ,custom-name
+                    (when the-avy-prefix
+                      (the-join-keys the-avy-prefix ,key))
+                    ,(format "Keybinding for `%S', as a string.
+nil means no keybinding is established."
+                             command-name)
+                    :group 'the
+                    :type 'string)
+                  (when ,custom-name
+                    (bind-key ,custom-name #',command-name))))))
+          specs)))
+
+  (the--establish-avy-bindings
+   ("c" . avy-goto-char)
+   ("t" . avy-goto-char-timer)
+   ("l" . avy-goto-line)
+   ("W" . avy-goto-word-1)
+   ("w" . avy-goto-word-0))
+
+  :config
+
+  ;; Use De Bruijn sequences for jump sequences. This allows you to
+  ;; fixate on a particular place you want to jump to, and just type
+  ;; whatever shows up there.
+  (setq avy-style 'de-bruijn))
+\end{minted}
+
+\subsubsection{Regexp Search/Replace}
+\label{sec:org75a4d48}
+\begin{minted}[]{common-lisp}
+;; This package highlights matches and previews replacements in query
+;; replace.
+(use-package visual-regexp
+  :demand t
+  :bind (;; Replace the regular query replace with the regexp query
+         ;; replace provided by this package.
+         ("M-%" . vr/query-replace)))
+
+(use-package pcre2el
+  :demand t
+  :config
+  (rxt-global-mode +1))
+
+(defcustom the-regex-engine 'pcre2el
+  "The regex engine to use for visual-regexp."
+  :group 'the
+  :type '(choice
+          (const :tag "Emacs" emacs)
+          (const :tag "pcre2el" pcre2el)
+          (const :tag "Python" python)
+          (const :tag "Custom" custom)))
+
+;; This package allows the use of other regexp engines for
+;; visual-regexp.
+(use-package visual-regexp-steroids
+  :demand t
+  :after (visual-regexp pcre2el)
+  :config
+
+  ;; Use Emacs-style regular expressions by default.
+  (setq vr/engine the-regex-engine))
+\end{minted}
+
+\subsubsection{Expand Region}
+\label{sec:org43a4c89}
+\begin{minted}[]{common-lisp}
+(use-package expand-region
+  :demand t)
+\end{minted}
+\subsubsection{Vimish Fold}
+\label{sec:org13b7e30}
+\begin{minted}[]{common-lisp}
+(use-package vimish-fold
+  :demand t
+  :config
+  (vimish-fold-global-mode 1))
+\end{minted}
 \subsection{Search}
-\label{sec:org4937ad9}
+\label{sec:orge3dda0b}
 \subsubsection{Regular Expressions}
-\label{sec:orgabba8e2}
+\label{sec:org65bf303}
 \begin{enumerate}
 \item Rx
-\label{sec:orga4c4a1b}
+\label{sec:orgcce4967}
 A prescription for your regex woes. Don't write obscure regex
 syntax. Describe the regex you want, then generate the bizarre
 incantation you need.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package rx)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \section{Writing}
-\label{sec:org0e9497f}
+\label{sec:orgd9f597e}
 \subsection{Org Mode Customization}
-\label{sec:orgd8ea1ad}
+\label{sec:orgc6ad546}
 \subsubsection{Global Outline Mode}
-\label{sec:org424612b}
+\label{sec:org687c836}
 Outlines work for just about any structured text imaginable, from code
 to prose. If it's got something that Emacs thinks is a paragraph, it
 works. When you need a high-level overview, it's hard to beat this.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (define-globalized-minor-mode global-outline-minor-mode
   outline-minor-mode outline-minor-mode)
 
 (global-outline-minor-mode +1)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Org}
-\label{sec:org0b70a9d}
+\label{sec:org62e6370}
 Org is a hugely expansive framework (a.k.a. collection of hacks) for
 organizing information, notes, tasks, calendars, and anything else
 related to Org-anization.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgf85f959}
+\label{sec:org54d31e5}
 \begin{enumerate}
 \item Version Hack
-\label{sec:org583fe3e}
+\label{sec:org42e95cd}
 Because \texttt{straight.el} runs Org directly from a Git repo, the
 autoloads Org uses to identify its version are not generated in
 the way that it expects. This causes it to either a) fail to
@@ -2171,7 +2326,7 @@ issues down the line, so we have to trick Org. This is how we do it.
 First, we have to get the Git version, here represented by a short
 hash of the current commit.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-org-git-version ()
   (let ((git-repo
          (f-join user-emacs-directory "straight/repos/org")))
@@ -2179,9 +2334,9 @@ hash of the current commit.
                      "--match=release\*"
                      "--abbrev=6"
                      "HEAD"))))
-\end{verbatim}
+\end{minted}
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-org-release ()
   (let ((git-repo
          (f-join user-emacs-directory "straight/repos/org")))
@@ -2190,37 +2345,23 @@ hash of the current commit.
                                     "--match=release\*"
                                     "--abbrev=0"
                                     "HEAD")))))
-\end{verbatim}
+\end{minted}
 
 Next, we need to define \texttt{org-git-version} and \texttt{org-release} eagerly.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 <<org-version>>
 <<org-release>>
 (defalias #'org-git-version #'the-org-git-version)
 (defalias #'org-release #'the-org-release)
 (provide 'org-version)
-\end{verbatim}
-
-\item \texttt{org-tempo}
-\label{sec:org6368506}
-In the most recent release of Org, the way easy template expansion
-(i.e., \texttt{<s[TAB]} expands to a \texttt{begin\_src} block) was changed to use
-\texttt{tempo}, so we need to require this in order to keep this very
-convenient functionality in place.
-
-\begin{verbatim}
-(defun the-fix-easy-templates ()
-  (require 'org-tempo))
-
-(add-hook 'org-mode-hook 'the-fix-easy-templates)
-\end{verbatim}
+\end{minted}
 
 \item Todo Sequence
-\label{sec:org699f8a4}
+\label{sec:org03c4bdb}
 We use an augmented set of todo states, including TODO, IN-PROGRESS,
 WAITING, and the done states DONE and CANCELED.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq org-todo-keywords
       '((sequence
          "BACKLOG(b!)"
@@ -2261,24 +2402,24 @@ WAITING, and the done states DONE and CANCELED.
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 (setq org-archive-location (f-expand "archive/%s::* Archived Tasks" org-directory))
-\end{verbatim}
+\end{minted}
 \item Bindings
-\label{sec:orgdc570ce}
+\label{sec:org419ec10}
 
 First, we want to set up some recommended bindings as specified in the
 Org manual.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("C-c a" . org-agenda)
 ("C-c c" . org-capture)
 ("C-c l" . org-store-link)
-("C-c b" . org-iswitchb)
-\end{verbatim}
+("C-c b" . org-switchb)
+\end{minted}
 
 First, we move the Org bindings for \texttt{org-shift*} from the \texttt{S-} prefix
 to \texttt{C-}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("S-<left>" . nil)
 ("S-<right>" . nil)
 ("S-<up>" . nil)
@@ -2287,26 +2428,29 @@ to \texttt{C-}.
 ("C-<right>" . org-shiftright)
 ("C-<up>" . org-shiftup)
 ("C-<down>" . org-shiftdown)
-\end{verbatim}
+\end{minted}
 
 By default, Org maps \texttt{org-(backward/forward)-paragraph}, but only maps
 it to the keys we overrode for shift up and down. We'll remap all
 instances so that our existing bindings for those functions will work
 as expected.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ([remap backward-paragraph] . org-backward-paragraph)
 ([remap forward-paragraph] . org-forward-paragraph)
-\end{verbatim}
+\end{minted}
 
 Finally, we'll set up a convenient binding for inserting headings.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("M-RET" . org-insert-heading)
-\end{verbatim}
+("M-<return>" . org-insert-heading)
+("M-S-RET" . org-insert-todo-heading)
+("M-S-<return>" . org-insert-todo-heading)
+\end{minted}
 
 \item Settings
-\label{sec:orga13aefb}
+\label{sec:org48f9910}
 \texttt{org-insert-headline} will split your content by default, which is
 pretty dumb. We therefore set it to create a new heading, instead. We
 also activate \texttt{org-indent-mode} for more beautiful documents.
@@ -2316,7 +2460,7 @@ We also set Org exports to occur asynchronously whenever possible.
 Finally, we set up refile to use outline path completion for easier
 refiling.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq org-insert-heading-respect-content t)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (setq org-export-in-background t)
@@ -2326,12 +2470,19 @@ refiling.
 (setq org-special-ctrl-a/e t
       org-special-ctrl-k t)
 (setq org-return-follows-link t)
-\end{verbatim}
+;(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+\end{minted}
 
 \item Tags
-\label{sec:org77f1c61}
+\label{sec:orgc360cf5}
 We set up some useful tags we'd like available in any Org buffer.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq org-tag-persistent-alist
       '((:startgroup . nil)
         ("@work" . ?w)
@@ -2345,20 +2496,24 @@ We set up some useful tags we'd like available in any Org buffer.
         ("noexport" . ?n)
         ("crypt" . ?c)
         ))
-\end{verbatim}
+\end{minted}
 \item Default Org Directory
-\label{sec:org97bc7af}
+\label{sec:org6fd95e0}
 We stick our Org files in a new directory in the home directory by
 default.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq org-directory "~/org")
-\end{verbatim}
+\end{minted}
 \item Capture Templates
-\label{sec:org3a1ba59}
-\begin{verbatim}
+\label{sec:org87887d2}
+\begin{minted}[]{common-lisp}
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-         "* TODO %?\n %T\n  %i\n  %a")
+         "* BACKLOG %?\n %T\n  %i\n  %a")
+        ("m" "Meeting" entry (file+headline "~/org/work.org" "Meetings")
+         "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+        ("p" "Phone call" entry (file+headline "~/org/work.org" "Phone Calls")
+         "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
         ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
          "* %?\nEntered on %U\n  %i")
         ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
@@ -2368,13 +2523,13 @@ default.
 
         (setq org-refile-targets
               '((org-agenda-files :maxlevel . 3)))
-\end{verbatim}
+\end{minted}
 \item Utilities
-\label{sec:org8355db8}
+\label{sec:org04a9aa6}
 \begin{enumerate}
 \item Recursively sort buffer entries alphabetically
-\label{sec:org904687f}
-\begin{verbatim}
+\label{sec:orgf1868f0}
+\begin{minted}[]{common-lisp}
 (defun the-org-sort-ignore-errors ()
   (condition-case x
       (org-sort-entries nil ?a)
@@ -2384,14 +2539,14 @@ default.
   "Sort all entries in the Org buffer recursively in alphabetical order."
   (interactive)
   (org-map-entries #'the-org-sort-ignore-errors))
-\end{verbatim}
+\end{minted}
 
 \item Archive dead tasks
-\label{sec:org0bd4a7d}
+\label{sec:org64fecbd}
 If tasks are marked DONE, and either have no deadline or the deadline
 has passed, archive it.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-org-past-entries ()
   (when (and (string= (org-get-todo-state) "DONE")
              (let ((deadline (org-entry-get (point) "DEADLINE")))
@@ -2406,35 +2561,35 @@ has passed, archive it.
   "Archive DONE items with deadlines either missing or in the past."
   (interactive)
   (org-map-entries #'the-org-past-entries))
-\end{verbatim}
+\end{minted}
 
 \item Pretty bullets
-\label{sec:orgd327f4e}
+\label{sec:org3a2d08d}
 We use \texttt{org-bullets} to make our outlines prettier. There's some minor
 alignment weirdness with my font, so I may need to specify the bullet
 codepoints, later.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package org-bullets
   :init
   (add-hook 'org-mode-hook 'org-bullets-mode))
-\end{verbatim}
+\end{minted}
 
 \item Dropbox integration
-\label{sec:orgd9075fe}
+\label{sec:org66db4c6}
 If \texttt{\textasciitilde{}/org/} doesn't exist, but \texttt{\textasciitilde{}/Dropbox/org} does, symlink the
 latter to the former.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (if (and
      (not (f-exists? org-directory))
      (f-directory? "~/Dropbox/org"))
     (f-symlink "~/Dropbox/org" org-directory))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orga968b37}
+\label{sec:org1f92767}
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package org
   :straight org-plus-contrib
   :demand t
@@ -2445,12 +2600,10 @@ latter to the former.
          <<org-mode-remaps>>
          <<org-mode-heading>>
          )
-  :init
   :config
   <<org-version-definitions>>
   <<org-dir>>
   <<org-capture>>
-  <<org-requires>>
   <<org-bullets>>
   <<org-settings>>
   <<org-sort-buffer>>
@@ -2458,41 +2611,45 @@ latter to the former.
   <<todo-states>>
   <<org-dropbox>>
   <<org-tags>>
+  (with-eval-after-load 'org-src
+    (diminish 'org-src-mode))
+  (with-eval-after-load 'org-indent
+    (diminish 'org-indent-mode))
   :delight
-  (org-indent-mode)
+  (org-mode "Ο")
   )
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \subsubsection{Org Agenda}
-\label{sec:org906c7a3}
+\label{sec:org71d4c8c}
 Org Agenda is for generating a more useful consolidated summary of all
 or some of your tasks, according to their metadata.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgd021db8}
+\label{sec:org9a64557}
 \begin{enumerate}
 \item Bindings
-\label{sec:org64c5683}
+\label{sec:org166f41f}
 Analogously to our bindings for regular org files, we'll also move
 things off of \texttt{S-} and onto \texttt{C-}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ("S-<up>" . nil)
 ("S-<down>" . nil)
 ("S-<left>" . nil)
 ("S-<right>" . nil)
 ("C-<left>" . org-agenda-do-date-earlier)
 ("C-<right>" . org-agenda-do-date-later)
-\end{verbatim}
+\end{minted}
 
 \item Window Splitting
-\label{sec:org552ba3b}
+\label{sec:org8eb311e}
 We want Org Agenda to split the window into two tall windows, rather
 than two wide windows stacked.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--advice-org-agenda-split-horizontally (org-agenda &rest args)
   "Make `org-agenda' split horizontally, not vertically, by default.
   This is an `:around' advice for `org-agenda'. It commutes with
@@ -2502,14 +2659,14 @@ than two wide windows stacked.
 
 (advice-add #'org-agenda :around
             #'the--advice-org-agenda-split-horizontally)
-\end{verbatim}
+\end{minted}
 
 \item Default Directory
-\label{sec:orgce112e4}
+\label{sec:orgeb5d31b}
 If \texttt{org-directory} exists, set \texttt{default-directory} to its value in the
 agenda so that things like \texttt{find-file} work sensibly.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--advice-org-agenda-default-directory
     (org-agenda &rest args)
   "If `org-directory' exists, set `default-directory' to it in the agenda.
@@ -2522,21 +2679,22 @@ agenda so that things like \texttt{find-file} work sensibly.
 
 (advice-add #'org-agenda :around
             #'the--advice-org-agenda-default-directory)
-\end{verbatim}
+\end{minted}
 
 \item Settings
-\label{sec:org7aaaa9e}
-\begin{verbatim}
+\label{sec:org871329c}
+\begin{minted}[]{common-lisp}
 (setq org-agenda-files '("~/org"))
 (setq org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orga51040b}
-\begin{verbatim}
+\label{sec:org1e12014}
+\begin{minted}[]{common-lisp}
 (use-package org-agenda
   :straight org-plus-contrib
+  :after (org)
   :demand t
   :bind (:map org-agenda-mode-map
          <<org-agenda-bindings>>
@@ -2546,12 +2704,32 @@ agenda so that things like \texttt{find-file} work sensibly.
   :config
   <<agenda-window-split>>
   <<agenda-default-directory>>
+  :delight
+  (org-agenda-mode "Οα ")
   )
-\end{verbatim}
+\end{minted}
 \end{enumerate}
+\subsubsection{Clocking}
+\label{sec:org4909cb0}
+\begin{minted}[]{common-lisp}
+(use-package org-clock
+  :straight org-plus-contrib
+  :after (org-agenda)
+  :bind (:map org-mode-map
+         ("C-c C-x C-i" . org-clock-in)
+         ("C-c C-x C-o" . org-clock-out))
+  :demand t)
+
+(use-package org-pomodoro
+  :after (org-clock)
+  :bind
+  ("M-T c p" . org-pomodoro)
+  :demand t)
+
+\end{minted}
 \subsubsection{Org Encryption}
-\label{sec:orge38bed1}
-\begin{verbatim}
+\label{sec:org336b0f0}
+\begin{minted}[]{common-lisp}
 (use-package org-crypt
   :straight org-plus-contrib
   :demand t
@@ -2559,22 +2737,22 @@ agenda so that things like \texttt{find-file} work sensibly.
   (org-crypt-use-before-save-magic)
   (setq org-tags-exclude-from-inheritance '("crypt"))
   (setq org-crypt-key "17F07DF3086C4BBFA5799F38EF21DED4826AAFCF"))
-\end{verbatim}
+\end{minted}
 \subsubsection{Org Journal}
-\label{sec:orgd05cb09}
+\label{sec:orgcd5fdba}
 Keeping a regular record of what's going on at work (programmer's
 journal) and at home (personal journal) can be a useful habit, so
 let's give it a shot.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package org-journal
   :demand t
   :config
   (setq org-journal-dir (f-expand "journal" org-directory))
   (setq org-journal-enable-encryption t))
-\end{verbatim}
+\end{minted}
 \subsubsection{Context-Aware Capture and Agenda}
-\label{sec:org3e9f733}
-\begin{verbatim}
+\label{sec:orgb79f98c}
+\begin{minted}[]{common-lisp}
 (use-package org-context
   :demand t
   :config
@@ -2588,21 +2766,21 @@ let's give it a shot.
            entry (file+headline place-holder "Questions")
            "* QUESTION %?\n OPENED: %U by %n\n FILE: %a")))
   (org-context-activate))
-\end{verbatim}
+\end{minted}
 \subsubsection{Extra Export Packages}
-\label{sec:orgc6c2166}
+\label{sec:orga74b0ae}
 In order to correctly export Org files to certain formats, we need
 some additional tools.
 \begin{enumerate}
 \item \texttt{htmlize}
-\label{sec:org649007c}
+\label{sec:org6190295}
 Used to convert symbols and such to HTML equivalents.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package htmlize)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsubsection{Org-mode Config Settings}
-\label{sec:orgb256336}
+\label{sec:org3e770df}
 Our config files live in \texttt{the-lib-directory}, but our org source files
 live in \texttt{the-org-lib-directory}. Unless I decide to start loading org
 files directly (which is doable if a touch annoying, at times), for
@@ -2612,7 +2790,7 @@ I'm working on one of THE's lib files.
 Additionally, I'd like to regenerate the documentation on save so
 things will always be up to date.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-in-the-org-lib-p ()
   (and (f-this-file)
        (f-child-of? (f-this-file) the-org-lib-directory)))
@@ -2635,20 +2813,20 @@ things will always be up to date.
                       (:noweb . "yes"))))))
 
   (add-hook 'org-mode-hook 'the-org-lib-hook)
-\end{verbatim}
+\end{minted}
 
 Finally, I'd like to automatically tangle the files on save.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-org-lib-tangle-hook ()
   (if (the-in-the-org-lib-p)
       (org-babel-tangle)))
 
 (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
-\end{verbatim}
+\end{minted}
 \subsubsection{\texttt{org-tree-slide}}
-\label{sec:orgdfd6f7e}
-\begin{verbatim}
+\label{sec:org4443201}
+\begin{minted}[]{common-lisp}
 (use-package org-tree-slide
   :config
   (org-tree-slide-presentation-profile)
@@ -2668,47 +2846,85 @@ Finally, I'd like to automatically tangle the files on save.
   (add-hook 'org-tree-slide-play-hook #'the-presentation-start)
   (add-hook 'org-tree-slide-stop-hook #'the-presentation-stop)
   )
-\end{verbatim}
+\end{minted}
 \subsection{Editing Prose}
-\label{sec:orgd3c4f76}
+\label{sec:orgf891e8b}
+\subsubsection{AUCTeX}
+\label{sec:orgec14906}
+\begin{minted}[]{common-lisp}
+(use-package tex
+  :demand t
+  :straight auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t))
+
+(use-package tex-buf
+  :straight auctex
+  :config
+
+  ;; Save buffers automatically when compiling, instead of prompting.
+  (setq TeX-save-query nil))
+
+(use-package latex
+  :straight auctex
+  :config
+
+  ;; Don't be afraid to break inline math between lines.
+  (setq LaTeX-fill-break-at-separators nil))
+
+(use-package auctex-latexmk
+  :demand t
+  :after tex
+  :config
+  (auctex-latexmk-setup))
+
+(use-package company-auctex
+  :demand t
+  :after tex
+  :config
+
+  ;; Enable the functionality of `company-auctex'.
+  (company-auctex-init))
+\end{minted}
 \subsubsection{Flyspell}
-\label{sec:org565d477}
+\label{sec:orgac74b5f}
 Flyspell is Flycheck but for spelling. Simple as.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package flyspell
   :bind* (("M-T ] s" . flyspell-goto-next-error))
   :diminish (flyspell-mode . "φ"))
-\end{verbatim}
+\end{minted}
 \subsection{Formatting}
-\label{sec:orgc8ccd53}
+\label{sec:orgc313916}
 \subsubsection{Formatting Options}
-\label{sec:org4fa1ad0}
+\label{sec:orgce6c5ab}
 \begin{enumerate}
 \item Formatting
-\label{sec:org88f2857}
+\label{sec:orgaaff617}
 \begin{enumerate}
 \item Sanity
-\label{sec:org3bb2e1c}
+\label{sec:orge65b32e}
 Don't use tabs for indentation, even in deeply indented lines.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq-default indent-tabs-mode nil)
-\end{verbatim}
+\end{minted}
 
 Sentences end with one space, not two. We're not French typographers,
 so cut it out.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq sentence-end-double-space nil)
-\end{verbatim}
+\end{minted}
 
 80 columns is the correct line length. Fight me.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq-default fill-column 80)
-\end{verbatim}
+\end{minted}
 
 \item Whitespace
-\label{sec:org7e5e334}
+\label{sec:orgebdd0d4}
 Trim trailing whitespace on save. This will get rid of end-of-line
 whitespace, and reduce the number of blank lines at the end of the
 file to one.
@@ -2717,47 +2933,47 @@ We don't always want this (though I almost always do), so we create a
 variable which is set globally, but which can be overridden on a
 per-file or per-directory basis.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defvar the-delete-trailing-whitespace t
   "If non-nil, delete trailing whitespace on save.")
 
 (put 'the-delete-trailing-whitespace
      'safe-local-variable #'booleanp)
-\end{verbatim}
+\end{minted}
 
 And now we have a little helper to delete whitespace according to our
 variable.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--maybe-delete-trailing-whitespace ()
   "Maybe delete trailing whitespace in buffer.
 Trailing whitespace is only deleted if variable
 `the-delete-trailing-whitespace' if non-nil."
   (when the-delete-trailing-whitespace
     (delete-trailing-whitespace)))
-\end{verbatim}
+\end{minted}
 
 Now we make sure whitespace is (maybe) deleted on save.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'before-save-hook
           #'the--maybe-delete-trailing-whitespace)
-\end{verbatim}
+\end{minted}
 
 Finally, always end files with a newline.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq require-final-newline t)
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item \texttt{long-lines-mode}
-\label{sec:orgb43f72b}
+\label{sec:org94e98d4}
 We define a minor mode for configuring \texttt{whitespace-mode} to highlight
 long lines. Enabling the mode will highlight characters beyond the
 fill column (80 columns, by default).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (define-minor-mode the-long-lines-mode
   "When enabled, highlight long lines."
   nil nil nil
@@ -2767,17 +2983,17 @@ fill column (80 columns, by default).
         (whitespace-mode 1))
     (whitespace-mode -1)
     (kill-local-variable 'whitespace-style)))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \item Line Wrapping
-\label{sec:org1b2faae}
+\label{sec:orga9c3e10}
 When editing text (i.e., not code), we want to automatically keep
 lines a reasonable length (<80 columns).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'text-mode-hook #'auto-fill-mode)
-\end{verbatim}
+\end{minted}
 
 \texttt{fill-paragraph} is pretty good, but some structured markup (like
 markdown) doesn't always play nice. \texttt{filladapt} will fill in these
@@ -2785,13 +3001,13 @@ gaps. However, we shut it off in Org because Org already has its own
 version of the functionality of \texttt{filladapt}, and they don't agree with
 each other.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package filladapt
   :demand t
   :config
   (add-hook 'text-mode-hook #'filladapt-mode)
   (add-hook 'org-mode-hook #'turn-off-filladapt-mode))
-\end{verbatim}
+\end{minted}
 
 Use an adaptive fill prefix when visually wrapping too-long lines.
 This means that if you have a line that is long enough to wrap
@@ -2799,7 +3015,7 @@ around, the prefix (e.g. comment characters or indent) will be
 displayed again on the next visual line. We turn it on everywhere by
 lifting it up to a global minor mode.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package adaptive-wrap
   :demand t
   :config
@@ -2807,23 +3023,23 @@ lifting it up to a global minor mode.
     adaptive-wrap-prefix-mode adaptive-wrap-prefix-mode)
 
   (global-adaptive-wrap-prefix-mode))
-\end{verbatim}
+\end{minted}
 
 \item EditorConfig
-\label{sec:orgaa39f5c}
+\label{sec:orgd60a906}
 EditorConfig is a tool for establishing and maintaining consistent
 code style in editors and IDEs which support it (most of the major
 ones have a plugin).
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package editorconfig)
-\end{verbatim}
+\end{minted}
 
 \item Utilities
-\label{sec:orgdb132af}
+\label{sec:org9b1d849}
 Like \texttt{reverse-region}, but works characterwise rather than linewise.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-reverse-characters (beg end)
   "Reverse the characters in the region from BEG to END.
 Interactively, reverse the characters in the current region."
@@ -2832,35 +3048,35 @@ Interactively, reverse the characters in the current region."
    (reverse
     (delete-and-extract-region
      beg end))))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Indentation}
-\label{sec:org8d348c0}
+\label{sec:orgbc5c33d}
 \begin{enumerate}
 \item Aggressive Indent
-\label{sec:orgfb5bd5a}
+\label{sec:orgf4912e6}
 Assuming your indentation is consistent, this will keep it correct
 without any additional work.
 \begin{enumerate}
 \item Setup
-\label{sec:orgf7d7209}
+\label{sec:orgef6c758}
 \begin{enumerate}
 \item Local Variable
-\label{sec:orge537878}
+\label{sec:org78a4323}
 Here, we set up \texttt{aggressive-indent-mode} as a variable we can set on a
 file- or directory-local level.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (put 'aggressive-indent-mode 'safe-local-variable #'booleanp)
-\end{verbatim}
+\end{minted}
 \item Slow mode
-\label{sec:orge633d33}
+\label{sec:orgab95cee}
 We register \texttt{aggressive-indent} with our slow mode, allowing us to
 disabled reindentation on save for situations in which reindentation
 is expensive. Note that
 \texttt{aggressive-indent-{}-proccess-changed-list-and-indent} is not a
 typo. Or rather, it is, but it's in the actual package, not on us.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-aggressive-indent-toggle-slow ()
   "Slow down `aggressive-indent' by disabling reindentation on save.
 This is done in `the-slow-indent-mode'."
@@ -2875,60 +3091,60 @@ This is done in `the-slow-indent-mode'."
               nil 'local)))
 
 (add-hook 'the-slow-indent-mode #'the-aggressive-indent-toggle-slow)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orga93fc2d}
-\begin{verbatim}
+\label{sec:orgce99b48}
+\begin{minted}[]{common-lisp}
 (use-package aggressive-indent
   :init
   <<agg-indent-local>>
   :config
   <<agg-indent-slow>>
-  :delight (aggressive-indent-mode "AggrIndent"))
+  :diminish aggressive-indent-mode)
 
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \end{enumerate}
 \section{Reading}
-\label{sec:org6701158}
+\label{sec:orgb89336f}
 \subsection{PDF Functionality}
-\label{sec:org6798fed}
+\label{sec:org31a7e35}
 \subsubsection{\texttt{pdf-tools}}
-\label{sec:org8315d1f}
+\label{sec:orgff4fb06}
 DocView is the built-in PDF viewer in Emacs, but it's a bit meh.
 \texttt{pdf-tools} is significantly nicer, with much better support for
 in-document hyperlinks and fancy things like that. It does require
 compilation of an external library, though.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package pdf-tools
   :init
   (pdf-tools-install)
   (setq pdf-view-midnight-colors '("#fe8019" . "#1d2021"))
   (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
-\end{verbatim}
+\end{minted}
 \section{Version Control}
-\label{sec:orgc0b2ec8}
+\label{sec:orgb796801}
 \subsection{Git integration}
-\label{sec:org810265e}
+\label{sec:org8cc8aa1}
 \subsubsection{Direct Interaction}
-\label{sec:orgb2598ea}
+\label{sec:org9c832b0}
 For Elisp purposes, we occasionally need to get some piece of
 information from Git. We do this using \texttt{git.el}, a dead-simple git
 interaction library.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package git
   :demand t)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Magit}
-\label{sec:orgb8db6e2}
+\label{sec:org7e76846}
 Magit is one of the Emacs killer apps. It's a Git porcelain which
 makes interacting with Git intuitive, instructive, and quick.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package magit
   :bind (;; Add important keybindings for Magit as described in the
          ;; manual [1].
@@ -2959,10 +3175,10 @@ makes interacting with Git intuitive, instructive, and quick.
            (socket (expand-file-name "git/credential/socket" xdg-config-home)))
       (setq magit-credential-cache-daemon-socket socket))))
 
-\end{verbatim}
+\end{minted}
 
 ** \texttt{git-commit}
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 ;; Allows editing Git commit messages from the command line (i.e. with
 ;; emacs or emacsclient as your core.editor).
 (use-package git-commit
@@ -3007,77 +3223,77 @@ makes interacting with Git intuitive, instructive, and quick.
   ;;
   ;; [1]: http://chris.beams.io/posts/git-commit/
   (setq git-commit-summary-max-length 50))
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item Github Integration
-\label{sec:orgcfa9ef6}
-\begin{verbatim}
+\label{sec:org1bd3720}
+\begin{minted}[]{common-lisp}
 (use-package magithub
   :demand t
   :after magit
   :config (magithub-feature-autoinject t))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \subsubsection{Get link to commit or source line}
-\label{sec:orge51a6da}
+\label{sec:orga78af24}
 Occasionally it's useful to send a link to a specific commit or source
 line on <repo host of choice>, and this package makes that relatively
 easy.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package git-link
   :demand t
-  :bind (("C-c g l" . git-link)))
-\end{verbatim}
+  :bind (("C-c C-g l" . git-link)))
+\end{minted}
 \section{Programming Utilities}
-\label{sec:orgbd1e930}
+\label{sec:org793192d}
 \subsection{Syntax Checking}
-\label{sec:orgfd3694a}
+\label{sec:orgcb2c70b}
 \subsubsection{Flycheck}
-\label{sec:org966d505}
+\label{sec:org44a41ae}
 Flycheck provides a framework for in-buffer error and warning
 highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 \begin{enumerate}
 \item Settings
-\label{sec:org4733101}
+\label{sec:org0e81b7d}
 \begin{enumerate}
 \item Enable Flycheck Globally
-\label{sec:org94c90d0}
+\label{sec:org02c8d3e}
 Enable Flycheck in all buffers, but also allow for disabling it
 per-buffer.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (global-flycheck-mode +1)
 (put 'flycheck-mode 'safe-local-variable #'booleanp)
-\end{verbatim}
+\end{minted}
 
 \item Disable Flycheck in the modeline
-\label{sec:org7d4d445}
+\label{sec:org2c58402}
 It's honestly more distracting than anything,
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq flycheck-mode-line nil)
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \item \texttt{use-package} declaration
-\label{sec:org44cf633}
-\begin{verbatim}
+\label{sec:org9c5a2b8}
+\begin{minted}[]{common-lisp}
 (use-package flycheck
   :defer 3
   :config
   <<flycheck-global>>
   <<no-flycheck-modeline>>
   )
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 \subsection{Auto-completion}
-\label{sec:org12479bd}
+\label{sec:orgaca528a}
 \subsubsection{Company Settings}
-\label{sec:orgfc1ab1d}
+\label{sec:org2c3607e}
 \begin{itemize}
 \item Show completions instantly, rather than after half a second.
 \item Show completions after typing three characters.
@@ -3108,7 +3324,7 @@ like a great idea, but it turns out to look really bad when you
 have domain-specific words that have particular casing.
 \end{itemize}
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 3)
 (setq company-tooltip-limit 10)
@@ -3118,15 +3334,15 @@ have domain-specific words that have particular casing.
 (setq company-dabbrev-downcase nil)
 (setq company-dabbrev-other-buffers nil)
 (setq company-dabbrev-ignore-case nil)
-\end{verbatim}
+\end{minted}
 
 \begin{enumerate}
 \item Performance
-\label{sec:org6866240}
+\label{sec:orgb1e57ed}
 In case autocompletion is making Emacs drag, we add a toggle to slow
 it down.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 
 (defun the-company-toggle-slow ()
   "Slow down `company' by turning up the delays before completion starts.
@@ -3139,10 +3355,10 @@ This is done in `the-slow-autocomplete-mode'."
     (kill-local-variable 'company-minimum-prefix-length)))
 
 (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
-\end{verbatim}
+\end{minted}
 
 \item YaSnippet Hack
-\label{sec:org8a57f84}
+\label{sec:orgb70ace6}
 Make it so that Company's keymap overrides Yasnippet's keymap when a
 snippet is active. This way, you can TAB to complete a suggestion for
 the current field in a snippet, and then TAB to move to the next
@@ -3150,7 +3366,7 @@ field. Plus, C-g will dismiss the Company completions menu rather than
 cancelling the snippet and moving the cursor while leaving the
 completions menu on-screen in the same location.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (with-eval-after-load 'yasnippet
   ;; FIXME: this is all a horrible hack, can it be done with
   ;; `bind-key' instead?
@@ -3214,29 +3430,29 @@ completions menu on-screen in the same location.
 
   (advice-add #'yas--make-control-overlay :around
               #'the-advice-company-overrides-yasnippet))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \subsubsection{Company}
-\label{sec:org7805a72}
+\label{sec:org572642e}
 \texttt{company} provides an in-buffer autocompletion framework. It
 allows for packages to define backends that supply completion
 candidates, as well as optional documentation and source code. Then
 Company allows for multiple frontends to display the candidates, such
 as a tooltip menu. Company stands for "Complete Anything".
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defvar the-company-backends-global
-  '(company-capf
+  '(;company-capf
     company-files
     (company-dabbrev-code company-keywords)
     company-dabbrev)
   "Values for `company-backends' used everywhere.
 If `company-backends' is overridden by The, then these
 backends will still be included.")
-\end{verbatim}
+\end{minted}
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package company
   :demand t
   :config
@@ -3244,15 +3460,25 @@ backends will still be included.")
   <<company-config>>
   <<company-slow>>
   (global-company-mode +1)
-  :delight company-mode)
-\end{verbatim}
+  :diminish company-mode)
+
+;(use-package posframe
+;  :demand t
+;  :diminish)
+
+;(use-package company-childframe
+;  :demand t
+;  :config
+;  (company-childframe-mode 1)
+;  :diminish)
+\end{minted}
 
 \subsubsection{Company Statistics}
-\label{sec:orga3fec7b}
+\label{sec:orgf50dcb1}
 \texttt{company-statistics} adds usage-based sorting to Company completions.
 It is a goal to replace this package with \href{https://github.com/PythonNut/historian.el}{\texttt{historian}} or \href{https://github.com/raxod502/prescient.el}{\texttt{prescient}}.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package company-statistics
   :demand t
   :config
@@ -3271,158 +3497,62 @@ It is a goal to replace this package with \href{https://github.com/PythonNut/his
 
   ;; Enable Company Statistics.
   (company-statistics-mode +1))
-\end{verbatim}
+\end{minted}
 \section{Languages}
-\label{sec:org9cda1fb}
+\label{sec:org04bf76e}
 \subsection{Common Lisp}
-\label{sec:orga5edccc}
+\label{sec:orgf9f5207}
 \subsubsection{Aggressive Indent}
-\label{sec:org35ba896}
+\label{sec:org040c036}
 Enable aggressive indentation in all Lisp modes.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'lisp-mode-hook #'aggressive-indent-mode)
-\end{verbatim}
+\end{minted}
 \subsection{Emacs Lisp}
-\label{sec:org75ef5c5}
+\label{sec:org5678607}
 \subsubsection{Hooks}
-\label{sec:org7ab7aba}
+\label{sec:orgddd0ae9}
 Enable ElDoc for Elisp buffers and the \textbf{scratch} buffer.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-\end{verbatim}
+\end{minted}
 
 Enable Aggressive Indent for Elisp buffers and the \textbf{scratch} buffer.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Fixes}
-\label{sec:orge85cd41}
+\label{sec:orgb610670}
 \begin{enumerate}
 \item Advised Function Noise
-\label{sec:orgb628fe2}
+\label{sec:org42534b2}
 Emacs barfs up a bunch of nonsense warnings every time a function is
 advised, and we do that a lot, so we'll just tell it to hush.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (setq ad-redefinition-action 'accept)
-\end{verbatim}
-
-\item Keyword lists
-\label{sec:orge316b9d}
-Keyword lists are indented kind of stupidly. To wit, by default they
-will be indented like this:
-
-\begin{verbatim}
-(:foo bar
-      :baz quux)
-\end{verbatim}
-
-\begin{verbatim}
-(:foo bar
- :bar quux)
-\end{verbatim}
-
-\begin{verbatim}
-(el-patch-defun lisp-indent-function (indent-point state)
-  "This function is the normal value of the variable `lisp-indent-function'.
-The function `calculate-lisp-indent' calls this to determine
-if the arguments of a Lisp function call should be indented specially.
-INDENT-POINT is the position at which the line being indented begins.
-Point is located at the point to indent under (for default indentation);
-STATE is the `parse-partial-sexp' state for that position.
-If the current line is in a call to a Lisp function that has a non-nil
-property `lisp-indent-function' (or the deprecated `lisp-indent-hook'),
-it specifies how to indent.  The property value can be:
-* `defun', meaning indent `defun'-style
-  (this is also the case if there is no property and the function
-  has a name that begins with \"def\", and three or more arguments);
-* an integer N, meaning indent the first N arguments specially
-  (like ordinary function arguments), and then indent any further
-  arguments like a body;
-* a function to call that returns the indentation (or nil).
-  `lisp-indent-function' calls this function with the same two arguments
-  that it itself received.
-This function returns either the indentation to use, or nil if the
-Lisp function does not specify a special indentation."
-  (el-patch-let (($cond (and (elt state 2)
-                             (el-patch-wrap 1 1
-                               (or (not (looking-at "\\sw\\|\\s_"))
-                                   (looking-at ":")))))
-                 ($then (progn
-                          (if (not (> (save-excursion (forward-line 1) (point))
-                                      calculate-lisp-indent-last-sexp))
-                              (progn (goto-char calculate-lisp-indent-last-sexp)
-                                     (beginning-of-line)
-                                     (parse-partial-sexp (point)
-                                                         calculate-lisp-indent-last-sexp 0 t)))
-                          ;; Indent under the list or under the first sexp on the same
-                          ;; line as calculate-lisp-indent-last-sexp.  Note that first
-                          ;; thing on that line has to be complete sexp since we are
-                          ;; inside the innermost containing sexp.
-                          (backward-prefix-chars)
-                          (current-column)))
-                 ($else (let ((function (buffer-substring (point)
-                                                          (progn (forward-sexp 1) (point))))
-                              method)
-                          (setq method (or (function-get (intern-soft function)
-                                                         'lisp-indent-function)
-                                           (get (intern-soft function) 'lisp-indent-hook)))
-                          (cond ((or (eq method 'defun)
-                                     (and (null method)
-                                          (> (length function) 3)
-                                          (string-match "\\`def" function)))
-                                 (lisp-indent-defform state indent-point))
-                                ((integerp method)
-                                 (lisp-indent-specform method state
-                                                       indent-point normal-indent))
-                                (method
-                                 (funcall method indent-point state))))))
-    (let ((normal-indent (current-column))
-          (el-patch-add
-            (orig-point (point))))
-      (goto-char (1+ (elt state 1)))
-      (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
-      (el-patch-swap
-        (if $cond
-            ;; car of form doesn't seem to be a symbol
-            $then
-          $else)
-        (cond
-         ;; car of form doesn't seem to be a symbol, or is a keyword
-         ($cond $then)
-         ((and (save-excursion
-                 (goto-char indent-point)
-                 (skip-syntax-forward " ")
-                 (not (looking-at ":")))
-               (save-excursion
-                 (goto-char orig-point)
-                 (looking-at ":")))
-          (save-excursion
-            (goto-char (+ 2 (elt state 1)))
-            (current-column)))
-         (t $else))))))
-\end{verbatim}
+\end{minted}
 \end{enumerate}
 
 \subsubsection{Reloading the Init File}
-\label{sec:org52c6f6d}
+\label{sec:org3dda503}
 First, we define a customizable keybinding to reload our init file.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defcustom the-reload-init-keybinding
   (the-join-keys the-prefix "r")
   "The keybinding for reloading init.el, as a string.
 Nil means no keybinding is established."
   :group 'the
   :type 'string)
-\end{verbatim}
+\end{minted}
 
 Now we define a function to actually do the reload and bind it to our
 key.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-reload-init ()
   "Reload init.el."
   (interactive)
@@ -3433,16 +3563,16 @@ key.
     (message "Reloading init.el... done.")))
 
 (bind-key the-reload-init-keybinding #'the-reload-init)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Evaluate an Elisp buffer}
-\label{sec:org7b043ae}
+\label{sec:org5d14316}
 Other Lisp interaction modes (like CIDER and Geiser) provide a binding
 for evaluating a whole buffer. We add a similar binding for
 \texttt{eval-buffer}, as well as some sanity-checking so we don't evaluate
 the init file in a bad way.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-eval-buffer ()
   "Evaluate the current buffer as Elisp code."
   (interactive)
@@ -3456,10 +3586,10 @@ the init file in a bad way.
   (message "Evaluating %s... done." (buffer-name)))
 
 (bind-key "C-c C-k" #'the-eval-buffer emacs-lisp-mode-map)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Rebind Find Commands}
-\label{sec:org9ed2286}
+\label{sec:org9c202ea}
 Add keybindings (\texttt{C-h C-f} and \texttt{C-h C-v}) for jumping to the source of
 Elisp functions and variables. Also, add a keybinding (\texttt{C-h C-o}) that
 performs the functionality of \texttt{M-.} only for Elisp, because the latter
@@ -3468,7 +3598,7 @@ overrides the default bindings of \texttt{C-h C-f} (\texttt{view-emacs-FAQ}) and
 \texttt{C-h C-o} (\texttt{describe-distribution}), but I've never used those in 10
 years of Emacsing.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun find-symbol (&optional symbol)
   "Same as `xref-find-definitions' but only for Elisp symbols."
   (interactive)
@@ -3481,29 +3611,41 @@ years of Emacsing.
  ("C-h C-f" . find-function)
  ("C-h C-v" . find-variable)
  ("C-h C-o" . find-symbol))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Lisp Interaction Lighter}
-\label{sec:orgbc75a23}
+\label{sec:orga5a31c6}
 Show `lisp-interaction-mode' as "ξι" instead of "Lisp Interaction" in
 the mode line.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the--rename-lisp-interaction-mode ()
   (setq mode-name "ξι"))
 
 (add-hook 'lisp-interaction-mode-hook
           #'the--rename-lisp-interaction-mode)
-\end{verbatim}
+\end{minted}
 \section{Performance}
-\label{sec:orgd5aee15}
+\label{sec:org4552ec4}
 \subsection{Performance Mode}
-\label{sec:org6f21057}
+\label{sec:orgde1ece1}
 Occasionally features like indentation and autocompletion are
 expensive, so we set up a minor mode to slow them down.
+\subsubsection{Aggressive Byte Compilation}
+\label{sec:orga8e616f}
+\begin{minted}[]{common-lisp}
+(use-package auto-compile
+  :init
+  (setq auto-compile-display-buffer nil)
+  (setq auto-compile-mode-line-counter t)
+  (setq auto-compile-update-autoloads t)
+  :config
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode))
+\end{minted}
 \subsubsection{Modes}
-\label{sec:orgdf502e6}
-\begin{verbatim}
+\label{sec:org74ca9ac}
+\begin{minted}[]{common-lisp}
 (define-minor-mode the-slow-indent-mode
   "Minor mode for when the indentation code is slow.
 This prevents `aggressive-indent' from indenting as frequently.")
@@ -3512,51 +3654,51 @@ This prevents `aggressive-indent' from indenting as frequently.")
   "Minor mode for when the autocompletion code is slow.
 This prevents `company' and `eldoc' from displaying metadata as
 quickly.")
-\end{verbatim}
+\end{minted}
 \section{Networking}
-\label{sec:org344acf9}
+\label{sec:org5979838}
 \subsection{Network Services}
-\label{sec:orgbd3155e}
+\label{sec:orgacc991a}
 \subsubsection{macOS TLS verification}
-\label{sec:orgfb8c080}
+\label{sec:org5cbc9b3}
 TLS certs on macOS don't live anywhere that \texttt{gnutls} can see them, by
 default, so \texttt{brew install libressl} and we'll use those.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (the-with-operating-system macOS
   (with-eval-after-load 'gnutls
     (setq gnutls-verify-error t)
     (setq gnutls-min-prime-bits 3072)
     (add-to-list 'gnutls-trustfiles "/usr/local/etc/libressl/cert.pem")))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{StackOverflow}
-\label{sec:orgf8a9d4a}
+\label{sec:org51c5a19}
 Honestly, probably the most important package here. \texttt{M-x
 sx-authenticate}, provide a username and password, then get to
 overflowing.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package sx)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Bug URL references}
-\label{sec:org7648e65}
+\label{sec:org5bc8837}
 Allow setting the regexp for bug references from file-local or
 directory-local variables. CIDER does this in its files, for example.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (put 'bug-reference-bug-regexp 'safe-local-variable #'stringp)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Pastebin}
-\label{sec:org6fb619b}
+\label{sec:org8a8f939}
 \texttt{ix.io} is a slick little pastebin, and now we can use it in Emacs.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package ix)
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Browsing}
-\label{sec:orgf312fb3}
+\label{sec:orgaec044f}
 \texttt{eww} is the wonderfully named Emacs Web Wowser, a text-based browser.
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (use-package eww
   :bind* (("M-T g x" . eww)
           ("M-T g :" . eww-browse-with-external-browser)
@@ -3566,25 +3708,46 @@ directory-local variables. CIDER does this in its files, for example.
   :config
   (progn
     (add-hook 'eww-mode-hook 'visual-line-mode)))
-\end{verbatim}
+\end{minted}
 
+\subsubsection{RSS}
+\label{sec:org21561d7}
+Org does everything, so we manage our RSS feeds with Org, as well.
+\begin{minted}[]{common-lisp}
+(use-package elfeed
+  :demand t)
+
+(use-package elfeed-org
+  :demand t
+  :config
+  (elfeed-org))
+\end{minted}
 \subsubsection{Steam}
-\label{sec:org73f486b}
-\begin{verbatim}
+\label{sec:orgea7cac5}
+\begin{minted}[]{common-lisp}
 (use-package steam
   :init
   (setq steam-username "prooftechnique"))
-\end{verbatim}
+\end{minted}
 \section{Etc.}
-\label{sec:org5a12e04}
+\label{sec:org8d403ff}
 \subsection{Miscellaneous Utilities}
-\label{sec:orgeabef6e}
+\label{sec:org2f2f597}
+\subsubsection{Alerts}
+\label{sec:org3795ca9}
+\begin{minted}[]{common-lisp}
+(use-package alert
+  :demand t
+  :config
+  (the-with-operating-system macOS
+    (setq alert-default-style 'osx-notifier)))
+\end{minted}
 \subsubsection{Eventually-obsolete Functions}
-\label{sec:org707ea22}
+\label{sec:org89183db}
 These functions will become unnecessary in Emacs 26.1, which
 extends \texttt{map-put} to have a TESTFN argument.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-alist-set (key val alist &optional symbol)
   "Set property KEY to VAL in ALIST. Return new alist.
 This creates the association if it is missing, and otherwise sets
@@ -3647,14 +3810,14 @@ That variable will be re-set using `setq'. Element comparison is
 done with TESTFN, which defaults to `eq'. See also
 `the-insert-before' and `the-insert-after*'."
   `(setq ,list (the-insert-before ,insert-elt ,after-elt ,list ,testfn)))
-\end{verbatim}
+\end{minted}
 
 \subsubsection{Framework Identification}
-\label{sec:orgb7210dd}
+\label{sec:org40c54eb}
 This gives us an easy way to check if the file we're editing is part
 of THE.
 
-\begin{verbatim}
+\begin{minted}[]{common-lisp}
 (defun the-managed-p (filename)
   "Return non-nil if FILENAME is managed by The.
 This means that FILENAME is a symlink whose target is inside
@@ -3665,5 +3828,5 @@ This means that FILENAME is a symlink whose target is inside
                         ;; but case-preserving, so we have to compare
                         ;; case-insensitively in that situation.
                         (eq the-operating-system 'macOS))))
-\end{verbatim}
+\end{minted}
 \end{document}

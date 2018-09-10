@@ -3,9 +3,12 @@ By default, Emacs fills your universe with (FSF-approved and
 GPL-compliant) garbage. I don't want a bit of it.
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-startup.el --- Cleaning up Emacs startup
   (require 'the-libraries)
+  (require 'the-package)
   (require 'the-org)
+  (require 'the-find-file)
 #+end_src
 
 ** Disable Startup Message
@@ -35,11 +38,15 @@ instead use our own fancy dashboard.
     (setq recentf-exclude (-map 'f-canonical (org-agenda-files)))
     (setq dashboard-banner-logo-title "REPENT!")
     (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
-    (setq dashboard-items '((recents  . 5)
-                            (bookmarks . 5)
-                            (projects . 5)
-                            (agenda . 5)
-                            (registers . 5)))
+    (if (f-exists? (f-expand "straight/build-cache.el" user-emacs-directory))
+        (setq dashboard-items '((recents . 5)
+                                (bookmarks . 5)
+                                (projects . 5)
+                                (agenda . 5)
+                                (registers . 5)))
+      (setq dashboard-items '((recents . 5)
+                              (bookmarks . 5)
+                              (registers . 5))))
     (dashboard-setup-startup-hook))
 #+end_src
 

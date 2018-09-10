@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-completion.el --- Completion systems
 
 (require 'the-appearance)
@@ -92,8 +93,7 @@
   (setq ivy-historian-recent-decrement 50)
   (ivy-historian-mode 1))
 
-(use-package icicles
-  :demand t)
+(use-package icicles)
 
 (provide 'the-completion)
 

@@ -1,73 +1,59 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-keymap.el --- Non-color-theme appearance tweaks
 
 (require 'the-package)
 (require 'the-custom)
 (require 'the-bind-key)
 (require 'the-hydra)
+(require 'the-os)
 (require 'the-libraries)
 (require 'the-modeline)
+(require 'the-navigation)
+(require 'the-org)
+(require 'the-undo)
+(require 'the-network)
 
 (use-package which-key
-  :init
-  (setq which-key-sort-order 'which-key-key-order-alpha)
-  :bind* (("M-T ?" . which-key-show-top-level))
+  :demand t
+  :bind* (("H-T ?" . which-key-show-top-level))
   :config
   (which-key-mode)
   (which-key-add-key-based-replacements
-    "M-T ?" "top level bindings")
-  :delight (which-key-mode  ""))
+    "H-T ?" "top level bindings")
+  (setq which-key-sort-order 'which-key-key-order-alpha)
+  (setq which-key-enable-extended-define-key t)
+  :diminish which-key-mode)
 
 (use-package discover-my-major
   :bind (("C-h C-m" . discover-my-major)
-         ("C-h M-T" . discover-my-mode)))
+         ("C-h H-T" . discover-my-mode)))
 
-(defcustom the-modalka-activation t
-  "If non-nil, use modalka for modal editing"
+(the-with-operating-system macOS
+  (setq ns-right-command-modifier 'none)
+  (setq ns-right-option-modifier 'none)
+  (setq ns-right-control-modifier 'control)
+  (setq ns-control-modifier 'super)
+  (setq ns-command-modifier 'meta)
+  (setq ns-option-modifier 'hyper))
+
+(defcustom the-ryo-activation t
+  "If non-nil, use ryo-modal for modal editing"
   :type '(boolean)
   :group 'the)
 
-(when the-modalka-activation
-  (use-package modalka
+(when the-ryo-activation
+  (use-package ryo-modal
     :demand t
-    :bind* (("C-z" . modalka-mode))
-    :init
-    (setq modalka-cursor-type 'box)
+    :bind* (("C-z" . ryo-modal-mode))
     :config
-    (bind-key "<escape>" #'modalka-mode)
-    (modalka-define-kbd "<escape>" "C-g")
-    (add-hook 'text-mode-hook #'modalka-mode)
-    (add-hook 'prog-mode-hook #'modalka-mode)
-    (setq-default cursor-type '(bar . 1))
-    (setq modalka-cursor-type 'box)
-    :delight (modalka-mode "µ")))
-
-(defun the-which-key-suggestion-builder (mapping)
-  (which-key-add-key-based-replacements (-second-item mapping) (-first-item mapping)))
-
-(defun the-which-key-suggestion-generator (data)
-  (-each data 'the-which-key-suggestion-builder))
-
-(defun the-modalka-binding-builder (mapping)
-  (if (s-present? (-last-item mapping))
-      (modalka-define-kbd (-second-item mapping) (-last-item mapping))))
-
-(defun the-modalka-binding-generator (data)
-  (when the-modalka-activation
-    (-each data 'the-modalka-binding-builder)))
-
-(let ((data (quote (("leader key" "SPC") ("help prefix" "SPC h") ("ex key" ":") ("THE prefix" "M-T") ("movement prefix" "M-T m") ("extended prefix" "M-T :") ("send code prefix" "M-T s") ("user prefix" "M-T SPC") ("global prefix" "M-T g") ("org prefix" "M-T o") ("around" "M-T a") ("inside" "M-T i") ("prev" "M-T [") ("next" "M-T ]")))))
-(the-which-key-suggestion-generator data)
-)
-
-(let ((data (quote (("org agenda" "SPC o a" "C-c a") ("org capture" "SPC o c" "C-c c") ("org store link" "SPC o l" "C-c l") ("org insert link" "SPC o L" "C-c C-l") ("org iswitchb" "SPC o B" "C-c b") ("org clock in" "SPC o C i" "C-c C-x TAB") ("org clock out" "SPC o C o" "C-c C-x C-o") ("org do something useful" "SPC o RET" "C-c C-c") ("org journal new entry" "SPC o j n" "C-c C-j") ("org forward" "SPC o f" "M-}") ("org backward" "SPC o b" "M-{")))))
-(the-which-key-suggestion-generator data)
-(the-modalka-binding-generator data)
-)
-
-(let ((data (quote (("leave modalka" "i" "C-z") ("left" "h" "C-b") ("down" "j" "C-n") ("up" "k" "C-p") ("right" "l" "C-f") ("forward word" "w" "M-f") ("backward word" "b" "M-b") ("smart next item" "n" "M-n") ("smart prev item" "N" "M-p") ("previous paragraph/org element" "{" "M-{") ("next paragraph/org element" "}" "M-}") ("beginning of line" "0" "C-a") ("end of line" "$" "C-e") ("end of buffer" "G" "M->") ("beginning of buffer" "g g" "M-<") ("yank (vim)/kill (emacs)" "y" "M-w") ("paste (vim)/yank (emacs)" "p" "C-y") ("yank pop (paste history)" "P" "M-y") ("delete char" "x" "C-d") ("kill line" "D" "C-k") ("re-center screen" "z" "C-l") ("shell command (async)" "!" "M-&") ("scroll left" "H" "C-x <") ("scroll up" "J" "C-v") ("scroll down" "K" "M-v") ("scroll right" "L" "C-x >") ("backward sentence" "(" "M-a") ("forward sentence" ")" "M-e") ("search" "/" "C-s") ("quit (minibuffer, etc)" "E" "C-g") ("go to line" "g l" "M-g g") ("record macro" "q" "C-x (") ("end macro" "Q" "C-x )") ("set mark (visual mode)" "v" "C-SPC") ("rectangle edit mode (better visual)" "V" "M-T V") ("indent region" "=" "C-M-\\") ("set bookmark" "+" "C-x r m") ("jump to bookmark" "'" "C-x r b") ("compile/lots of other stuff" "\\\\" "C-c C-c")))))
-(the-which-key-suggestion-generator data)
-(the-modalka-binding-generator data)
-)
+    (bind-key "<escape>" #'ryo-modal-mode)
+    (ryo-modal-keys ("<escape>" "C-g"))
+    (add-hook 'text-mode-hook #'ryo-modal-mode)
+    (add-hook 'prog-mode-hook #'ryo-modal-mode)
+    (push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+    (setq ryo-modal-default-cursor-color "#EBDBB2")
+    (setq ryo-modal-cursor-color "#FFAF00")
+    :diminish "ρ"))
 
 (defhydra the-hydra-rectangle (:pre (rectangle-mark-mode 1)
                                     :color pink
@@ -95,16 +81,125 @@
   ("q" keyboard-quit :color blue))
 
 (bind-keys*
-  ("M-T V" . the-hydra-rectangle/body))
+  ("H-T V" . the-hydra-rectangle/body))
 
-(let ((data (quote (("describe function" "SPC h f" "C-h f") ("describe variable" "SPC h v" "C-h v") ("describe key" "SPC h k" "C-h k") ("describe bindings" "SPC ?" "C-h b") ("major mode bindings" "SPC h m" "C-h C-m") ("minor mode bindings" "SPC h M" "C-h M-T")))))
-(the-which-key-suggestion-generator data)
-(the-modalka-binding-generator data)
-)
+(let ((text-objects
+       '(("." er/mark-symbol :name "Symbol")
+         (":" er/mark-symbol-with-prefix :name "Symbol+Prefix")
+         ("B" mark-whole-buffer :name "All buffer")
+         ("E" org-mark-element :name "Org Element")
+         ("d" er/mark-defun :name "Defun")
+         ("f" avy-goto-word-1 :then (er/mark-symbol) :name "◎ Symbol")
+         ("i" er/mark-inside-pairs :name "Inner")
+         ("m" er/mark-method-call :name "Method call")
+         ("n" er/mark-next-accessor :name "Next accessor")
+         ("o" er/mark-outside-pairs :name "Outer")
+         ("p" er/mark-paragraph :name "Paragraph")
+         ("s" er/mark-sentence :name "Sentence")
+         ("t" org-mark-subtree :name "Org Subtree")
+         ("u" er/mark-url :name "URL")
+         ("w" er/mark-word :name "Word")
+         (";" er/mark-comment :name "Comment"))))
+  (eval `(ryo-modal-keys
+          ("c" ,text-objects :then '(kill-region) :exit t :name "Replace")
+          ("d" ,text-objects :then '(kill-region) :name "Delete")
+          ("y" ,text-objects :then '(copy-region-as-kill) :name "Yank")
+          ("v" ,text-objects :name "Select")
+          ("V" the-hydra-rectangle/body :name "Rectangle Select")
+          ("i" ,text-objects :then '(vimish-fold) :name "Fold")
+          (";" ,text-objects :then '(comment-dwim) :name "Comment")
+          ("p" yank)
+          ("P" yank-pop)
+          ("x" delete-char)
+          ("s" delete-char :exit t)
+          ("o" open-line :exit t)
+          ("O" open-line :first '(previous-line) :exit t)
+          ("a" forward-char :exit t)
+          ("A" end-of-line :exit t)
+          ("i" ryo-modal-mode)
+          ("I" beginning-of-line :exit t)
+          ("d d" kill-whole-line)
+          ("c c" kill-whole-line :exit t))))
 
-(let ((data (quote (("ex key" ":" "") ("find file" ": e" "C-x C-f") ("insert file" ": r" "C-x i")))))
-(the-which-key-suggestion-generator data)
-(the-modalka-binding-generator data)
-)
+(ryo-modal-keys
+ ("," ryo-modal-repeat)
+ ("RET" ryo-modal-mode)
+ ("!" async-shell-command)
+ ("/" swiper :name "Search")
+ ("%" vr/query-replace)
+ ("u" undo-tree-undo)
+ ("C-r" undo-tree-redo)
+ ("U" undo-tree-visualize))
+
+ (ryo-modal-keys
+  (:norepeat t)
+  ("0" "M-0")
+  ("1" "M-1")
+  ("2" "M-2")
+  ("3" "M-3")
+  ("4" "M-4")
+  ("5" "M-5")
+  ("6" "M-6")
+  ("7" "M-7")
+  ("8" "M-8")
+  ("9" "M-9"))
+
+(ryo-modal-keys
+ ("h" backward-char)
+ ("j" next-line)
+ ("k" previous-line)
+ ("l" forward-char)
+ ("w" forward-word)
+ ("b" backward-word)
+ ("{" "M-{")
+ ("}" "M-}")
+ ("(" backward-sentence)
+ (")" forward-sentence)
+ ("$" move-end-of-line)
+ ("G" end-of-buffer)
+ ("g g" beginning-of-buffer)
+ ("g l" goto-line)
+ ("+" bookmark-set)
+ ("'" bookmark-jump))
+
+(ryo-modal-keys ("SPC"
+                 (("o"
+                   (("a" org-agenda)
+                    ("c" org-capture)
+                    ("l" org-store-link)
+                    ("L" org-insert-link)
+                    ("C"
+                     (("i" org-clock-in)
+                      ("o" org-clock-out))
+                     :name "Clock")
+                    ("p" org-pomodoro)
+                    ("RET" org-ctrl-c-ctrl-c :name "Do Something Useful")
+                    ("f" org-forward-element)
+                    ("b" org-backward-element))
+                   :name "Org"))))
+
+(ryo-modal-keys ("?" which-key-show-top-level))
+(ryo-modal-key "SPC h"
+               '(("f" "C-h f")
+                 ("v" "C-h v")
+                 ("k" "C-h k")
+                 ("?" "C-h b")
+                 ("m" "C-h C-m")
+                 ("M" "C-h H-T"))
+               :name "Help")
+
+(ryo-modal-key "SPC :"
+               '(("e" "C-x C-f")
+                 ("r" "C-x i")))
+
+(ryo-modal-key "SPC e"
+               '(("e" eww)))
+
+(ryo-modal-major-mode-keys
+ 'eww-mode
+ (":" eww-browse-with-external-browser)
+ ("#" eww-list-histories)
+ ("{" eww-back-url)
+ ("}" eww-forward-url))
 
 (provide 'keymap)

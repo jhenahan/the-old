@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-theme.el --- Loading color themes
 
 (require 'the-custom)

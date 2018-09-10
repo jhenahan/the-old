@@ -1,7 +1,14 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-util.el --- Miscellaneous utility functions
 
 (require 'the-os)
 (require 'the-libraries)
+
+(use-package alert
+  :demand t
+  :config
+  (the-with-operating-system macOS
+    (setq alert-default-style 'osx-notifier)))
 
 (defun the-alist-set (key val alist &optional symbol)
   "Set property KEY to VAL in ALIST. Return new alist.

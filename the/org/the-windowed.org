@@ -4,6 +4,7 @@ based on the active window system.
 
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-windowed.el --- Checking the window system
 #+end_src
 

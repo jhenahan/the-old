@@ -1,6 +1,7 @@
 * Undo
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-undo.el -- Better undo interaction
   (require 'the-package)
 #+end_src
@@ -13,7 +14,9 @@ through the tree.
   (use-package undo-tree
     :demand t
     :config
-    (global-undo-tree-mode))
+    (global-undo-tree-mode)
+    :delight undo-tree-mode
+    )
 #+end_src
 
 ** Provides                                                       :noexport:

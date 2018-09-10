@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-pdf.el --- PDF functionality
 
 (require 'the-package)

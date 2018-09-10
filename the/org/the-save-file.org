@@ -1,6 +1,7 @@
 * Saving Files
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-save-file.el --- Saving files
 #+end_src
 

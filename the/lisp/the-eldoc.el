@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-eldoc.el --- Eldoc customizations
 
 (require 'the-slow)

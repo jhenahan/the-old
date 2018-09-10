@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-config.el --- Configuration file editing
 
 (require 'the-package)

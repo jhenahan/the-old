@@ -1,6 +1,7 @@
 * Config File Utilities
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-config.el --- Configuration file editing
 
   (require 'the-package)

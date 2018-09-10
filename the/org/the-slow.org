@@ -3,9 +3,21 @@ Occasionally features like indentation and autocompletion are
 expensive, so we set up a minor mode to slow them down.
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-slow.el --- For when Emacs just isn't fast enough
 #+end_src
 
+** Aggressive Byte Compilation
+#+begin_src emacs-lisp
+  (use-package auto-compile
+    :init
+    (setq auto-compile-display-buffer nil)
+    (setq auto-compile-mode-line-counter t)
+    (setq auto-compile-update-autoloads t)
+    :config
+    (auto-compile-on-load-mode)
+    (auto-compile-on-save-mode))
+#+end_src
 ** Modes
 #+begin_src emacs-lisp
   (define-minor-mode the-slow-indent-mode

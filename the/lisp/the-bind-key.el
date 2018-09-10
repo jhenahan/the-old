@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-bind-key.el --- Utility functions for keybindings
 
 (require 'the-custom)

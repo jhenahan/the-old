@@ -4,6 +4,7 @@ windows specific magic later. :smile:
 
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-windows.el --- Managing windows
   (require 'the-package)
 #+end_src
@@ -14,7 +15,8 @@ I'm a great fan of =golden-ratio=.
   (use-package golden-ratio
     :demand t
     :config
-    (golden-ratio-mode t))
+    (golden-ratio-mode t)
+    :diminish "φ")
 #+end_src
 
 ** Window Selection

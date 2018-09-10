@@ -1,6 +1,7 @@
 * Git integration
 ** Requirements :noexport:
    #+begin_src emacs-lisp
+     ;; -*- lexical-binding: t; -*-
      ;;; the-git.el --- Interfacing with Git.
 
      (require 'the-appearance)

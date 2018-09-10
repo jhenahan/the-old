@@ -1,6 +1,7 @@
 * Auto-completion
 ** Requirements                                                    :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-autocomplete.el --- In-buffer completion
 
   (require 'the-package)
@@ -157,7 +158,7 @@ as a tooltip menu. Company stands for "Complete Anything".
 
 #+begin_src emacs-lisp
   (defvar the-company-backends-global
-    '(company-capf
+    '(;company-capf
       company-files
       (company-dabbrev-code company-keywords)
       company-dabbrev)
@@ -174,7 +175,17 @@ as a tooltip menu. Company stands for "Complete Anything".
     <<company-config>>
     <<company-slow>>
     (global-company-mode +1)
-    :delight company-mode)
+    :diminish company-mode)
+
+  ;(use-package posframe
+  ;  :demand t
+  ;  :diminish)
+
+  ;(use-package company-childframe
+  ;  :demand t
+  ;  :config
+  ;  (company-childframe-mode 1)
+  ;  :diminish)
 #+end_src
 
 ** Company Statistics

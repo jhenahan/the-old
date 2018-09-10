@@ -4,6 +4,7 @@
 
 ** Requirements                                                    :noexport:
    #+begin_src emacs-lisp
+     ;; -*- lexical-binding: t; -*-
      ;;; the-command.el --- Enable disabled commands
    #+end_src
 

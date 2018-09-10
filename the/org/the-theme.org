@@ -1,6 +1,7 @@
 * Theme
 ** Requirements :noexport:
    #+begin_src emacs-lisp
+     ;; -*- lexical-binding: t; -*-
      ;;; the-theme.el --- Loading color themes
 
      (require 'the-custom)
@@ -8,7 +9,7 @@
    #+end_src
 
 ** Utilities
-   
+
    This function is useful for reformatting lispy names (like
    =deeper-blue=) into user-friendly strings (like "Deeper Blue") for
    the Custom interface.
@@ -32,7 +33,6 @@
        `(when (eq ',theme the-color-theme)
 	  ,@body))
    #+end_src
-
 
 ** Default Color Scheme
 
@@ -61,7 +61,7 @@
 				     gruvbox))
 				  #'string-lessp)))))
    #+end_src
-   
+
    Defer color theme loading until after init, which helps to avoid
    weirdness during the processing of the local init-file.
 

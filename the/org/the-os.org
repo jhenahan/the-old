@@ -1,6 +1,7 @@
 * OS-specific Customization
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-os.el --- Operating system detection
 
   (require 'the-custom)

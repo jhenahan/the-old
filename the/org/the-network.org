@@ -1,10 +1,12 @@
 * Network Services
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-network.el --- Network and web browsing
 
   (require 'the-os)
   (require 'the-package)
+  (require 'the-org)
 #+end_src
 
 ** macOS TLS verification
@@ -53,6 +55,17 @@ directory-local variables. CIDER does this in its files, for example.
       (add-hook 'eww-mode-hook 'visual-line-mode)))
 #+end_src
 
+** RSS
+Org does everything, so we manage our RSS feeds with Org, as well.
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :demand t)
+
+  (use-package elfeed-org
+    :demand t
+    :config
+    (elfeed-org))
+#+end_src
 ** Steam
 #+begin_src emacs-lisp
   (use-package steam

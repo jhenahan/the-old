@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-custom.el --- Customizing Radian Emacs
 
 (defgroup the nil

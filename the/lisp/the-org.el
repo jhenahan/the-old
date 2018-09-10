@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-org.el -- Org mode customizations
 
 (require 'the-bind-key)
@@ -19,7 +20,7 @@
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
-         ("C-c b" . org-iswitchb)
+         ("C-c b" . org-switchb)
          :map org-mode-map
          ("S-<left>" . nil)
          ("S-<right>" . nil)
@@ -32,8 +33,10 @@
          ([remap backward-paragraph] . org-backward-paragraph)
          ([remap forward-paragraph] . org-forward-paragraph)
          ("M-RET" . org-insert-heading)
+         ("M-<return>" . org-insert-heading)
+         ("M-S-RET" . org-insert-todo-heading)
+         ("M-S-<return>" . org-insert-todo-heading)
          )
-  :init
   :config
   (defun the-org-git-version ()
     (let ((git-repo
@@ -56,7 +59,11 @@
   (setq org-directory "~/org")
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-           "* TODO %?\n %T\n  %i\n  %a")
+           "* BACKLOG %?\n %T\n  %i\n  %a")
+          ("m" "Meeting" entry (file+headline "~/org/work.org" "Meetings")
+           "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+          ("p" "Phone call" entry (file+headline "~/org/work.org" "Phone Calls")
+           "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
           ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
            "* %?\nEntered on %U\n  %i")
           ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
@@ -66,10 +73,6 @@
   
           (setq org-refile-targets
                 '((org-agenda-files :maxlevel . 3)))
-  (defun the-fix-easy-templates ()
-    (require 'org-tempo))
-  
-  (add-hook 'org-mode-hook 'the-fix-easy-templates)
   (use-package org-bullets
     :init
     (add-hook 'org-mode-hook 'org-bullets-mode))
@@ -82,6 +85,13 @@
   (setq org-special-ctrl-a/e t
         org-special-ctrl-k t)
   (setq org-return-follows-link t)
+  ;(add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted)
+  
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (defun the-org-sort-ignore-errors ()
     (condition-case x
         (org-sort-entries nil ?a)
@@ -162,12 +172,17 @@
           ("noexport" . ?n)
           ("crypt" . ?c)
           ))
+  (with-eval-after-load 'org-src
+    (diminish 'org-src-mode))
+  (with-eval-after-load 'org-indent
+    (diminish 'org-indent-mode))
   :delight
-  (org-indent-mode)
+  (org-mode "Ο")
   )
 
 (use-package org-agenda
   :straight org-plus-contrib
+  :after (org)
   :demand t
   :bind (:map org-agenda-mode-map
          ("S-<up>" . nil)
@@ -203,7 +218,23 @@
   
   (advice-add #'org-agenda :around
               #'the--advice-org-agenda-default-directory)
+  :delight
+  (org-agenda-mode "Οα ")
   )
+
+(use-package org-clock
+  :straight org-plus-contrib
+  :after (org-agenda)
+  :bind (:map org-mode-map
+         ("C-c C-x C-i" . org-clock-in)
+         ("C-c C-x C-o" . org-clock-out))
+  :demand t)
+
+(use-package org-pomodoro
+  :after (org-clock)
+  :bind
+  ("M-T c p" . org-pomodoro)
+  :demand t)
 
 (use-package org-crypt
   :straight org-plus-contrib

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-crypt.el --- Encryption in Emacs
 
 (require 'the-package)

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-emoji.el --- Emojis :smile:
 
 (require 'the-package)

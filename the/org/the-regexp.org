@@ -1,6 +1,7 @@
 * Regular Expressions
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-regexp.el --- Support for regular expressions
 
   (require 'the-package)

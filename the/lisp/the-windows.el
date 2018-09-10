@@ -1,10 +1,12 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-windows.el --- Managing windows
 (require 'the-package)
 
 (use-package golden-ratio
   :demand t
   :config
-  (golden-ratio-mode t))
+  (golden-ratio-mode t)
+  :diminish "φ")
 
 (use-package shackle
   :demand t

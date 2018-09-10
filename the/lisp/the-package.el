@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-package.el --- Package management
 
 (setq package-enable-at-startup nil)

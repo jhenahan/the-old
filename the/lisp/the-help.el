@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-help.el --- better help behavior
 
 (require 'the-package)

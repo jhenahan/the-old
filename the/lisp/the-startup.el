@@ -1,6 +1,9 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-startup.el --- Cleaning up Emacs startup
 (require 'the-libraries)
+(require 'the-package)
 (require 'the-org)
+(require 'the-find-file)
 
 (defalias 'the--advice-inhibit-startup-echo-area-message #'ignore
   "Unconditionally inhibit the startup message in the echo area.
@@ -17,11 +20,15 @@ This is an `:override' advice for
   (setq recentf-exclude (-map 'f-canonical (org-agenda-files)))
   (setq dashboard-banner-logo-title "REPENT!")
   (setq dashboard-startup-banner (f-expand "heresy.png" the-image-directory))
-  (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5)
-                          (registers . 5)))
+  (if (f-exists? (f-expand "straight/build-cache.el" user-emacs-directory))
+      (setq dashboard-items '((recents . 5)
+                              (bookmarks . 5)
+                              (projects . 5)
+                              (agenda . 5)
+                              (registers . 5)))
+    (setq dashboard-items '((recents . 5)
+                            (bookmarks . 5)
+                            (registers . 5))))
   (dashboard-setup-startup-hook))
 
 (setq initial-scratch-message nil)

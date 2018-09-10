@@ -1,0 +1,32 @@
+* Email
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  ;;; the-mail.el --- Email
+
+  (require 'the-package)
+#+end_src
+
+** Gnus
+#+begin_src emacs-lisp
+  (use-package gnus
+    :init
+    (setq user-mail-address "jhenahan@me.com"
+          user-full-name "Jack Henahan")
+    (setq gnus-select-method
+          '(nnimap "iCloud"
+                   (nnimap-address "imap.mail.me.com")
+                   (nnimap-server-port "imaps")
+                   (nnimap-stream ssl)))
+    (setq smtpmail-smtp-server "smtp.mail.me.com"
+          smtpmail-smtp-service 587
+          gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+    )
+#+end_src
+
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-mail)
+
+  ;;; the-mail.el ends here
+#+end_src

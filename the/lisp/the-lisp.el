@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-lisp.el --- Support for Lisps
 
 (require 'the-indent)

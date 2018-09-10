@@ -1,6 +1,7 @@
 * Formatting Options
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-formatting.el --- Formatting text
 
   (require 'the-appearance)

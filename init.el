@@ -11,6 +11,8 @@
 ;; Stop dumping junk in my init file, Customize
 (setq custom-file the-local-init-file)
 
+(setq straight-recipes-gnu-elpa-use-mirror t)
+
 (if (version< emacs-version the-minimum-emacs-version)
     (warn (concat "The Heretic's Emacs requires at least Emacs %s, "
                   "but you are running Emacs %s")

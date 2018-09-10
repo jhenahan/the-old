@@ -1,6 +1,7 @@
 * ElDoc
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-eldoc.el --- Eldoc customizations
 
   (require 'the-slow)

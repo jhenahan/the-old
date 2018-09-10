@@ -1,6 +1,7 @@
 * PDF Functionality
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-pdf.el --- PDF functionality
 
   (require 'the-package)

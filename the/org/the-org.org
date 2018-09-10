@@ -1,6 +1,7 @@
 * Org Mode Customization
 ** Requirements                                                    :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-org.el -- Org mode customizations
 
   (require 'the-bind-key)
@@ -10,7 +11,6 @@
   (require 'the-modeline)
   (require 'the-crypt)
 #+end_src
-
 ** Global Outline Mode
 Outlines work for just about any structured text imaginable, from code
 to prose. If it's got something that Emacs thinks is a paragraph, it
@@ -77,20 +77,6 @@ related to Org-anization.
       (provide 'org-version)
     #+end_src
 
-**** =org-tempo=
-In the most recent release of Org, the way easy template expansion
-(i.e., =<s[TAB]= expands to a =begin_src= block) was changed to use
-=tempo=, so we need to require this in order to keep this very
-convenient functionality in place.
-
-#+NAME: org-requires
-#+begin_src emacs-lisp
-  (defun the-fix-easy-templates ()
-    (require 'org-tempo))
-
-  (add-hook 'org-mode-hook 'the-fix-easy-templates)
-#+end_src
-
 **** Todo Sequence
 We use an augmented set of todo states, including TODO, IN-PROGRESS,
 WAITING, and the done states DONE and CANCELED.
@@ -147,7 +133,7 @@ Org manual.
   ("C-c a" . org-agenda)
   ("C-c c" . org-capture)
   ("C-c l" . org-store-link)
-  ("C-c b" . org-iswitchb)
+  ("C-c b" . org-switchb)
 #+end_src
 
 First, we move the Org bindings for =org-shift*= from the =S-= prefix
@@ -181,6 +167,9 @@ Finally, we'll set up a convenient binding for inserting headings.
 #+NAME: org-mode-heading
 #+begin_src emacs-lisp
   ("M-RET" . org-insert-heading)
+  ("M-<return>" . org-insert-heading)
+  ("M-S-RET" . org-insert-todo-heading)
+  ("M-S-<return>" . org-insert-todo-heading)
 #+end_src
 
 **** Settings
@@ -204,6 +193,13 @@ refiling.
   (setq org-special-ctrl-a/e t
         org-special-ctrl-k t)
   (setq org-return-follows-link t)
+  ;(add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted)
+
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 
 **** Tags
@@ -236,7 +232,11 @@ default.
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-           "* TODO %?\n %T\n  %i\n  %a")
+           "* BACKLOG %?\n %T\n  %i\n  %a")
+          ("m" "Meeting" entry (file+headline "~/org/work.org" "Meetings")
+           "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+          ("p" "Phone call" entry (file+headline "~/org/work.org" "Phone Calls")
+           "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
           ("g" "Groceries" entry (file+headline "~/org/groceries.org" "Groceries")
            "* %?\nEntered on %U\n  %i")
           ("w" "Work" entry (file+headline "~/org/work.org" "Tasks")
@@ -318,12 +318,10 @@ latter to the former.
            <<org-mode-remaps>>
            <<org-mode-heading>>
            )
-    :init
     :config
     <<org-version-definitions>>
     <<org-dir>>
     <<org-capture>>
-    <<org-requires>>
     <<org-bullets>>
     <<org-settings>>
     <<org-sort-buffer>>
@@ -331,8 +329,12 @@ latter to the former.
     <<todo-states>>
     <<org-dropbox>>
     <<org-tags>>
+    (with-eval-after-load 'org-src
+      (diminish 'org-src-mode))
+    (with-eval-after-load 'org-indent
+      (diminish 'org-indent-mode))
     :delight
-    (org-indent-mode)
+    (org-mode "Ο")
     )
 #+end_src
 
@@ -406,6 +408,7 @@ agenda so that things like =find-file= work sensibly.
 #+begin_src emacs-lisp
   (use-package org-agenda
     :straight org-plus-contrib
+    :after (org)
     :demand t
     :bind (:map org-agenda-mode-map
            <<org-agenda-bindings>>
@@ -415,7 +418,26 @@ agenda so that things like =find-file= work sensibly.
     :config
     <<agenda-window-split>>
     <<agenda-default-directory>>
+    :delight
+    (org-agenda-mode "Οα ")
     )
+#+end_src
+** Clocking
+#+begin_src emacs-lisp
+  (use-package org-clock
+    :straight org-plus-contrib
+    :after (org-agenda)
+    :bind (:map org-mode-map
+           ("C-c C-x C-i" . org-clock-in)
+           ("C-c C-x C-o" . org-clock-out))
+    :demand t)
+
+  (use-package org-pomodoro
+    :after (org-clock)
+    :bind
+    ("M-T c p" . org-pomodoro)
+    :demand t)
+
 #+end_src
 ** Org Encryption
 #+begin_src emacs-lisp

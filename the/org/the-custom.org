@@ -1,6 +1,7 @@
 * Customization Group
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-custom.el --- Customizing Radian Emacs
 #+end_src
 

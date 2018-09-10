@@ -1,6 +1,7 @@
 * Better Help
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-help.el --- better help behavior
 
   (require 'the-package)

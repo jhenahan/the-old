@@ -1,6 +1,7 @@
 * Appearance
 ** Requires                                                        :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-appearance.el --- Non-color-theme appearance tweaks
 
   (require 'the-custom)
@@ -34,6 +35,11 @@ nonsense. We'll turn all of that off.
   (menu-bar-mode -1)
   (setq ring-bell-function #'ignore)
   (scroll-bar-mode -1)
+  (defun the-disable-scroll-bars (frame)
+    (modify-frame-parameters frame
+                             '((vertical-scroll-bars . nil)
+                               (horizontal-scroll-bars . nil))))
+  (add-hook 'after-make-frame-functions 'the-disable-scroll-bars)
   (tool-bar-mode -1)
   (blink-cursor-mode -1)
 #+end_src
@@ -58,7 +64,11 @@ versions, patches exist to get the same effect.
   (if (version<= "26" emacs-version)
       (progn
         (setq frame-resize-pixelwise t)
-        (setq default-frame-alist '((undecorated . t)))))
+        (setq default-frame-scroll-bars 'none)
+        (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+        (add-to-list 'default-frame-alist '(ns-appearance . dark))
+                                          ;(setq default-frame-alist '((undecorated . t)))
+        ))
 #+end_src
 
 ** Fonts
@@ -91,6 +101,18 @@ of the monitor.
   (call-interactively 'the-fontify-idle)
 #+end_src
 
+** Fancy nonsense
+Transparency and whatnot.
+#+begin_src emacs-lisp
+  (defcustom the-fancy-stuff nil
+    "Non-nil means turn on a bunch of weird appearance tweaks like
+  transparency."
+    :group 'the
+    :type 'boolean)
+
+  (if the-fancy-stuff
+      (add-to-list 'default-frame-alist '(alpha . (85 . 50))))
+#+end_src
 ** Provides                                                        :noexport:
 #+begin_src emacs-lisp
   (provide 'the-appearance)

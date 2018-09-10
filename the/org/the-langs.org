@@ -1,0 +1,80 @@
+* Programming Languages
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  ;;; the-langs.el --- programming is cool
+
+  (require 'the-package)
+#+end_src
+
+** Supported Languages
+*** APL
+**** APL Mode
+I like thinking about data processing problems in APL and Haskell, so
+this just gives us a fancy little APL environment to play in.
+
+#+begin_src emacs-lisp
+  (use-package gnu-apl-mode)
+#+end_src
+
+*** Haskell
+**** Haskell Mode
+#+begin_src emacs-lisp
+  (use-package haskell-mode
+    :commands haskell-mode
+    :init
+    (add-hook 'haskell-mode-hook
+              (lambda ()
+                (set (make-local-variable 'company-backends)
+                     (append '((;company-capf
+                                company-dabbrev-code))
+                             company-backends)))))
+#+end_src
+**** Dante
+#+begin_src emacs-lisp
+  (use-package dante
+    :after haskell-mode
+    :commands dante-mode
+    :init
+    (add-hook 'haskell-mode-hook 'dante-mode)
+    (add-hook 'haskell-mode-hook 'flycheck-mode)
+    :config
+    (add-hook 'dante-mode-hook
+              '(lambda () (flycheck-add-next-checker 'haskell-dante
+                                                '(warning . haskell-hlint)))))
+#+end_src
+**** Structured Haskell Mode
+#+begin_src emacs-lisp
+  (use-package shm
+    :after haskell-mode
+    :commands structured-haskell-mode
+    :init
+    (add-hook 'haskell-mode-hook 'structured-haskell-mode))
+#+end_src
+*** Rust
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :init
+    (setq rust-format-on-save t))
+  (use-package racer
+    :commands racer-mode
+    :init
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode))
+#+end_src
+*** NASM
+#+begin_src emacs-lisp
+  (use-package x86-lookup
+    :config
+    (setq x86-lookup-pdf "~/Dropbox/intel-vol2.pdf"))
+
+  (use-package nasm-mode
+    :hook asm-mode)
+#+end_src
+** Provides                                                       :noexport:
+#+begin_src emacs-lisp
+  (provide 'the-langs)
+
+  ;;; the-langs.el ends here
+#+end_src

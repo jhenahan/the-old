@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-hydra.el --- The many-headed keybinding machine
 
 (require 'the-custom)

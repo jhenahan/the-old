@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-find-file.el --- Finding files
 
 (require 'cl-lib)
@@ -210,8 +211,8 @@ created directories if they kill the buffer without saving it."
             #'the--advice-find-file-automatically-create-directory)
 
 ;; Also enable it for `write-file' (C-x C-w).
-(advice-add #'write-file :around
-            #'the--advice-find-file-automatically-create-directory)
+;(advice-add #'write-file :around
+;            #'the--advice-find-file-automatically-create-directory)
 
 (defun the--kill-buffer-delete-directory-if-appropriate ()
   "Delete parent directories if appropriate.
@@ -301,6 +302,8 @@ This is a function for `after-save-hook'. Remove
 (use-package projectile
   :demand t
   :config
+  (setq projectile-mode-line
+        '(:eval (format "π[%s]" (projectile-project-name))))
   (projectile-mode +1)
   (defun the-projectile-ignore-projects (project-root)
     (f-descendant-of? project-root (f-join user-emacs-directory "straight/repos")))
@@ -311,7 +314,7 @@ This is a function for `after-save-hook'. Remove
   
   (put 'projectile-indexing-method 'safe-local-variable
        #'the-projectile-indexing-method-p)
-)
+  )
 
 (use-package counsel-projectile
   :init

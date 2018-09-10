@@ -1,6 +1,7 @@
 * Finding files
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-find-file.el --- Finding files
 
   (require 'cl-lib)
@@ -273,8 +274,8 @@ then offer to delete the created directory or directories.
               #'the--advice-find-file-automatically-create-directory)
 
   ;; Also enable it for `write-file' (C-x C-w).
-  (advice-add #'write-file :around
-              #'the--advice-find-file-automatically-create-directory)
+  ;(advice-add #'write-file :around
+  ;            #'the--advice-find-file-automatically-create-directory)
 
   (defun the--kill-buffer-delete-directory-if-appropriate ()
     "Delete parent directories if appropriate.
@@ -411,9 +412,11 @@ alter the indexing method as a dirlocal.
   (use-package projectile
     :demand t
     :config
+    (setq projectile-mode-line
+          '(:eval (format "π[%s]" (projectile-project-name))))
     <<global-projectile>>
     <<projectile-index>>
-  )
+    )
 #+end_src
 *** Counsel Projectile
 Counsel is everywhere! This integrates Projectile commands and Ivy.

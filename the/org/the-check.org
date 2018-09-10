@@ -1,6 +1,7 @@
 * Syntax Checking
 ** Requirements :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-check.el --- On-the-fly syntax and semantics checking
 
   (require 'the-package)

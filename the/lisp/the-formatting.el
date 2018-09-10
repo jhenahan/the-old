@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-formatting.el --- Formatting text
 
 (require 'the-appearance)
@@ -6,6 +7,8 @@
 (setq-default indent-tabs-mode nil)
 
 (setq sentence-end-double-space nil)
+
+(setq-default fill-column 80)
 
 (defvar the-delete-trailing-whitespace t
   "If non-nil, delete trailing whitespace on save.")

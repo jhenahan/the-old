@@ -1,6 +1,7 @@
 * Encryption Facilities
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-crypt.el --- Encryption in Emacs
 
   (require 'the-package)

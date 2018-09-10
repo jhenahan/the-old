@@ -1,6 +1,7 @@
 * Modern Libraries
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-libraries.el --- Helfpul utility libraries
 
   (require 'the-package)

@@ -1,6 +1,7 @@
 * Future-proof patches
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-patch.el --- Patching functions in other packages
 
   (require 'the-package)

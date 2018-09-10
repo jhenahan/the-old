@@ -5,7 +5,7 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+EXPORT_FILE_NAME: ../README
-#+LATEX_HEADER: \usepackage{alphabeta}
+#+LATEX_HEADER: \usepackage{alphabeta} \usepackage[outputdir=..]{minted}
 
 * Basics
 #+include: "../org/the-libraries.org"

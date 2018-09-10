@@ -1,6 +1,7 @@
 * Auto-Revert
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-revert.el --- Auto-revert
 
   (require 'the-libraries)

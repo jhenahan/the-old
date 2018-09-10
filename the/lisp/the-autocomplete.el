@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-autocomplete.el --- In-buffer completion
 
 (require 'the-package)
@@ -5,7 +6,7 @@
 (require 'the-slow)
 
 (defvar the-company-backends-global
-  '(company-capf
+  '(;company-capf
     company-files
     (company-dabbrev-code company-keywords)
     company-dabbrev)
@@ -39,7 +40,17 @@ backends will still be included.")
   
   (add-hook 'the-slow-autocomplete-mode-hook #'the-company-toggle-slow)
   (global-company-mode +1)
-  :delight company-mode)
+  :diminish company-mode)
+
+;(use-package posframe
+;  :demand t
+;  :diminish)
+
+;(use-package company-childframe
+;  :demand t
+;  :config
+;  (company-childframe-mode 1)
+;  :diminish)
 
 (use-package company-statistics
   :demand t

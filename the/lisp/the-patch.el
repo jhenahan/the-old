@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-patch.el --- Patching functions in other packages
 
 (require 'the-package)

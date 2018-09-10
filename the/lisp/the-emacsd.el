@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-emacsd.el --- Organizing ~/.emacs.d
 
 (require 'the-package)

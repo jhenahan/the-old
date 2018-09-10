@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-pragmata.el --- ligatures for Pragmata Pro
 
 (setq prettify-symbols-unprettify-at-point 'right-edge)

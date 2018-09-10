@@ -1,12 +1,20 @@
 * Miscellaneous Utilities
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-util.el --- Miscellaneous utility functions
 
   (require 'the-os)
   (require 'the-libraries)
 #+end_src
-
+** Alerts
+#+begin_src emacs-lisp
+  (use-package alert
+    :demand t
+    :config
+    (the-with-operating-system macOS
+      (setq alert-default-style 'osx-notifier)))
+#+end_src
 ** Eventually-obsolete Functions
 These functions will become unnecessary in Emacs 26.1, which
 extends =map-put= to have a TESTFN argument.

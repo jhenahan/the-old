@@ -1,6 +1,7 @@
 * Indentation
 ** Requirements                                                   :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-indent.el --- Indentation
 
   (require 'the-package)
@@ -51,7 +52,7 @@ typo. Or rather, it is, but it's in the actual package, not on us.
     <<agg-indent-local>>
     :config
     <<agg-indent-slow>>
-    :delight (aggressive-indent-mode "AggrIndent"))
+    :diminish aggressive-indent-mode)
 
 #+end_src
 

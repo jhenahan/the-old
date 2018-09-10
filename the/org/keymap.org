@@ -1,14 +1,20 @@
 * Keymap
 ** Requirements :noexport:
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
   ;;; the-keymap.el --- Non-color-theme appearance tweaks
 
   (require 'the-package)
   (require 'the-custom)
   (require 'the-bind-key)
   (require 'the-hydra)
+  (require 'the-os)
   (require 'the-libraries)
   (require 'the-modeline)
+  (require 'the-navigation)
+  (require 'the-org)
+  (require 'the-undo)
+  (require 'the-network)
 #+end_src
 
 ** =which-key=
@@ -29,17 +35,25 @@ Sort =which-key= suggestions alphabetically.
   (setq which-key-sort-order 'which-key-key-order-alpha)
 #+end_src
 
+**** Extended Key Definitions
+Because prefixes are a big part of our config, we'll want to turn those on.
+
+#+NAME: wk-extend
+#+begin_src emacs-lisp
+  (setq which-key-enable-extended-define-key t)
+#+end_src
 *** =use-package= declaration
 #+begin_src emacs-lisp
   (use-package which-key
-    :init
-    <<wk-sort>>
-    :bind* (("M-T ?" . which-key-show-top-level))
+    :demand t
+    :bind* (("H-T ?" . which-key-show-top-level))
     :config
     (which-key-mode)
     (which-key-add-key-based-replacements
-      "M-T ?" "top level bindings")
-    :delight (which-key-mode  ""))
+      "H-T ?" "top level bindings")
+    <<wk-sort>>
+    <<wk-extend>>
+    :diminish which-key-mode)
 #+end_src
 
 ** Discoverability
@@ -50,63 +64,220 @@ easier with =discover-my-major=.
 #+begin_src emacs-lisp
   (use-package discover-my-major
     :bind (("C-h C-m" . discover-my-major)
-           ("C-h M-T" . discover-my-mode)))
+           ("C-h H-T" . discover-my-mode)))
 #+end_src
 
-* Modalka
+* Freeing up modifiers
+#+begin_src emacs-lisp
+  (the-with-operating-system macOS
+    (setq ns-right-command-modifier 'none)
+    (setq ns-right-option-modifier 'none)
+    (setq ns-right-control-modifier 'control)
+    (setq ns-control-modifier 'super)
+    (setq ns-command-modifier 'meta)
+    (setq ns-option-modifier 'hyper))
+#+end_src
+* Modal Keys
 
 Evil's not enough effort, apparently, so I'm building my own modal
-bindings with =modalka=, a great framework for custom modal editing.
+bindings with =ryo-modal=, a great framework for custom modal editing.
 This isn't to everyone's tastes, so it can be turned off by
 customizing a variable.
 
 #+begin_src emacs-lisp
-  (defcustom the-modalka-activation t
-    "If non-nil, use modalka for modal editing"
+  (defcustom the-ryo-activation t
+    "If non-nil, use ryo-modal for modal editing"
     :type '(boolean)
     :group 'the)
 #+end_src
 
 #+begin_src emacs-lisp
-  (when the-modalka-activation
-    (use-package modalka
+  (when the-ryo-activation
+    (use-package ryo-modal
       :demand t
-      :bind* (("C-z" . modalka-mode))
-      :init
-      (setq modalka-cursor-type 'box)
+      :bind* (("C-z" . ryo-modal-mode))
       :config
-      (bind-key "<escape>" #'modalka-mode)
-      (modalka-define-kbd "<escape>" "C-g")
-      (add-hook 'text-mode-hook #'modalka-mode)
-      (add-hook 'prog-mode-hook #'modalka-mode)
-      (setq-default cursor-type '(bar . 1))
-      (setq modalka-cursor-type 'box)
-      :delight (modalka-mode "µ")))
+      (bind-key "<escape>" #'ryo-modal-mode)
+      (ryo-modal-keys ("<escape>" "C-g"))
+      (add-hook 'text-mode-hook #'ryo-modal-mode)
+      (add-hook 'prog-mode-hook #'ryo-modal-mode)
+      (push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+      (setq ryo-modal-default-cursor-color "#EBDBB2")
+      (setq ryo-modal-cursor-color "#FFAF00")
+      :diminish "ρ"))
 #+end_src
 
-** Helper functions
+** Bindings
+*** Hydras
 
-We'll use org tables to document our bindings, and because org is cool
-we can also use the tables to create those bindings. For that, we need
-a couple of helper functions.
+**** Rectangle Edit Mode
+This is basically an improved and more interactive version of the
+standard visual mode from Vim.
 
 #+begin_src emacs-lisp
-  (defun the-which-key-suggestion-builder (mapping)
-    (which-key-add-key-based-replacements (-second-item mapping) (-first-item mapping)))
+  (defhydra the-hydra-rectangle (:pre (rectangle-mark-mode 1)
+                                      :color pink
+                                      :hint nil)
+    "
+   _p_: paste   _r_: replace  _I_: insert
+   _y_: copy    _o_: open     _V_: reset
+   _d_: kill    _n_: number   _q_: quit
+  "
+    ("h" backward-char nil)
+    ("l" forward-char nil)
+    ("k" previous-line nil)
+    ("j" next-line nil)
+    ("y" copy-rectangle-as-kill)
+    ("d" kill-rectangle)
+    ("x" clear-rectangle)
+    ("o" open-rectangle)
+    ("p" yank-rectangle)
+    ("r" string-rectangle)
+    ("n" rectangle-number-lines)
+    ("I" string-insert-rectangle)
+    ("V" (if (region-active-p)
+             (deactivate-mark)
+           (rectangle-mark-mode 1)) nil)
+    ("q" keyboard-quit :color blue))
 
-  (defun the-which-key-suggestion-generator (data)
-    (-each data 'the-which-key-suggestion-builder))
-
-  (defun the-modalka-binding-builder (mapping)
-    (if (s-present? (-last-item mapping))
-        (modalka-define-kbd (-second-item mapping) (-last-item mapping))))
-
-  (defun the-modalka-binding-generator (data)
-    (when the-modalka-activation
-      (-each data 'the-modalka-binding-builder)))
+  (bind-keys*
+    ("H-T V" . the-hydra-rectangle/body))
 #+end_src
 
+*** General Text Editing
+#+begin_src emacs-lisp
+  (let ((text-objects
+         '(("." er/mark-symbol :name "Symbol")
+           (":" er/mark-symbol-with-prefix :name "Symbol+Prefix")
+           ("B" mark-whole-buffer :name "All buffer")
+           ("E" org-mark-element :name "Org Element")
+           ("d" er/mark-defun :name "Defun")
+           ("f" avy-goto-word-1 :then (er/mark-symbol) :name "◎ Symbol")
+           ("i" er/mark-inside-pairs :name "Inner")
+           ("m" er/mark-method-call :name "Method call")
+           ("n" er/mark-next-accessor :name "Next accessor")
+           ("o" er/mark-outside-pairs :name "Outer")
+           ("p" er/mark-paragraph :name "Paragraph")
+           ("s" er/mark-sentence :name "Sentence")
+           ("t" org-mark-subtree :name "Org Subtree")
+           ("u" er/mark-url :name "URL")
+           ("w" er/mark-word :name "Word")
+           (";" er/mark-comment :name "Comment"))))
+    (eval `(ryo-modal-keys
+            ("c" ,text-objects :then '(kill-region) :exit t :name "Replace")
+            ("d" ,text-objects :then '(kill-region) :name "Delete")
+            ("y" ,text-objects :then '(copy-region-as-kill) :name "Yank")
+            ("v" ,text-objects :name "Select")
+            ("V" the-hydra-rectangle/body :name "Rectangle Select")
+            ("i" ,text-objects :then '(vimish-fold) :name "Fold")
+            (";" ,text-objects :then '(comment-dwim) :name "Comment")
+            ("p" yank)
+            ("P" yank-pop)
+            ("x" delete-char)
+            ("s" delete-char :exit t)
+            ("o" open-line :exit t)
+            ("O" open-line :first '(previous-line) :exit t)
+            ("a" forward-char :exit t)
+            ("A" end-of-line :exit t)
+            ("i" ryo-modal-mode)
+            ("I" beginning-of-line :exit t)
+            ("d d" kill-whole-line)
+            ("c c" kill-whole-line :exit t))))
+#+end_src
+*** Conveniences
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("," ryo-modal-repeat)
+   ("RET" ryo-modal-mode)
+   ("!" async-shell-command)
+   ("/" swiper :name "Search")
+   ("%" vr/query-replace)
+   ("u" undo-tree-undo)
+   ("C-r" undo-tree-redo)
+   ("U" undo-tree-visualize))
 
+   (ryo-modal-keys
+    (:norepeat t)
+    ("0" "M-0")
+    ("1" "M-1")
+    ("2" "M-2")
+    ("3" "M-3")
+    ("4" "M-4")
+    ("5" "M-5")
+    ("6" "M-6")
+    ("7" "M-7")
+    ("8" "M-8")
+    ("9" "M-9"))
+#+end_src
+*** Movement
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("h" backward-char)
+   ("j" next-line)
+   ("k" previous-line)
+   ("l" forward-char)
+   ("w" forward-word)
+   ("b" backward-word)
+   ("{" "M-{")
+   ("}" "M-}")
+   ("(" backward-sentence)
+   (")" forward-sentence)
+   ("$" move-end-of-line)
+   ("G" end-of-buffer)
+   ("g g" beginning-of-buffer)
+   ("g l" goto-line)
+   ("+" bookmark-set)
+   ("'" bookmark-jump))
+
+#+end_src
+*** Org Mode
+#+begin_src emacs-lisp
+  (ryo-modal-keys ("SPC"
+                   (("o"
+                     (("a" org-agenda)
+                      ("c" org-capture)
+                      ("l" org-store-link)
+                      ("L" org-insert-link)
+                      ("C"
+                       (("i" org-clock-in)
+                        ("o" org-clock-out))
+                       :name "Clock")
+                      ("p" org-pomodoro)
+                      ("RET" org-ctrl-c-ctrl-c :name "Do Something Useful")
+                      ("f" org-forward-element)
+                      ("b" org-backward-element))
+                     :name "Org"))))
+#+end_src
+*** Help
+#+begin_src emacs-lisp
+  (ryo-modal-keys ("?" which-key-show-top-level))
+  (ryo-modal-key "SPC h"
+                 '(("f" "C-h f")
+                   ("v" "C-h v")
+                   ("k" "C-h k")
+                   ("?" "C-h b")
+                   ("m" "C-h C-m")
+                   ("M" "C-h H-T"))
+                 :name "Help")
+#+end_src
+*** Ex Keys
+#+begin_src emacs-lisp
+  (ryo-modal-key "SPC :"
+                 '(("e" "C-x C-f")
+                   ("r" "C-x i")))
+#+end_src
+*** Browser
+#+begin_src emacs-lisp
+  (ryo-modal-key "SPC e"
+                 '(("e" eww)))
+
+  (ryo-modal-major-mode-keys
+   'eww-mode
+   (":" eww-browse-with-external-browser)
+   ("#" eww-list-histories)
+   ("{" eww-back-url)
+   ("}" eww-forward-url))
+#+end_src
 ** Prefix keys
 
 We're gonna end up with a lot of bindings, so we'll set up some
@@ -118,22 +289,17 @@ prefixes for classes of bindings.
 | leader key       | SPC     |
 | help prefix      | SPC h   |
 | ex key           | :       |
-| THE prefix       | M-T     |
-| movement prefix  | M-T m   |
-| extended prefix  | M-T :   |
-| send code prefix | M-T s   |
-| user prefix      | M-T SPC |
-| global prefix    | M-T g   |
-| org prefix       | M-T o   |
-| "around" prefix  | M-T a   |
-| "inside" prefix  | M-T i   |
-| "prev" prefix    | M-T [   |
-| "next" prefix    | M-T ]   |
-
-#+NAME: generate prefix key which-key suggestions
-#+begin_src emacs-lisp :exports code :var data=prefixes[1:-1]
-  (the-which-key-suggestion-generator data)
-#+end_src
+| THE prefix       | H-T     |
+| movement prefix  | H-T m   |
+| extended prefix  | H-T :   |
+| send code prefix | H-T s   |
+| user prefix      | H-T SPC |
+| global prefix    | H-T g   |
+| org prefix       | H-T o   |
+| "around" prefix  | H-T a   |
+| "inside" prefix  | H-T i   |
+| "prev" prefix    | H-T [   |
+| "next" prefix    | H-T ]   |
 
 ** Org Bindings
 
@@ -151,12 +317,6 @@ prefixes for classes of bindings.
 | org journal new entry   | SPC o j n | C-c C-j     |
 | org forward             | SPC o f   | M-}         |
 | org backward            | SPC o b   | M-{         |
-
-#+NAME: generate org bindings and suggestions
-#+begin_src emacs-lisp :exports none :var data=org-bindings[1:-1]
-  (the-which-key-suggestion-generator data)
-  (the-modalka-binding-generator data)
-#+end_src
 
 ** Vim-like bindings
 
@@ -199,53 +359,11 @@ We'll set up some convenient bindings for a more vim-like experience.
 | record macro                        | q       | C-x (   |
 | end macro                           | Q       | C-x )   |
 | set mark (visual mode)              | v       | C-SPC   |
-| rectangle edit mode (better visual) | V       | M-T V   |
+| rectangle edit mode (better visual) | V       | H-T V   |
 | indent region                       | =       | C-M-\   |
 | set bookmark                        | +       | C-x r m |
 | jump to bookmark                    | '       | C-x r b |
 | compile/lots of other stuff         | \\      | C-c C-c |
-
-#+NAME: generate vim bindings and suggestions
-#+begin_src emacs-lisp :exports code :var data=vim[1:-1]
-  (the-which-key-suggestion-generator data)
-  (the-modalka-binding-generator data)
-#+end_src
-
-*** Hydras
-
-**** Rectangle Edit Mode
-This is basically an improved and more interactive version of the
-standard visual mode from Vim.
-
-#+begin_src emacs-lisp
-  (defhydra the-hydra-rectangle (:pre (rectangle-mark-mode 1)
-                                      :color pink
-                                      :hint nil)
-    "
-   _p_: paste   _r_: replace  _I_: insert
-   _y_: copy    _o_: open     _V_: reset
-   _d_: kill    _n_: number   _q_: quit
-  "
-    ("h" backward-char nil)
-    ("l" forward-char nil)
-    ("k" previous-line nil)
-    ("j" next-line nil)
-    ("y" copy-rectangle-as-kill)
-    ("d" kill-rectangle)
-    ("x" clear-rectangle)
-    ("o" open-rectangle)
-    ("p" yank-rectangle)
-    ("r" string-rectangle)
-    ("n" rectangle-number-lines)
-    ("I" string-insert-rectangle)
-    ("V" (if (region-active-p)
-             (deactivate-mark)
-           (rectangle-mark-mode 1)) nil)
-    ("q" keyboard-quit :color blue))
-
-  (bind-keys*
-    ("M-T V" . the-hydra-rectangle/body))
-#+end_src
 
 ** Help bindings
 
@@ -260,13 +378,8 @@ and figure out what's out there.
 | describe key        | SPC h k | C-h k   |
 | describe bindings   | SPC ?   | C-h b   |
 | major mode bindings | SPC h m | C-h C-m |
-| minor mode bindings | SPC h M | C-h M-T |
+| minor mode bindings | SPC h M | C-h H-T |
 
-#+NAME: generate help bindings and suggestions
-#+begin_src emacs-lisp :exports none :var data=help[1:-1]
-  (the-which-key-suggestion-generator data)
-  (the-modalka-binding-generator data)
-#+end_src
 
 #+NAME: movement
 | function        | modalka | emacs |
@@ -279,13 +392,6 @@ and figure out what's out there.
 | ex key               | :       |         |
 | find file            | : e     | C-x C-f |
 | insert file          | : r     | C-x i   |
-
-
-#+NAME: generate ex key which-key suggestions and bindings
-#+begin_src emacs-lisp :exports none yes :var data=ex[1:-1]
-  (the-which-key-suggestion-generator data)
-  (the-modalka-binding-generator data)
-#+end_src
 
 ** Provides :noexport:
 #+begin_src emacs-lisp

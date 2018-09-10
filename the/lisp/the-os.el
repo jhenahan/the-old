@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-os.el --- Operating system detection
 
 (require 'the-custom)

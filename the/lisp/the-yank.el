@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; the-yank.el --- Killing and yanking
 
 (delete-selection-mode 1)
