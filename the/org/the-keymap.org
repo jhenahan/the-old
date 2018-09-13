@@ -1,277 +1,379 @@
-;;; the-keymap.el --- Non-color-theme appearance tweaks
+* Keymap
+** Requirements                                                   :noexport:
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  ;;; the-keymap.el --- Non-color-theme appearance tweaks
 
-(require 'the-package)
-(require 'the-custom)
-(require 'the-bind-key)
-(require 'the-libraries)
+  (require 'the-package)
+  (require 'the-custom)
+  (require 'the-bind-key)
+  (require 'the-hydra)
+  (require 'the-os)
+  (require 'the-libraries)
+  (require 'the-modeline)
+  (require 'the-navigation)
+  (require 'the-org)
+  (require 'the-undo)
+  (require 'the-network)
+#+end_src
 
-;;; Emacs is a big beast, and which-key is the only sane way to figure
-;;; it out.
+** =which-key=
 
-(use-package which-key
-  :init
+Emacs is a big beast, and =which-key= makes it much easier to deal
+with.
+
+*** Settings
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+
+**** Sort order
+Sort =which-key= suggestions alphabetically.
+
+#+NAME: wk-sort
+#+begin_src emacs-lisp
   (setq which-key-sort-order 'which-key-key-order-alpha)
-  :bind* (("M-T ?" . which-key-show-top-level))
-  :config
-  (which-key-mode)
-  (which-key-add-key-based-replacements
-    "M-T ?" "top level bindings")
-  :delight (which-key-mode  ""))
+#+end_src
 
-;;; Occasionally major modes come with a bunch of bindings, and
-;;; this'll help you figure them out.
+**** Extended Key Definitions
+Because prefixes are a big part of our config, we'll want to turn those on.
 
-(use-package discover-my-major
-  :bind (("C-h C-m" . discover-my-major)
-         ("C-h M-T" . discover-my-mode)))
-
-;;; Decide whether or not we're actually using Modalka
-
-(defcustom the-modalka-activation t
-  "If non-nil, use modalka for modal editing"
-  :type '(boolean)
-  :group 'the)
-
-;;;
-
-(when the-modalka-activation
-  (use-package modalka
+#+NAME: wk-extend
+#+begin_src emacs-lisp
+  (setq which-key-enable-extended-define-key t)
+#+end_src
+*** =use-package= declaration
+#+begin_src emacs-lisp
+  (use-package which-key
     :demand t
-    :bind* (("C-z" . modalka-mode))
-    :init
-    (setq modalka-cursor-type 'box)
+    :bind* (("H-T ?" . which-key-show-top-level))
     :config
-    (global-set-key (kbd "<escape>") #'modalka-mode)
-    (modalka-global-mode 1)
+    (which-key-mode)
     (which-key-add-key-based-replacements
-      "M-T"     "Modalka prefix"
-      "M-T :"   "extended prefix"
-      "M-T m"   "move prefix"
-      "M-T s"   "send code prefix"
-      "M-T SPC" "user prefix"
-      "M-T g"   "global prefix"
-      "M-T o"   "org prefix"
-      "M-T a"   "expand around prefix"
-      "M-T i"   "expand inside prefix"
-      "M-T ["   "prev nav prefix"
-      "M-T ]"   "next nav prefix")
-    :diminish (modalka-mode . "µ"))
+      "H-T ?" "top level bindings")
+    <<wk-sort>>
+    <<wk-extend>>
+    :diminish which-key-mode)
+#+end_src
+
+** Discoverability
+
+Some major modes have default bindings, and digging those up is much
+easier with =discover-my-major=.
+
+#+begin_src emacs-lisp
+  (use-package discover-my-major
+    :bind (("C-h C-m" . discover-my-major)
+           ("C-h H-T" . discover-my-mode)))
+#+end_src
+
+* Freeing up modifiers
+#+begin_src emacs-lisp
+  (the-with-operating-system macOS
+    (setq ns-right-command-modifier 'none)
+    (setq ns-right-option-modifier 'none)
+    (setq ns-right-control-modifier 'control)
+    (setq ns-control-modifier 'super)
+    (setq ns-command-modifier 'meta)
+    (setq ns-option-modifier 'hyper))
+#+end_src
+* Modal Keys
+
+Evil's not enough effort, apparently, so I'm building my own modal
+bindings with =ryo-modal=, a great framework for custom modal editing.
+This isn't to everyone's tastes, so it can be turned off by
+customizing a variable.
+
+#+begin_src emacs-lisp
+  (defcustom the-ryo-activation t
+    "If non-nil, use ryo-modal for modal editing"
+    :type '(boolean)
+    :group 'the)
+#+end_src
+
+#+begin_src emacs-lisp
+  (when the-ryo-activation
+    (use-package ryo-modal
+      :demand t
+      :bind* (("C-z" . ryo-modal-mode))
+      :config
+      (bind-key "<escape>" #'ryo-modal-mode)
+      (ryo-modal-keys ("<escape>" "C-g"))
+      (add-hook 'text-mode-hook #'ryo-modal-mode)
+      (add-hook 'prog-mode-hook #'ryo-modal-mode)
+      (push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+      (setq ryo-modal-default-cursor-color "#EBDBB2")
+      (setq ryo-modal-cursor-color "#FFAF00")
+      <<ryo-editing>>
+      <<ryo-conveniences>>
+      <<ryo-movement>>
+      <<ryo-org>>
+      <<ryo-help>>
+      <<ryo-ex>>
+      <<ryo-browser>>
+      :diminish "ρ"))
+#+end_src
+
+** Bindings
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+*** General Text Editing
+#+NAME: ryo-editing
+#+begin_src emacs-lisp
+  (let ((text-objects
+         '(("." er/mark-symbol :name "Symbol")
+           (":" er/mark-symbol-with-prefix :name "Symbol+Prefix")
+           ("B" mark-whole-buffer :name "All buffer")
+           ("E" org-mark-element :name "Org Element")
+           ("d" er/mark-defun :name "Defun")
+           ("f" avy-goto-word-1 :then (er/mark-symbol) :name "◎ Symbol")
+           ("i" er/mark-inside-pairs :name "Inner")
+           ("m" er/mark-method-call :name "Method call")
+           ("n" er/mark-next-accessor :name "Next accessor")
+           ("o" er/mark-outside-pairs :name "Outer")
+           ("p" er/mark-paragraph :name "Paragraph")
+           ("s" er/mark-sentence :name "Sentence")
+           ("t" org-mark-subtree :name "Org Subtree")
+           ("u" er/mark-url :name "URL")
+           ("w" er/mark-word :name "Word")
+           (";" er/mark-comment :name "Comment"))))
+    (eval `(ryo-modal-keys
+            ("c" ,text-objects :then '(kill-region) :exit t :name "Replace")
+            ("d" ,text-objects :then '(kill-region) :name "Delete")
+            ("y" ,text-objects :then '(copy-region-as-kill) :name "Yank")
+            ("v" ,text-objects :name "Select")
+            ("V" the-hydra-rectangle/body :name "Rectangle Select")
+            ("i" ,text-objects :then '(vimish-fold) :name "Fold")
+            (";" ,text-objects :then '(comment-dwim) :name "Comment")
+            ("p" yank)
+            ("P" yank-pop)
+            ("x" delete-char)
+            ("s" delete-char :exit t)
+            ("o" open-line :exit t)
+            ("O" open-line :first '(previous-line) :exit t)
+            ("a" forward-char :exit t)
+            ("A" end-of-line :exit t)
+            ("i" ryo-modal-mode)
+            ("I" beginning-of-line :exit t)
+            ("d d" kill-whole-line)
+            ("c c" kill-whole-line :exit t))))
+#+end_src
+*** Conveniences
+#+NAME: ryo-conveniences
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("," ryo-modal-repeat)
+   ("RET" ryo-modal-mode)
+   ("!" async-shell-command)
+   ("/" swiper :name "Search")
+   ("%" vr/query-replace)
+   ("u" undo-tree-undo)
+   ("C-r" undo-tree-redo)
+   ("U" undo-tree-visualize))
+
+   (ryo-modal-keys
+    (:norepeat t)
+    ("0" "M-0")
+    ("1" "M-1")
+    ("2" "M-2")
+    ("3" "M-3")
+    ("4" "M-4")
+    ("5" "M-5")
+    ("6" "M-6")
+    ("7" "M-7")
+    ("8" "M-8")
+    ("9" "M-9"))
+#+end_src
+*** Movement
+#+NAME: ryo-movement
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("h" backward-char)
+   ("j" next-line)
+   ("k" previous-line)
+   ("l" forward-char)
+   ("w" forward-word)
+   ("b" backward-word)
+   ("{" "M-{")
+   ("}" "M-}")
+   ("(" backward-sentence)
+   (")" forward-sentence)
+   ("$" move-end-of-line)
+   ("G" end-of-buffer)
+   ("g g" beginning-of-buffer)
+   ("g l" goto-line)
+   ("+" bookmark-set)
+   ("'" bookmark-jump))
+#+end_src
+*** Org Mode
+#+NAME: ryo-org
+#+begin_src emacs-lisp
+  (ryo-modal-keys ("SPC"
+                   (("o"
+                     (("a" org-agenda)
+                      ("c" org-capture)
+                      ("l" org-store-link)
+                      ("L" org-insert-link)
+                      ("C"
+                       (("i" org-clock-in)
+                        ("o" org-clock-out))
+                       :name "Clock")
+                      ("p" org-pomodoro)
+                      ("RET" org-ctrl-c-ctrl-c :name "Do Something Useful")
+                      ("f" org-forward-element)
+                      ("b" org-backward-element))
+                     :name "Org"))))
+#+end_src
+*** Help
+#+NAME: ryo-help
+#+begin_src emacs-lisp
+  (ryo-modal-keys ("?" which-key-show-top-level))
+  (ryo-modal-key "SPC h"
+                 '(("f" "C-h f")
+                   ("v" "C-h v")
+                   ("k" "C-h k")
+                   ("?" "C-h b")
+                   ("m" "C-h C-m")
+                   ("M" "C-h H-T"))
+                 :name "Help")
+#+end_src
+*** Ex Keys
+#+NAME: ryo-ex
+#+begin_src emacs-lisp
+  (ryo-modal-key "SPC :"
+                 '(("e" "C-x C-f")
+                   ("r" "C-x i")))
+#+end_src
+*** Browser
+#+NAME: ryo-browser
+#+begin_src emacs-lisp
+  (ryo-modal-key "SPC e"
+                 '(("e" eww)))
+
+  (ryo-modal-major-mode-keys
+   'eww-mode
+   (":" eww-browse-with-external-browser)
+   ("#" eww-list-histories)
+   ("{" eww-back-url)
+   ("}" eww-forward-url))
+#+end_src
+** Prefix keys
+
+We're gonna end up with a lot of bindings, so we'll set up some
+prefixes for classes of bindings.
+
+#+NAME: prefixes
+| purpose          | prefix  |
+|------------------+---------|
+| leader key       | SPC     |
+| help prefix      | SPC h   |
+| ex key           | :       |
+| THE prefix       | H-T     |
+| movement prefix  | H-T m   |
+| extended prefix  | H-T :   |
+| send code prefix | H-T s   |
+| user prefix      | H-T SPC |
+| global prefix    | H-T g   |
+| org prefix       | H-T o   |
+| "around" prefix  | H-T a   |
+| "inside" prefix  | H-T i   |
+| "prev" prefix    | H-T [   |
+| "next" prefix    | H-T ]   |
+
+** Org Bindings
+
+#+NAME: org-bindings
+| purpose                 | modalka   | emacs       |
+|-------------------------+-----------+-------------|
+| org agenda              | SPC o a   | C-c a       |
+| org capture             | SPC o c   | C-c c       |
+| org store link          | SPC o l   | C-c l       |
+| org insert link         | SPC o L   | C-c C-l     |
+| org iswitchb            | SPC o B   | C-c b       |
+| org clock in            | SPC o C i | C-c C-x TAB |
+| org clock out           | SPC o C o | C-c C-x C-o |
+| org do something useful | SPC o RET | C-c C-c     |
+| org journal new entry   | SPC o j n | C-c C-j     |
+| org forward             | SPC o f   | M-}         |
+| org backward            | SPC o b   | M-{         |
+
+** Vim-like bindings
+
+We'll set up some convenient bindings for a more vim-like experience.
+
+#+NAME: vim
+| function                            | modalka | emacs   |
+|-------------------------------------+---------+---------|
+| leave modalka                       | i       | C-z     |
+| left                                | h       | C-b     |
+| down                                | j       | C-n     |
+| up                                  | k       | C-p     |
+| right                               | l       | C-f     |
+| forward word                        | w       | M-f     |
+| backward word                       | b       | M-b     |
+| smart next item                     | n       | M-n     |
+| smart prev item                     | N       | M-p     |
+| previous paragraph/org element      | {       | M-{     |
+| next paragraph/org element          | }       | M-}     |
+| beginning of line                   | "0"     | C-a     |
+| end of line                         | $       | C-e     |
+| end of buffer                       | G       | M->     |
+| beginning of buffer                 | g g     | M-<     |
+| yank (vim)/kill (emacs)             | y       | M-w     |
+| paste (vim)/yank (emacs)            | p       | C-y     |
+| yank pop (paste history)            | P       | M-y     |
+| delete char                         | x       | C-d     |
+| kill line                           | D       | C-k     |
+| re-center screen                    | z       | C-l     |
+| shell command (async)               | !       | M-&     |
+| scroll left                         | H       | C-x <   |
+| scroll up                           | J       | C-v     |
+| scroll down                         | K       | M-v     |
+| scroll right                        | L       | C-x >   |
+| backward sentence                   | (       | M-a     |
+| forward sentence                    | )       | M-e     |
+| search                              | /       | C-s     |
+| quit (minibuffer, etc)              | E       | C-g     |
+| go to line                          | g l     | M-g g   |
+| record macro                        | q       | C-x (   |
+| end macro                           | Q       | C-x )   |
+| set mark (visual mode)              | v       | C-SPC   |
+| rectangle edit mode (better visual) | V       | H-T V   |
+| indent region                       | =       | C-M-\   |
+| set bookmark                        | +       | C-x r m |
+| jump to bookmark                    | '       | C-x r b |
+| compile/lots of other stuff         | \\      | C-c C-c |
+
+** Help bindings
+
+There's a lot of stuff to dig around, so when all else fails, =SPC h=
+and figure out what's out there.
+
+#+NAME: help
+| function            | modalka | emacs   |
+|---------------------+---------+---------|
+| describe function   | SPC h f | C-h f   |
+| describe variable   | SPC h v | C-h v   |
+| describe key        | SPC h k | C-h k   |
+| describe bindings   | SPC ?   | C-h b   |
+| major mode bindings | SPC h m | C-h C-m |
+| minor mode bindings | SPC h M | C-h H-T |
 
 
-  ;; Leave Modalka
-  (modalka-define-kbd "i" "C-z")
+#+NAME: movement
+| function        | modalka | emacs |
+|-----------------+---------+-------|
+| movement prefix |         |       |
 
-    ;;; Vim-style numeric prefix keys
-  (modalka-define-kbd "0" "C-0")
-  (modalka-define-kbd "1" "C-1")
-  (modalka-define-kbd "2" "C-2")
-  (modalka-define-kbd "3" "C-3")
-  (modalka-define-kbd "4" "C-4")
-  (modalka-define-kbd "5" "C-5")
-  (modalka-define-kbd "6" "C-6")
-  (modalka-define-kbd "7" "C-7")
-  (modalka-define-kbd "8" "C-8")
-  (modalka-define-kbd "9" "C-9")
+#+NAME: ex
+| function             | modalka | emacs   |
+|----------------------+---------+---------|
+| ex key               | :       |         |
+| find file            | : e     | C-x C-f |
+| insert file          | : r     | C-x i   |
 
-    ;;; Vim-like movement (hjkl, etc.)
-  ;; (modalka-define-kbd "d w" "M-d")
-  ;; (modalka-define-kbd "w" "C-x o")
-  ;; (modalka-define-kbd "W" "M-T W")
-  ;; (modalka-define-kbd "B" "M-T B")
-  ;; (modalka-define-kbd "H" "C-x >")
-  ;; (modalka-define-kbd "L" "C-x <")
-  ;; (modalka-define-kbd "Z" "C-x 1")
-  ;; (modalka-define-kbd "q" "C-x (")
-  ;; (modalka-define-kbd "Q" "C-x )")
-  ;; (modalka-define-kbd "." "M-T .")
-  ;; (modalka-define-kbd "?" "M-T ?")
-  ;; (modalka-define-kbd "v" "C-SPC")
-  ;; (modalka-define-kbd "V" "M-T V")
-  ;; (modalka-define-kbd "=" "M-T =")
-  ;; (modalka-define-kbd "R" "M-T R")
-  ;; (modalka-define-kbd "X" "C-x C-x")
-  ;; (modalka-define-kbd "+" "C-x r m")
-  ;; (modalka-define-kbd "'" "C-x r b")
-  ;; (modalka-define-kbd "\\" "C-c C-c")
-
-  ;; Global prefixed keys
-  ;; (modalka-define-kbd "g g" "M-<")
-  (modalka-define-kbd "g o" "C-x C-e")
-  (modalka-define-kbd "g O" "C-M-x")
-  (modalka-define-kbd "g m" "M-T g m")
-  (modalka-define-kbd "g M" "M-T g M")
-  (modalka-define-kbd "g n" "M-T g n")
-  (modalka-define-kbd "g N" "M-T g N")
-  (modalka-define-kbd "g f" "M-T g f")
-  (modalka-define-kbd "g F" "M-T g F")
-  (modalka-define-kbd "g j" "M-T g j")
-  (modalka-define-kbd "g k" "M-T g k")
-  (modalka-define-kbd "g q" "M-T g q")
-  (modalka-define-kbd "g w" "C-x 3")
-  (modalka-define-kbd "g W" "C-x 2")
-  (modalka-define-kbd "g @" "M-T g @")
-  (modalka-define-kbd "g ;" "M-T g ;")
-  (modalka-define-kbd "g :" "M-T g :")
-  (modalka-define-kbd "g #" "M-T g #")
-  (modalka-define-kbd "g {" "M-T g {")
-  (modalka-define-kbd "g }" "M-T g }")
-  (modalka-define-kbd "g (" "M-T g (")
-  (modalka-define-kbd "g )" "M-T g )")
-  (modalka-define-kbd "^" "M-T ^")
-  (modalka-define-kbd "&" "M-T &")
-  (modalka-define-kbd "g s" "C-x g")
-  (modalka-define-kbd "g S" "C-x M-g")
-
-  ;; Region prefixed
-  (modalka-define-kbd "a a" "C-x h")
-
-  ;; Narrowing
-  (modalka-define-kbd "] ]" "C-x n n")
-  (modalka-define-kbd "] s" "M-T ] s")
-
-  ;; Expanding
-  (modalka-define-kbd "[ [" "C-x n w")
-
-  ;; Quit, restart, time
-  (modalka-define-kbd ": q" "C-x C-c")
-  ;; (modalka-define-kbd ": r" "C-x M-c")
-  (modalka-define-kbd ": t" "M-T : t")
-
-  ;; Prefix for common functions
-  (modalka-define-kbd "g U" "C-c C-k")
-  (modalka-define-kbd "SPC SPC" "M-x")
-  (modalka-define-kbd "SPC b" "C-x b")
-  (modalka-define-kbd "SPC k" "C-x k")
-  (modalka-define-kbd "SPC g" "M-g g")
-  (modalka-define-kbd "SPC d" "C-x d")
-  (modalka-define-kbd "SPC q" "C-x 0")
-  (modalka-define-kbd "SPC f" "C-x C-f")
-  (modalka-define-kbd "SPC w" "C-x C-s")
-  (modalka-define-kbd "SPC c" "M-T SPC c")
-  (modalka-define-kbd "SPC R" "M-T SPC R")
-  (modalka-define-kbd "SPC ?" (the-join-keys the-prefix "SPC ?"))
-
-  ;; Help keys
-  (modalka-define-kbd "SPC h f" "C-h f")
-  (modalka-define-kbd "SPC h k" "C-h k")
-  (modalka-define-kbd "SPC h v" "C-h v")
-
-
-
-  ;; which-key definitions
-
-  (which-key-add-key-based-replacements
-    "0" "0"
-    "1" "1"
-    "2" "2"
-    "3" "3"
-    "4" "4"
-    "5" "5"
-    "6" "6"
-    "7" "7"
-    "8" "8"
-    "9" "9")
-
-  (which-key-add-key-based-replacements
-    "ESC" "toggle mode"
-    "DEL" "smart del"
-    "TAB" "smart tab"
-    "RET" "smart enter"
-    "B"   "previous buffer"
-    ;; "W"   "winner undo"
-    ;; "w"   "other window"
-    ;; "d"   "delete prefix"
-    ;; "d w"   "delete word"
-    ;; "y"   "copy selection"
-    ;; "p"   "paste"
-    ;; "P"   "paste history"
-    ;; "x"   "delete char"
-    ;; "D"   "delete rest of line"
-    ;; "M"   "modify argument"
-    ;; "z"   "scroll center/top/bot"
-    ;; "Z"   "zoom into window"
-    ;; "H"   "scroll left"
-    ;; "J"   "scroll down"
-    ;; "K"   "scroll up"
-    ;; "L"   "scroll right"
-    ;; "'"   "org edit separately"
-    ;; "q"   "start macro"
-    ;; "Q"   "end macro"
-    ;; "?"   "top level bindings"
-    ;; "v"   "start selection"
-    ;; "R"   "overwrite mode"
-    ;; "X"   "exchange point and mark"
-    ;; "+"   "set bookmark"
-    ;; "'"   "jump to bookmark"
-    ;; "="   "indent region"
-    ;; "\\"  "C-c C-c"
-    ;; "!"   "async shell command"
-    "&"   "shell command")
-
-  (which-key-add-key-based-replacements
-    "g"   "global prefix"
-    "g m" "make frame"
-    "g M" "delete frame"
-    "g n" "select frame by name"
-    "g N" "name frame"
-    "g j" "next pdf page"
-    "g k" "previous pdf page"
-    "g f" "file/url at cursor"
-    "g F" "enable follow mode"
-    "g o" "eval elisp"
-    "g O" "eval defun"
-    "g w" "vertical split win"
-    "g W" "horizontal split win"
-    "g S" "split line"
-    "g @" "compose mail"
-    "g #" "list eww histories"
-    "g x" "browse with eww"
-    "g :" "browse with external browser"
-    "g {" "eww back"
-    "g }" "eww forward"
-    "g (" "info previous"
-    "g )" "info next"
-    "^"   "info up"
-    "&"   "info goto"
-    "g q" "format para")
-
-  (which-key-add-key-based-replacements
-    "i"   "exit mode"
-    "a a" "expand entire buffer")
-
-  (which-key-add-key-based-replacements
-    "]"   "forward nav/edit"
-    "] ]" "narrow region"
-    "] s" "next spell error")
-
-  (which-key-add-key-based-replacements
-    "["   "backward nav/edit"
-    "[ [" "widen region")
-
-  (which-key-add-key-based-replacements
-    ":"   "extended prefix"
-    ": q" "quit emacs"
-    ": r" "restart emacs"
-    ": t" "initiliazation time")
-
-  (which-key-add-key-based-replacements
-    "SPC"   "leader key"
-    "SPC ?" "describe bindings"
-    "SPC j" "jump to cmd"
-    "SPC f" "find file"
-    "SPC a" "switch buffers"
-    "SPC g" "goto line"
-    "SPC d" "dired"
-    "SPC k" "close buffer"
-    "SPC w" "save buffer"
-    "SPC c" "load theme"
-    "SPC R" "locate"
-    "SPC q" "quit window"
-    "g U"   "simulate C-c C-k")
-  )
-
-
-(provide 'the-keymap)
-
-
-;;; the-keymap.el ends here
+** Provides :noexport:
+#+begin_src emacs-lisp
+  (provide 'keymap)
+#+end_src

@@ -3,9 +3,7 @@
 
 (require 'the-package)
 
-(use-package emojify
-  :init
-  (add-hook 'after-init-hook #'global-emojify-mode))
+(use-package emojify)
 
 (provide 'the-emoji)
 
