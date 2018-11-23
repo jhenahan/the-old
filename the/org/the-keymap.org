@@ -375,5 +375,5 @@ and figure out what's out there.
 
 ** Provides :noexport:
 #+begin_src emacs-lisp
-  (provide 'keymap)
+  (provide 'the-keymap)
 #+end_src

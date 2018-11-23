@@ -167,4 +167,4 @@
      ("}" eww-forward-url))
     :diminish "ρ"))
 
-(provide 'keymap)
+(provide 'the-keymap)

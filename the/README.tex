@@ -1,4 +1,4 @@
-% Created 2018-09-13 Thu 11:33
+% Created 2018-09-14 Fri 16:54
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,14 +32,14 @@
 
 
 \section{Basics}
-\label{sec:orgc2b4130}
+\label{sec:orgafb7135}
 \subsection{Modern Libraries}
-\label{sec:orgb9cf37e}
+\label{sec:org2fd0e43}
 \subsubsection{Libraries}
-\label{sec:orgf66cd0d}
+\label{sec:org68b0500}
 \begin{enumerate}
 \item Async
-\label{sec:org4174677}
+\label{sec:org8efc899}
 The \texttt{async} library makes writing asynchronous functions easier (since
 async in Emacs is kind of a nightmare, otherwise).
 
@@ -49,7 +49,7 @@ async in Emacs is kind of a nightmare, otherwise).
 \end{minted}
 
 \item \texttt{cl-lib}
-\label{sec:org7676927}
+\label{sec:orgccf0b26}
 This library extends the "Lispiness" of Elisp, making it more like
 Common Lisp though I always feel a bit dirty about using it.
 
@@ -59,7 +59,7 @@ Common Lisp though I always feel a bit dirty about using it.
 \end{minted}
 
 \item Lists
-\label{sec:org597fc80}
+\label{sec:org85e3a8b}
 The list API in Elisp basically sucks, so there's \texttt{dash}. I'm
 attempting to learn how to use \texttt{seq} properly, though, since it's
 built in and should be just about at parity with \texttt{dash}'s API, if a
@@ -71,7 +71,7 @@ bit more verbose.
 \end{minted}
 
 \item Files
-\label{sec:org2c0eacd}
+\label{sec:orgca6927c}
 The file API in Elisp \textbf{also} sucks, so we have \texttt{f.el}.
 
 \begin{minted}[]{common-lisp}
@@ -80,7 +80,7 @@ The file API in Elisp \textbf{also} sucks, so we have \texttt{f.el}.
 \end{minted}
 
 \item Strings
-\label{sec:org41edb07}
+\label{sec:org3cf272e}
 Keeping up the pattern, the string API in Elisp is hot garbage, so we
 have \texttt{s.el} to make things nice.
 
@@ -90,7 +90,7 @@ have \texttt{s.el} to make things nice.
 \end{minted}
 
 \item Hash Tables
-\label{sec:org63fe613}
+\label{sec:orgcffca8a}
 Elisp's hash table API is based around \texttt{make-hash-table}, which is a
 pretty awful function with five keyword arguments. This might almost
 be worth it for how much faster hash tables are than alists, but
@@ -102,7 +102,7 @@ luckily \texttt{ht.el} means we don't have to choose.
 \end{minted}
 
 \item \texttt{subr} extensions
-\label{sec:orge98ae33}
+\label{sec:org368f8a8}
 \texttt{subr-x} provides some built-in equivalents to some of the modern APIs
 above, some implemented in C.
 
@@ -111,22 +111,22 @@ above, some implemented in C.
 \end{minted}
 \end{enumerate}
 \subsection{Sensible Defaults}
-\label{sec:org6f0a2e3}
+\label{sec:orgd73a47a}
 \subsubsection{Default Directory}
-\label{sec:org472f836}
+\label{sec:orgf31e54e}
 When using \texttt{find-file}, search from the user's home directory.
 \begin{minted}[]{common-lisp}
 (setq default-directory "~/")
 \end{minted}
 
 \subsubsection{Treat Camel-Case Words as separate words}
-\label{sec:orgf815ec8}
+\label{sec:org2047fca}
 \begin{minted}[]{common-lisp}
 (add-hook 'prog-mode-hook 'subword-mode)
 \end{minted}
 
 \subsubsection{Increase GC threshold}
-\label{sec:org2cea42f}
+\label{sec:orgcc44ecd}
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
 collection. This means GC runs less often, which speeds up some
 operations.
@@ -135,7 +135,7 @@ operations.
 \end{minted}
 
 \subsubsection{Make Scripts Executable By Default}
-\label{sec:orgc3a823e}
+\label{sec:org44b6f5c}
 If your file starts with a shebang, the file will be marked executable
 on save.
 \begin{minted}[]{common-lisp}
@@ -144,7 +144,7 @@ on save.
 \end{minted}
 
 \subsubsection{Transient Mark Mode}
-\label{sec:orgcf424fe}
+\label{sec:org5489ac7}
 Transient mark means region highlighting works the way you would
 expect it to coming from other editors.
 \begin{minted}[]{common-lisp}
@@ -152,14 +152,14 @@ expect it to coming from other editors.
 \end{minted}
 
 \subsubsection{Short Confirmations}
-\label{sec:org5717b2d}
+\label{sec:org0b0186b}
 Typing out \texttt{yes} and \texttt{no} is irritating. Just use \texttt{y} or \texttt{n}.
 \begin{minted}[]{common-lisp}
 (fset #'yes-or-no-p #'y-or-n-p)
 \end{minted}
 
 \subsubsection{macOS settings}
-\label{sec:orgd8abe11}
+\label{sec:org5bb3590}
 If you set Emacs as the default file handler for certain types of
 files, double-clicking will open an entire new Emacs frame. This
 setting causes Emacs to reuse the existing one.
@@ -168,22 +168,22 @@ setting causes Emacs to reuse the existing one.
   (setq ns-pop-up-frames nil))
 \end{minted}
 \subsection{Enable Disabled Commands}
-\label{sec:orge20a65f}
+\label{sec:orgb144d06}
 It is obvious to anyone that if a function is disabled then it must
 be powerful, or at least interesting. I want them.
 
 \subsubsection{Do it}
-\label{sec:org79fa739}
+\label{sec:org9ac3fcc}
 \begin{minted}[]{common-lisp}
 (setq disabled-command-function nil)
 \end{minted}
 \subsection{Killing and Yanking (copying and pasting)}
-\label{sec:org9f2b439}
+\label{sec:orgde12be4}
 \subsubsection{Settings}
-\label{sec:org9e12de9}
+\label{sec:org4947b1a}
 \begin{enumerate}
 \item Delete Selection
-\label{sec:org1f2c4a4}
+\label{sec:org9936a8d}
 If you start typing when you have something selected, then the
 selection will be deleted. If you press DEL while you have something
 selected, it will be deleted rather than killed. (Otherwise, in both
@@ -196,7 +196,7 @@ is performed.)
 
 \begin{enumerate}
 \item AUCTeX compatibility
-\label{sec:orgb12d108}
+\label{sec:orga03d535}
 Make delete-selection-mode work properly with AUCTeX.
 \begin{minted}[]{common-lisp}
 (with-eval-after-load 'latex
@@ -204,7 +204,7 @@ Make delete-selection-mode work properly with AUCTeX.
 \end{minted}
 \end{enumerate}
 \item Eliminate duplicates in kill ring
-\label{sec:org4e7e14b}
+\label{sec:orgc250411}
 If you kill the same thing twice, you won't have to use \texttt{yank} twice
 to get past it to older entries in the kill ring.
 \begin{minted}[]{common-lisp}
@@ -212,11 +212,11 @@ to get past it to older entries in the kill ring.
 \end{minted}
 \end{enumerate}
 \subsection{Startup}
-\label{sec:org4737b46}
+\label{sec:org6c499b3}
 By default, Emacs fills your universe with (FSF-approved and
 GPL-compliant) garbage. I don't want a bit of it.
 \subsubsection{Disable Startup Message}
-\label{sec:org4a5fa42}
+\label{sec:orgdd3d522}
 I like GNU. You maybe like GNU. You're using Emacs. Whatever. You
 don't need the "For information about Emacs\ldots{}" message.
 
@@ -231,7 +231,7 @@ This is an `:override' advice for
 \end{minted}
 
 \subsubsection{Disable About}
-\label{sec:orgdc313c8}
+\label{sec:org758b3bf}
 If I wanted to know about GNU Emacs, there are dozens of doc
 options. I do not need that buffer on startup. We disable that and
 instead use our own fancy dashboard.
@@ -257,14 +257,14 @@ instead use our own fancy dashboard.
 \end{minted}
 
 \subsubsection{Blank Scratch Buffer}
-\label{sec:orga041df1}
+\label{sec:org292e5eb}
 I know what a scratch buffer is. Hush.
 \begin{minted}[]{common-lisp}
 (setq initial-scratch-message nil)
 \end{minted}
 
 \subsubsection{Emacs Server}
-\label{sec:org3574725}
+\label{sec:orgbc8a672}
 Start up an Emacs server process so we can attach \texttt{emacsclient} to it
 and get that fast response time the Vim people are so smug about.
 
@@ -272,9 +272,9 @@ and get that fast response time the Vim people are so smug about.
 (server-start)
 \end{minted}
 \subsection{Auto-Revert}
-\label{sec:orgd7ed217}
+\label{sec:orgfc687ef}
 \subsubsection{Settings}
-\label{sec:org4ffadf9}
+\label{sec:org85c3fb0}
 Turn the delay on auto-reloading from 5 seconds down to 1 second. We
 have to do this before turning on \texttt{auto-revert-mode} for the change to
 take effect, unless we do it through \texttt{customize-set-variable} (which
@@ -404,13 +404,13 @@ Don't show it in the mode line.
 (setq auto-revert-mode-text nil)
 \end{minted}
 \subsection{Saving Files}
-\label{sec:orga67db88}
+\label{sec:org78831ef}
 \section{Package Management}
-\label{sec:org8186679}
+\label{sec:org5eeb872}
 \subsection{Package Management}
-\label{sec:orgef0d5ad}
+\label{sec:org450679d}
 \subsubsection{Disable \texttt{package.el}}
-\label{sec:orgde236cc}
+\label{sec:orgd70f582}
 We use \texttt{straight.el} in this household, and like it! Emacs will
 initialize \texttt{package.el} unless we tell it not to, so we do so.
 
@@ -419,7 +419,7 @@ initialize \texttt{package.el} unless we tell it not to, so we do so.
 \end{minted}
 
 \subsubsection{Bootstrap \texttt{straight.el}}
-\label{sec:org6d308d1}
+\label{sec:org64739b3}
 We are using a package manager called straight.el. This code, which is
 taken from \href{https://github.com/raxod502/straight.el}{the README}, bootstraps the system (because obviously the
 package manager is unable to install and load itself, if it is not
@@ -439,7 +439,7 @@ already installed and loaded).
 \end{minted}
 
 \subsubsection{\texttt{use-package}}
-\label{sec:org5bb6a1f}
+\label{sec:orgcc387f3}
 To handle a lot of useful tasks related to package configuration, we
 use a library called `use-package', which provides a macro by the same
 name. This macro automates many common tasks, like autoloading
@@ -452,7 +452,7 @@ through the use of keyword arguments. See the README.
 
 \begin{enumerate}
 \item \texttt{straight.el} integration
-\label{sec:org45a4a37}
+\label{sec:orga07aad2}
 Tell use-package to automatically install packages if they are
 missing. By default, packages are installed via \href{https://github.com/raxod502/straight.el}{\texttt{straight.el}}, which
 draws package installation recipes (short lists explaining where to
@@ -467,7 +467,7 @@ README}.
 \end{minted}
 
 \item Lazy-loading
-\label{sec:org478aace}
+\label{sec:org5e43cae}
 Tell use-package to always load packages lazily unless told otherwise.
 It's nicer to have this kind of thing be deterministic: if `:demand'
 is present, the loading is eager; otherwise, the loading is lazy. See
@@ -479,9 +479,9 @@ is present, the loading is eager; otherwise, the loading is lazy. See
 \end{minted}
 \end{enumerate}
 \subsection{Future-proof patches}
-\label{sec:org7221a5b}
+\label{sec:org2502568}
 \subsubsection{El-Patch}
-\label{sec:orgc11244b}
+\label{sec:org6916178}
 Occasionally you need to customize a small part of a large function
 defined by another package. This library provides an elegant,
 clear, and robust way of doing so. See \href{https://github.com/raxod502/el-patch}{the README}.
@@ -511,11 +511,11 @@ clear, and robust way of doing so. See \href{https://github.com/raxod502/el-patc
   (setq el-patch-require-function #'the-require-with-deferred-install))
 \end{minted}
 \section{Customization}
-\label{sec:orga7e19ec}
+\label{sec:org7926b55}
 \subsection{Customization Group}
-\label{sec:orgf2c9d06}
+\label{sec:org8ca81ce}
 \subsubsection{THE group}
-\label{sec:orga5f234c}
+\label{sec:org4e41919}
 Here we define a customization group for THE. This allows users
 to customize the variables declared here in a user-friendly way
 using the Custom interface.
@@ -526,14 +526,14 @@ using the Custom interface.
   :group 'emacs)
 \end{minted}
 \section{System Integration}
-\label{sec:orgf59564f}
+\label{sec:orgdc6fe84}
 \subsection{OS Integration}
-\label{sec:org1df5567}
+\label{sec:org8801590}
 \subsubsection{OS-specific Customization}
-\label{sec:org671cee8}
+\label{sec:orga2d81b1}
 \begin{enumerate}
 \item OS detection
-\label{sec:org4ca386c}
+\label{sec:org305654e}
 Ideally, we detect the operating system here, as well as giving the
 option to customize it directly in case we get it wrong.
 \begin{minted}[]{common-lisp}
@@ -552,7 +552,7 @@ automatically detected and does not need to be changed."
 \end{minted}
 
 \item OS-specific settings
-\label{sec:orge1abe5f}
+\label{sec:orgc3ee006}
 This macro allows us to handle things like operating system specific
 clipboard/mouse hacks and other things like that.
 
@@ -567,10 +567,10 @@ which should not be quoted."
 \end{minted}
 \end{enumerate}
 \subsubsection{Path Settings}
-\label{sec:org03cb21f}
+\label{sec:orgaafdae1}
 \begin{enumerate}
 \item Path Fixes
-\label{sec:org784285d}
+\label{sec:org5886145}
 In the terminal, the mouse and clipboard don't work properly. But in
 windowed Emacsen, the \texttt{PATH} is not necessarily set correctly! You
 can't win.
@@ -587,10 +587,10 @@ can't win.
 \end{minted}
 \end{enumerate}
 \subsubsection{Clipboard Integration}
-\label{sec:orgc6e417a}
+\label{sec:orgaf97217}
 \begin{enumerate}
 \item macOS integration
-\label{sec:org60d71b9}
+\label{sec:orga5c0c60}
 Like mouse integration, clipboard integration
 works properly in windowed Emacs but not in terminal Emacs (at
 least by default). This code was originally based on \href{https://gist.github.com/the-kenny/267162}{1}, and then
@@ -606,7 +606,7 @@ modified based on \href{http://emacs.stackexchange.com/q/26471/12534}{2}.
 \end{minted}
 
 \item Inter-program paste
-\label{sec:org81fcb41}
+\label{sec:org3f5bf3e}
 If you have something on the system clipboard, and then kill something
 in Emacs, then by default whatever you had on the system clipboard is
 gone and there is no way to get it back. Setting the following option
@@ -618,15 +618,15 @@ way, you can paste it with \texttt{yank-pop}.
 \end{minted}
 \end{enumerate}
 \subsection{UI Integration}
-\label{sec:orgc89bd65}
+\label{sec:org5ff8cb3}
 \subsubsection{Window System}
-\label{sec:org5dfc606}
+\label{sec:orgf788400}
 These macros give us a convenient way to conditionally execute code
 based on the active window system.
 
 \begin{enumerate}
 \item Macros
-\label{sec:org9997d95}
+\label{sec:orgb95733f}
 \begin{minted}[]{common-lisp}
 (defmacro the-with-windowed-emacs (&rest body)
   "Eval BODY if Emacs is windowed, else return nil."
@@ -642,44 +642,44 @@ based on the active window system.
 \end{minted}
 \end{enumerate}
 \section{Config Management}
-\label{sec:org3fe0672}
+\label{sec:org0d03fc1}
 \subsection{Config File Utilities}
-\label{sec:org37eefce}
+\label{sec:orgfb391af}
 \subsubsection{Apache configs}
-\label{sec:orgb15d8d3}
+\label{sec:org7d43a1f}
 \begin{minted}[]{common-lisp}
 (use-package apache-mode)
 \end{minted}
 \subsubsection{Dockerfiles}
-\label{sec:org74badbc}
+\label{sec:org36a589b}
 \begin{minted}[]{common-lisp}
 (use-package dockerfile-mode)
 \end{minted}
 
 \subsubsection{Git files}
-\label{sec:org925029c}
+\label{sec:org3e8f115}
 \begin{enumerate}
 \item Git config and modules
-\label{sec:orgac5b444}
+\label{sec:orgcb4eab8}
 \begin{minted}[]{common-lisp}
 (use-package gitconfig-mode)
 \end{minted}
 
 \item Git ignore files
-\label{sec:org469ba88}
+\label{sec:org66ba4a5}
 \begin{minted}[]{common-lisp}
 (use-package gitignore-mode)
 \end{minted}
 \end{enumerate}
 
 \subsubsection{SSH configs}
-\label{sec:org75c5f0a}
+\label{sec:orge2cae97}
 \begin{minted}[]{common-lisp}
 (use-package ssh-config-mode)
 \end{minted}
 
 \subsubsection{YAML}
-\label{sec:org76ba9bc}
+\label{sec:orgd9f091c}
 I edit a lot of YAML files, especially Ansible configs. The current
 version of \texttt{emacs-ansible} has a hard dependency on \texttt{auto-complete},
 which we don't use, so until there's a version without that
@@ -700,19 +700,19 @@ it breaks things.
 \end{minted}
 
 \subsubsection{Jinja2}
-\label{sec:orgf345b4a}
+\label{sec:orgfef6c4c}
 Jinja2 is the template format of record for Ansible, so we just add
 basic support here.
 \begin{minted}[]{common-lisp}
 (use-package jinja2-mode)
 \end{minted}
 \subsection{Emacs}
-\label{sec:orge91b603}
+\label{sec:orgdd41222}
 \subsubsection{emacs.d Organization}
-\label{sec:orgaa49142}
+\label{sec:org6cc8682}
 \begin{enumerate}
 \item \texttt{no-littering}
-\label{sec:org3a491db}
+\label{sec:orgd415b69}
 A lot of packages (and also a lot of Emacs defaults) throw files all
 over your config directory. \texttt{no-littering} sets a lot of sensible
 defaults for commonly used packages to keep the config directory
@@ -724,11 +724,11 @@ manageable and discoverable.
 \end{minted}
 \end{enumerate}
 \section{Documentation}
-\label{sec:orge66d40c}
+\label{sec:orgc2be573}
 \subsection{Better Help}
-\label{sec:orga227cc4}
+\label{sec:org63ed20d}
 \subsubsection{Helpful}
-\label{sec:org831c4d2}
+\label{sec:org16bcb43}
 We alias common help methods to their Helpful equivalents because
 Helpful is a much nicer version of the built-in help.
 \begin{minted}[]{common-lisp}
@@ -741,9 +741,9 @@ Helpful is a much nicer version of the built-in help.
   (defalias #'describe-symbol #'helpful-symbol))
 \end{minted}
 \subsection{ElDoc}
-\label{sec:orgac6967d}
+\label{sec:org3675c2c}
 \subsubsection{Settings}
-\label{sec:org2be3e45}
+\label{sec:org70978f3}
 Show ElDoc messages in the echo area immediately, instead of after 1/2
 a second.
 
@@ -778,11 +778,11 @@ This is done in `the-slow-autocomplete-mode'."
 (add-hook 'the-slow-autocomplete-mode-hook #'the-eldoc-toggle-slow)
 \end{minted}
 \section{Keybindings}
-\label{sec:org81dbf18}
+\label{sec:orgce77ca2}
 \subsection{Binding Keys}
-\label{sec:org5807b54}
+\label{sec:org7813e0b}
 \subsubsection{Custom Prefix}
-\label{sec:org792d506}
+\label{sec:org470ba0c}
 There's a lot of room for keybindings, but we rely on a common prefix
 for discoverability and to leave room for extension. This also makes
 creating modal bindings later quite a bit easier.
@@ -809,7 +809,7 @@ cells to make the whole thing more customizable.
 \end{minted}
 
 \subsubsection{\texttt{bind-key}}
-\label{sec:org3d71097}
+\label{sec:org63243a0}
 \texttt{bind-key} is the prettier cousin of \texttt{define-key} and
 \texttt{global-set-key}, as well as providing the \texttt{:bind} family of keywords
 in \texttt{use-package},
@@ -818,22 +818,22 @@ in \texttt{use-package},
 (use-package bind-key)
 \end{minted}
 \subsection{Hydra}
-\label{sec:orgd798f37}
+\label{sec:orgdad6347}
 Hydras are a really fancy feature that let you create families of
 related bindings with a common prefix.
 \subsubsection{\texttt{use-package} declaration}
-\label{sec:org3f4f8a1}
+\label{sec:orgd7b797b}
 \begin{minted}[]{common-lisp}
 (use-package hydra
   :demand t)
 \end{minted}
 
 \subsubsection{Hydras}
-\label{sec:orgd5e175a}
+\label{sec:org0ad3cb0}
 
 \begin{enumerate}
 \item Rectangle Edit Mode
-\label{sec:org7ce5c8b}
+\label{sec:orgc78cd23}
 This is basically an improved and more interactive version of the
 standard visual mode from Vim.
 
@@ -868,17 +868,17 @@ standard visual mode from Vim.
 \end{minted}
 \end{enumerate}
 \section{UI}
-\label{sec:org9e23c8a}
+\label{sec:org09cff2c}
 \subsection{Appearance}
-\label{sec:orgac48657}
+\label{sec:org67c21ef}
 \subsubsection{Basic Setup}
-\label{sec:org3cc21a1}
+\label{sec:org2af6f92}
 This file has appearance tweaks that are unrelated to the color
 theme. Menus, scroll bars, bells, cursors, and so on. See also
 \texttt{the-theme}, which customizes the color theme specifically.
 
 \subsubsection{Fullscreen}
-\label{sec:org75d8b00}
+\label{sec:org7a70531}
 I use \texttt{chunkwm} to manage most windows, including Emacs, so the native
 fullscreen mode is unnecessary. It's also necessary to set pixelwise
 frame resizing non-nil for a variety of window managers. I don't see
@@ -891,7 +891,7 @@ any particular harm in having it on, regardless of WM.
 \end{minted}
 
 \subsubsection{Interface Cleanup}
-\label{sec:org389b975}
+\label{sec:org2ed8faf}
 Emacs defaults are a nightmare of toolbars and scrollbars and such
 nonsense. We'll turn all of that off.
 
@@ -909,7 +909,7 @@ nonsense. We'll turn all of that off.
 \end{minted}
 
 \subsubsection{Keystroke Display}
-\label{sec:orgca0e7a7}
+\label{sec:org1af20ca}
 Display keystrokes in the echo area immediately, not after one
 second. We can't set the delay to zero because somebody thought it
 would be a good idea to have that value suppress keystroke display
@@ -920,7 +920,7 @@ entirely.
 \end{minted}
 
 \subsubsection{No Title Bars}
-\label{sec:org1846e32}
+\label{sec:org6b64fe7}
 I put a lot of effort into purging title bars from most of the
 software I use on a regular basis (what a waste of real estate), and
 in Emacs 26 (might really be 26.2 or so) this is built in. For earlier
@@ -938,12 +938,12 @@ versions, patches exist to get the same effect.
 \end{minted}
 
 \subsubsection{Fonts}
-\label{sec:org9bf597c}
+\label{sec:orgcbf05a2}
 I use Pragmata Pro everywhere, but I'll eventually figure out how to
 deal with fonts properly and allow this to be specified.
 
 \subsubsection{Adjust font size by screen resolution}
-\label{sec:org6942863}
+\label{sec:org9a93fef}
 The biggest issue I have with multiple monitors is that the font size
 is all over the place. The functions below just set up some reasonable
 defaults and machinery to change the size depending on the resolution
@@ -970,7 +970,7 @@ of the monitor.
 \end{minted}
 
 \subsubsection{Fancy nonsense}
-\label{sec:org84cef02}
+\label{sec:org555b775}
 Transparency and whatnot.
 \begin{minted}[]{common-lisp}
 (defcustom the-fancy-stuff nil
@@ -983,9 +983,9 @@ transparency."
     (add-to-list 'default-frame-alist '(alpha . (85 . 50))))
 \end{minted}
 \subsection{Theme}
-\label{sec:org2665d5c}
+\label{sec:org8cbdfdd}
 \subsubsection{Utilities}
-\label{sec:org3f2d474}
+\label{sec:org36e19b3}
 
 This function is useful for reformatting lispy names (like
 \texttt{deeper-blue}) into user-friendly strings (like "Deeper Blue") for
@@ -1012,7 +1012,7 @@ The current color theme is determined by consulting
 \end{minted}
 
 \subsubsection{Default Color Scheme}
-\label{sec:org81fcd73}
+\label{sec:orgb5d6863}
 
 The default color scheme is Gruvbox, but you can set it to whatever
 you like.
@@ -1053,7 +1053,7 @@ loaded."
 \end{minted}
 
 \subsubsection{Leuven Customization}
-\label{sec:org9afcdef}
+\label{sec:org4d0fdd3}
 \begin{itemize}
 \item Change the highlight color from yellow to blue
 \item Don't underline current search match
@@ -1071,7 +1071,7 @@ loaded."
 \end{itemize}
 
 \subsubsection{Gruvbox installation}
-\label{sec:org8ad71a4}
+\label{sec:org7996c24}
 We register the Gruvbox package with Straight, but it is only
 downloaded if the theme is active.
 \begin{minted}[]{common-lisp}
@@ -1081,7 +1081,7 @@ downloaded if the theme is active.
 \end{minted}
 
 \subsubsection{Actually load the theme}
-\label{sec:org9400148}
+\label{sec:org41ca109}
 Load the appropriate color scheme as specified in
 \texttt{the-color-theme}.
 \begin{minted}[]{common-lisp}
@@ -1100,9 +1100,9 @@ If there is an error, report it as a warning."
     (load-theme the-color-theme 'no-confirm)))
 \end{minted}
 \subsection{Modeline Configuration}
-\label{sec:org22bbe51}
+\label{sec:orga43217c}
 \subsubsection{Diminish}
-\label{sec:orgd13c7cd}
+\label{sec:org40eb921}
 \texttt{diminish} allows us to change the display of minor modes in the
 modeline. I prefer Delight, but \texttt{diminish} is the standard used by
 many packages.
@@ -1126,7 +1126,7 @@ many packages.
   )
 \end{minted}
 \subsubsection{Delight}
-\label{sec:orgfe623aa}
+\label{sec:orgb7698e8}
 \texttt{delight} allows us to change the display of minor and major modes in
 the modeline. Spaceline is gonna do a lot of this work for us, but for
 anything it doesn't catch we'll make our own lighter. This also gives
@@ -1140,7 +1140,7 @@ us the \texttt{:delight} keyword in our \texttt{use-package} declarations.
    '((emacs-lisp-mode "ξ" :major))))
 \end{minted}
 \subsubsection{Nyan!}
-\label{sec:org6a1934f}
+\label{sec:org4d88021}
 Gotta have that cat! This will add a Nyan Cat progress indicator to
 the modeline.
 \begin{minted}[]{common-lisp}
@@ -1153,7 +1153,7 @@ the modeline.
   (nyan-mode 1))
 \end{minted}
 \subsubsection{{\bfseries\sffamily TODO} Custom Modeline}
-\label{sec:org0989972}
+\label{sec:orgd92799f}
 \begin{minted}[]{common-lisp}
 (use-package spaceline
   :init
@@ -1162,9 +1162,9 @@ the modeline.
   (spaceline-spacemacs-theme))
 \end{minted}
 \subsection{Emojis!}
-\label{sec:orgecd5899}
+\label{sec:org327bed2}
 \subsubsection{\texttt{emojify}}
-\label{sec:org8086257}
+\label{sec:org2763a44}
 Emojify renders a variety of strings as emojis, as well as providing
 some nice interactive functions to get emojis all over the place.
 
@@ -1172,7 +1172,7 @@ some nice interactive functions to get emojis all over the place.
 (use-package emojify)
 \end{minted}
 \subsection{Fancy Pragmata Pro ligatures}
-\label{sec:orgdb3a5f6}
+\label{sec:org516031a}
 \begin{minted}[]{common-lisp}
 ;; -*- lexical-binding: t; -*-
 ;;; the-pragmata.el --- ligatures for Pragmata Pro
@@ -1411,14 +1411,14 @@ some nice interactive functions to get emojis all over the place.
 ;;; the-pragmata.el ends here
 \end{minted}
 \section{Navigation}
-\label{sec:orgaa7a370}
+\label{sec:orgbe216b9}
 \subsection{Completion}
-\label{sec:orgc3547ce}
+\label{sec:org3be787f}
 \subsubsection{Packages}
-\label{sec:org47b8857}
+\label{sec:org1a13a9c}
 \begin{enumerate}
 \item Smex - Frecency for command history
-\label{sec:orge70f2ea}
+\label{sec:org9493614}
 This package provides a simple mechanism for recording the user's
 command history so that it can be used to sort commands by usage. It
 is automatically used by Ivy. Note, however, that historian.el will
@@ -1430,7 +1430,7 @@ more elegant way. See \href{https://github.com/nonsequitur/smex}{1}, \href{https
 \end{minted}
 
 \item flx - Fuzzy command matching
-\label{sec:orga7ac755}
+\label{sec:org3c9a84e}
 This package provides a framework for sorting choices in a hopefully
 intelligent way based on what the user has typed in, using "fuzzy
 matching" (i.e. "ffap" matches "find-file-at-point"). See \href{https://github.com/lewang/flx}{1}.
@@ -1440,7 +1440,7 @@ matching" (i.e. "ffap" matches "find-file-at-point"). See \href{https://github.c
 \end{minted}
 
 \item Ivy - completing-read on steroids
-\label{sec:org191f089}
+\label{sec:orgd4c2a4b}
 Ivy is a completion and narrowing framework. What does this mean?
 By default, Emacs has some basic tab-completion for commands,
 files, and so on. Ivy replaces this interface by showing a list of
@@ -1449,10 +1449,10 @@ way (using smex and flx, if they are installed) as the user inputs
 a query. This is much faster.
 \begin{enumerate}
 \item Setup
-\label{sec:orgda2982e}
+\label{sec:orgedac263}
 \begin{enumerate}
 \item Lazy Loading
-\label{sec:orgc7e5146}
+\label{sec:orgb4b3cd2}
 We'll be making a few patches, so we want to make sure that the
 patches aren't loaded until \texttt{ivy} is.
 
@@ -1460,7 +1460,7 @@ patches aren't loaded until \texttt{ivy} is.
 (el-patch-feature ivy)
 \end{minted}
 \item Keymap
-\label{sec:org09d969b}
+\label{sec:orgce5665b}
 We define a keymap for \texttt{ivy-mode} so we can remap buffer switching
 commands when \texttt{ivy} is active.
 \begin{minted}[]{common-lisp}
@@ -1474,7 +1474,7 @@ commands when \texttt{ivy} is active.
       "Keymap for `ivy-mode'.")
 \end{minted}
 \item Minor Mode Patches
-\label{sec:orgac07d6e}
+\label{sec:orga99b341}
 We patch Ivy to be easily toggle-able, and to restore normal
 \texttt{completing-read} functionality if \texttt{ivy-mode} is disabled.
 \begin{minted}[]{common-lisp}
@@ -1501,7 +1501,7 @@ We patch Ivy to be easily toggle-able, and to restore normal
     (setq completion-in-region-function 'completion--in-region)))
 \end{minted}
 \item Keybindings
-\label{sec:org8156e36}
+\label{sec:org1b94950}
 \texttt{ivy-resume} lets us jump back into the last completion session, which
 is pretty handy.
 
@@ -1510,7 +1510,7 @@ is pretty handy.
 \end{minted}
 \begin{enumerate}
 \item Minibuffer bindings
-\label{sec:org92250f7}
+\label{sec:org08490dd}
 The behavior of Ivy in the minibuffer is a bit unintuitive, so we're
 gonna make it a bit more intuitive. In short, tab for navigation,
 return for interaction, and \texttt{C-j} to use the current candidate as is.
@@ -1521,7 +1521,7 @@ return for interaction, and \texttt{C-j} to use the current candidate as is.
 \end{minted}
 \end{enumerate}
 \item Fuzzy matching
-\label{sec:orgda70db3}
+\label{sec:orgf42af24}
 Fuzzy matching is nice almost everywhere, so we turn it on for all
 \texttt{ivy} completions except for \texttt{swiper} (text search), since fuzzy
 matching for text is weird. We also raise the \texttt{ivy-flx-limit} so that
@@ -1534,7 +1534,7 @@ it will actually be used.
 \end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org0377a3b}
+\label{sec:org77b5354}
 \begin{minted}[]{common-lisp}
 (use-package ivy
   :demand t
@@ -1555,17 +1555,17 @@ it will actually be used.
 \end{enumerate}
 
 \item Counsel - Ivy-ized standard Emacs commands
-\label{sec:org424f5db}
+\label{sec:orgeaf94fb}
 Ivy is just a general-purpose completion framework. It can be used
 to generate improved versions of many stock Emacs commands. This is
 done by the Counsel library. (It also adds a few new commands, such
 as \texttt{counsel-git-grep}.)
 \begin{enumerate}
 \item Setup
-\label{sec:orgd725ab3}
+\label{sec:org7bb477c}
 \begin{enumerate}
 \item Bindings
-\label{sec:org10a8fe4}
+\label{sec:org98af079}
 Counsel is a set of convenient commands based on Ivy meant to improve
 the built-in Emacs equivalents. We bind them to the normal Emacs keys
 so we can use Ivy nearly everywhere. We also have some other useful
@@ -1593,7 +1593,7 @@ We also bind a key for use in expression buffers (like
 ("C-r" . counsel-expression-history)
 \end{minted}
 \item Find file at point
-\label{sec:org41df9d2}
+\label{sec:org136efb5}
 If there is a valid file at point, \texttt{counsel-find-file} will select
 that file by default.
 \begin{minted}[]{common-lisp}
@@ -1601,7 +1601,7 @@ that file by default.
 \end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org2399d78}
+\label{sec:orga562da3}
 \begin{minted}[]{common-lisp}
 (use-package counsel
   :bind (;; Use Counsel for common Emacs commands.
@@ -1616,7 +1616,7 @@ that file by default.
 \end{enumerate}
 
 \item Historian - Remember completion choices
-\label{sec:org6096abc}
+\label{sec:org43d4658}
 Remembers your choices in completion menus.
 
 \begin{minted}[]{common-lisp}
@@ -1628,12 +1628,12 @@ Remembers your choices in completion menus.
 
 \begin{enumerate}
 \item \texttt{ivy-historian}
-\label{sec:org1b9caf4}
+\label{sec:org6ad87f6}
 We use Historian to sort Ivy candidates by frecency+flx.
 
 \begin{enumerate}
 \item Setup
-\label{sec:org4c69669}
+\label{sec:org484e0af}
 The only configuration we do here is to mess around with how Historian
 weights results.
 \begin{minted}[]{common-lisp}
@@ -1643,7 +1643,7 @@ weights results.
 \end{minted}
 
 \item \texttt{use-package} declaration
-\label{sec:org62b3440}
+\label{sec:org69a8592}
 \begin{minted}[]{common-lisp}
 (use-package ivy-historian
   :demand t
@@ -1656,7 +1656,7 @@ weights results.
 \end{enumerate}
 
 \item Icicles - Sheesh
-\label{sec:orgf115324}
+\label{sec:org089767d}
 Icicles is steroids for the steroids. I don't even know everything it
 does, so it's not on by default.
 
@@ -1665,12 +1665,12 @@ does, so it's not on by default.
 \end{minted}
 \end{enumerate}
 \subsection{Finding files}
-\label{sec:org548e44a}
+\label{sec:org5b8f85f}
 \subsubsection{Dotfile shortcuts}
-\label{sec:org3cdd60a}
+\label{sec:orge7367b2}
 \begin{enumerate}
 \item Prefix key
-\label{sec:org99bedde}
+\label{sec:org796fb7c}
 We define a custom prefix to provide shortcuts to edit common
 dotfiles, and another to edit the file in another window.
 
@@ -1691,7 +1691,7 @@ The function `the-register-dotfile' creates a keybinding under
 this prefix, if you ask it to.")
 \end{minted}
 \item Registering dotfiles
-\label{sec:org1abe14c}
+\label{sec:org541925c}
 By providing a filename (relative to your \texttt{\$HOME}), we define a
 function \texttt{the-find-<something>}, where <something> is a cleaned up
 version of the basename of the file. You can also specify a keybinding
@@ -1779,14 +1779,14 @@ be generated automatically from the basename of FILENAME."
 
 \begin{enumerate}
 \item Emacs
-\label{sec:org0b75816}
+\label{sec:orgbf63665}
 \begin{minted}[]{common-lisp}
 (the-register-dotfile ".emacs.d/init.el" "e i")
 (the-register-dotfile ".emacs.d/init.local.el" "e l")
 \end{minted}
 
 \item Git
-\label{sec:org3ab549b}
+\label{sec:orgcf29f72}
 \begin{minted}[]{common-lisp}
 (the-register-dotfile ".gitconfig" "g c")
 (the-register-dotfile ".gitexclude" "g e")
@@ -1794,13 +1794,13 @@ be generated automatically from the basename of FILENAME."
 \end{minted}
 
 \item Fish
-\label{sec:orgb165a39}
+\label{sec:org60a77e5}
 \begin{minted}[]{common-lisp}
 (the-register-dotfile ".config/fish/config.fish" "f c")
 \end{minted}
 
 \item ChunkWM
-\label{sec:orgb7487ee}
+\label{sec:orgde1dbc9}
 \begin{minted}[]{common-lisp}
 (the-register-dotfile ".chunkwmrc" "w m")
 
@@ -1810,17 +1810,17 @@ be generated automatically from the basename of FILENAME."
 \end{minted}
 
 \item SKHD
-\label{sec:org1a736a5}
+\label{sec:orgc7ef35b}
 \begin{minted}[]{common-lisp}
 (the-register-dotfile ".skhdrc" "h k")
 \end{minted}
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Visiting files}
-\label{sec:org39d8cc5}
+\label{sec:org245af2a}
 \begin{enumerate}
 \item Symlinks
-\label{sec:org2d78bf8}
+\label{sec:org999690b}
 Follow symlinks when opening files. This has the concrete impact, for
 instance, that when you edit init.el with the shortcut provided by
 \texttt{the-register-dotfile} and then later do \texttt{find-file}, you will be in
@@ -1839,7 +1839,7 @@ dangerous, as it will just redirect you to the existing buffer.)
 \end{minted}
 
 \item VC nonsense
-\label{sec:org6eb222d}
+\label{sec:org7a5417d}
 Disable Emacs' built-in version control handling. This improves
 performance and disables some annoying warning messages and prompts,
 especially regarding symlinks. I only use Magit, and the \texttt{vc}
@@ -1851,7 +1851,7 @@ warnings.
 \end{minted}
 
 \item Directory hygiene
-\label{sec:org9d442f7}
+\label{sec:org79b73ae}
 Automatically create any nonexistent parent directories when finding a
 file. If the buffer for the new file is killed without being saved,
 then offer to delete the created directory or directories.
@@ -2007,7 +2007,7 @@ This is a function for `after-save-hook'. Remove
 \end{minted}
 
 \item Save place\ldots{}
-\label{sec:org73dc3d9}
+\label{sec:orga7b89f8}
 When you open a file, position the cursor at the same place as the
 last time you edited the file.
 
@@ -2017,7 +2017,7 @@ last time you edited the file.
 
 \begin{enumerate}
 \item \ldots{}and shut up about it
-\label{sec:org9286ee9}
+\label{sec:org2ac42c4}
 Inhibit the message that is usually printed when the `saveplace'
 file is written.
 
@@ -2052,10 +2052,10 @@ file is written.
 \end{enumerate}
 
 \subsubsection{Projects}
-\label{sec:orgb820385}
+\label{sec:org08da2b4}
 \begin{enumerate}
 \item Projectile
-\label{sec:orgf7b2948}
+\label{sec:orgb001f90}
 Projectile keeps track of a "project" list, which is automatically
 added to as you visit files in Git repositories, Node.js projects,
 etc. It then provides commands for quickly navigating between and
@@ -2063,10 +2063,10 @@ within these projects.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgd81c0d5}
+\label{sec:orgc2aec20}
 \begin{enumerate}
 \item Enable projectile globally
-\label{sec:orgf1eceb7}
+\label{sec:org2cbd969}
 Also, ignore the repos set up by \texttt{straight.el}.
 \begin{minted}[]{common-lisp}
 (projectile-mode +1)
@@ -2075,7 +2075,7 @@ Also, ignore the repos set up by \texttt{straight.el}.
 (setq projectile-ignored-project-function #'the-projectile-ignore-projects)
 \end{minted}
 \item Directory-local indexing
-\label{sec:org6de9d2f}
+\label{sec:org0d716c7}
 In case your \texttt{.projectile} file is pretty hairy, this allows us to
 alter the indexing method as a dirlocal.
 \begin{minted}[]{common-lisp}
@@ -2088,7 +2088,7 @@ alter the indexing method as a dirlocal.
 \end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org5be4744}
+\label{sec:org4f1f077}
 \begin{minted}[]{common-lisp}
 (use-package projectile
   :demand t
@@ -2101,11 +2101,11 @@ alter the indexing method as a dirlocal.
 \end{minted}
 \end{enumerate}
 \item Counsel Projectile
-\label{sec:org944fafb}
+\label{sec:org23fc64d}
 Counsel is everywhere! This integrates Projectile commands and Ivy.
 \begin{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org082d267}
+\label{sec:orgab2f6d5}
 \begin{minted}[]{common-lisp}
 (use-package counsel-projectile
   :init
@@ -2116,9 +2116,9 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{enumerate}
 \end{enumerate}
 \subsection{Navigation}
-\label{sec:org07b592e}
+\label{sec:org2a8b17e}
 \subsubsection{Mark Ring Navigation}
-\label{sec:org61de8a4}
+\label{sec:orga6d1332}
 \begin{minted}[]{common-lisp}
 ;; Make it so that if you provide a negative prefix argument to
 ;; C-SPC (i.e. like M-- C-SPC), then it will step forwards in the mark
@@ -2181,7 +2181,7 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{minted}
 
 \subsubsection{Confirm Reference Jump}
-\label{sec:orga411d61}
+\label{sec:org7e1a9c8}
 \begin{minted}[]{common-lisp}
 ;; When using M-. and friends, always prompt for the identifier (it
 ;; defaults to the identifier at point). This behavior is more
@@ -2191,7 +2191,7 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{minted}
 
 \subsubsection{Faster search highlight}
-\label{sec:org838ca80}
+\label{sec:org02677d5}
 \begin{minted}[]{common-lisp}
 ;; Eliminate the quarter-second delay before I-search matches are
 ;; highlighted, because delays suck.
@@ -2199,7 +2199,7 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{minted}
 
 \subsubsection{Better search}
-\label{sec:orgb3f6c52}
+\label{sec:orgb1c9730}
 \begin{minted}[]{common-lisp}
 ;; This package provides an enhanced version of Isearch that uses Ivy
 ;; to display a preview of the results.
@@ -2209,7 +2209,7 @@ Counsel is everywhere! This integrates Projectile commands and Ivy.
 \end{minted}
 
 \subsubsection{Jump to characters, words, etc.}
-\label{sec:org0be12e8}
+\label{sec:orgc3770ac}
 \begin{minted}[]{common-lisp}
 ;; This package allows you to jump quickly to characters and words
 ;; visible onscreen.
@@ -2261,7 +2261,7 @@ nil means no keybinding is established."
 \end{minted}
 
 \subsubsection{Regexp Search/Replace}
-\label{sec:org13a77f9}
+\label{sec:org136af55}
 \begin{minted}[]{common-lisp}
 ;; This package highlights matches and previews replacements in query
 ;; replace.
@@ -2297,13 +2297,13 @@ nil means no keybinding is established."
 \end{minted}
 
 \subsubsection{Expand Region}
-\label{sec:org37cd2ea}
+\label{sec:org0cafe2c}
 \begin{minted}[]{common-lisp}
 (use-package expand-region
   :demand t)
 \end{minted}
 \subsubsection{Vimish Fold}
-\label{sec:orge335640}
+\label{sec:orgc567c35}
 \begin{minted}[]{common-lisp}
 (use-package vimish-fold
   :demand t
@@ -2311,12 +2311,12 @@ nil means no keybinding is established."
   (vimish-fold-global-mode 1))
 \end{minted}
 \subsection{Search}
-\label{sec:org957f94a}
+\label{sec:org5b1c0ee}
 \subsubsection{Regular Expressions}
-\label{sec:orgee44df3}
+\label{sec:org8087abc}
 \begin{enumerate}
 \item Rx
-\label{sec:org55ad63b}
+\label{sec:org22eb042}
 A prescription for your regex woes. Don't write obscure regex
 syntax. Describe the regex you want, then generate the bizarre
 incantation you need.
@@ -2326,11 +2326,11 @@ incantation you need.
 \end{minted}
 \end{enumerate}
 \section{Writing}
-\label{sec:orge708a8a}
+\label{sec:org72c39e0}
 \subsection{Org Mode Customization}
-\label{sec:org019d410}
+\label{sec:orgf39a998}
 \subsubsection{Global Outline Mode}
-\label{sec:orga1d8f1e}
+\label{sec:orge94e380}
 Outlines work for just about any structured text imaginable, from code
 to prose. If it's got something that Emacs thinks is a paragraph, it
 works. When you need a high-level overview, it's hard to beat this.
@@ -2343,17 +2343,17 @@ works. When you need a high-level overview, it's hard to beat this.
 \end{minted}
 
 \subsubsection{Org}
-\label{sec:org3b633f8}
+\label{sec:orgdd3c1e4}
 Org is a hugely expansive framework (a.k.a. collection of hacks) for
 organizing information, notes, tasks, calendars, and anything else
 related to Org-anization.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgc4b040b}
+\label{sec:org749f009}
 \begin{enumerate}
 \item Version Hack
-\label{sec:org9862966}
+\label{sec:org0714f0b}
 Because \texttt{straight.el} runs Org directly from a Git repo, the
 autoloads Org uses to identify its version are not generated in
 the way that it expects. This causes it to either a) fail to
@@ -2396,7 +2396,7 @@ Next, we need to define \texttt{org-git-version} and \texttt{org-release} eagerl
 \end{minted}
 
 \item Todo Sequence
-\label{sec:org50a0e96}
+\label{sec:org968e84c}
 We use an augmented set of todo states, including TODO, IN-PROGRESS,
 WAITING, and the done states DONE and CANCELED.
 \begin{minted}[]{common-lisp}
@@ -2442,7 +2442,7 @@ WAITING, and the done states DONE and CANCELED.
 (setq org-archive-location (f-expand "archive/%s::* Archived Tasks" org-directory))
 \end{minted}
 \item Bindings
-\label{sec:org30a51ff}
+\label{sec:org44885dc}
 
 First, we want to set up some recommended bindings as specified in the
 Org manual.
@@ -2488,7 +2488,7 @@ Finally, we'll set up a convenient binding for inserting headings.
 \end{minted}
 
 \item Settings
-\label{sec:org9bb8498}
+\label{sec:orgae35692}
 \texttt{org-insert-headline} will split your content by default, which is
 pretty dumb. We therefore set it to create a new heading, instead. We
 also activate \texttt{org-indent-mode} for more beautiful documents.
@@ -2518,7 +2518,7 @@ refiling.
 \end{minted}
 
 \item Tags
-\label{sec:org4bafefc}
+\label{sec:org1f97dbf}
 We set up some useful tags we'd like available in any Org buffer.
 \begin{minted}[]{common-lisp}
 (setq org-tag-persistent-alist
@@ -2536,14 +2536,14 @@ We set up some useful tags we'd like available in any Org buffer.
         ))
 \end{minted}
 \item Default Org Directory
-\label{sec:orgba21ff2}
+\label{sec:org5b9c441}
 We stick our Org files in a new directory in the home directory by
 default.
 \begin{minted}[]{common-lisp}
 (setq org-directory "~/org")
 \end{minted}
 \item Capture Templates
-\label{sec:orgf1c4171}
+\label{sec:orgdec9566}
 \begin{minted}[]{common-lisp}
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
@@ -2563,10 +2563,10 @@ default.
               '((org-agenda-files :maxlevel . 3)))
 \end{minted}
 \item Utilities
-\label{sec:orgf598f80}
+\label{sec:org292a0d2}
 \begin{enumerate}
 \item Recursively sort buffer entries alphabetically
-\label{sec:org3a8c796}
+\label{sec:org52f0f6f}
 \begin{minted}[]{common-lisp}
 (defun the-org-sort-ignore-errors ()
   (condition-case x
@@ -2580,7 +2580,7 @@ default.
 \end{minted}
 
 \item Archive dead tasks
-\label{sec:org72a2d46}
+\label{sec:org7918a7a}
 If tasks are marked DONE, and either have no deadline or the deadline
 has passed, archive it.
 
@@ -2602,7 +2602,7 @@ has passed, archive it.
 \end{minted}
 
 \item Pretty bullets
-\label{sec:orgb637d7b}
+\label{sec:org3e691d7}
 We use \texttt{org-bullets} to make our outlines prettier. There's some minor
 alignment weirdness with my font, so I may need to specify the bullet
 codepoints, later.
@@ -2613,7 +2613,7 @@ codepoints, later.
 \end{minted}
 
 \item Dropbox integration
-\label{sec:orgb4c668f}
+\label{sec:orgdcf07c6}
 If \texttt{\textasciitilde{}/org/} doesn't exist, but \texttt{\textasciitilde{}/Dropbox/org} does, symlink the
 latter to the former.
 \begin{minted}[]{common-lisp}
@@ -2625,7 +2625,7 @@ latter to the former.
 \end{enumerate}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org4c9d41a}
+\label{sec:orgbe1bca1}
 
 \begin{minted}[]{common-lisp}
 (use-package org
@@ -2660,16 +2660,16 @@ latter to the former.
 \end{enumerate}
 
 \subsubsection{Org Agenda}
-\label{sec:orgb3a45b3}
+\label{sec:org96e7270}
 Org Agenda is for generating a more useful consolidated summary of all
 or some of your tasks, according to their metadata.
 
 \begin{enumerate}
 \item Setup
-\label{sec:orgd9deaeb}
+\label{sec:org20aab9e}
 \begin{enumerate}
 \item Bindings
-\label{sec:org24f79ff}
+\label{sec:org1ca57dc}
 Analogously to our bindings for regular org files, we'll also move
 things off of \texttt{S-} and onto \texttt{C-}.
 
@@ -2683,7 +2683,7 @@ things off of \texttt{S-} and onto \texttt{C-}.
 \end{minted}
 
 \item Window Splitting
-\label{sec:org3463765}
+\label{sec:org34c9abd}
 We want Org Agenda to split the window into two tall windows, rather
 than two wide windows stacked.
 
@@ -2700,7 +2700,7 @@ than two wide windows stacked.
 \end{minted}
 
 \item Default Directory
-\label{sec:org7f92e51}
+\label{sec:orge25ae97}
 If \texttt{org-directory} exists, set \texttt{default-directory} to its value in the
 agenda so that things like \texttt{find-file} work sensibly.
 
@@ -2720,7 +2720,7 @@ agenda so that things like \texttt{find-file} work sensibly.
 \end{minted}
 
 \item Settings
-\label{sec:org252f8b4}
+\label{sec:orgae989a2}
 \begin{minted}[]{common-lisp}
 (setq org-agenda-files '("~/org"))
 (setq org-agenda-skip-scheduled-if-done t
@@ -2728,7 +2728,7 @@ agenda so that things like \texttt{find-file} work sensibly.
 \end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:org8afdf3c}
+\label{sec:org4fe03e8}
 \begin{minted}[]{common-lisp}
 (use-package org-agenda
   :straight org-plus-contrib
@@ -2748,7 +2748,7 @@ agenda so that things like \texttt{find-file} work sensibly.
 \end{minted}
 \end{enumerate}
 \subsubsection{Clocking}
-\label{sec:org602c3f0}
+\label{sec:org9fb0be7}
 \begin{minted}[]{common-lisp}
 (use-package org-clock
   :straight org-plus-contrib
@@ -2766,7 +2766,7 @@ agenda so that things like \texttt{find-file} work sensibly.
 
 \end{minted}
 \subsubsection{Org Encryption}
-\label{sec:org78e02ba}
+\label{sec:org7f350bd}
 \begin{minted}[]{common-lisp}
 (use-package org-crypt
   :straight org-plus-contrib
@@ -2777,7 +2777,7 @@ agenda so that things like \texttt{find-file} work sensibly.
   (setq org-crypt-key "17F07DF3086C4BBFA5799F38EF21DED4826AAFCF"))
 \end{minted}
 \subsubsection{Org Journal}
-\label{sec:org042be29}
+\label{sec:org061f175}
 Keeping a regular record of what's going on at work (programmer's
 journal) and at home (personal journal) can be a useful habit, so
 let's give it a shot.
@@ -2789,7 +2789,7 @@ let's give it a shot.
   (setq org-journal-enable-encryption t))
 \end{minted}
 \subsubsection{Context-Aware Capture and Agenda}
-\label{sec:orga2570f7}
+\label{sec:orgc114d28}
 \begin{minted}[]{common-lisp}
 (use-package org-context
   :demand t
@@ -2806,19 +2806,19 @@ let's give it a shot.
   (org-context-activate))
 \end{minted}
 \subsubsection{Extra Export Packages}
-\label{sec:org917a62c}
+\label{sec:org90751bf}
 In order to correctly export Org files to certain formats, we need
 some additional tools.
 \begin{enumerate}
 \item \texttt{htmlize}
-\label{sec:org06d6072}
+\label{sec:org21a01fd}
 Used to convert symbols and such to HTML equivalents.
 \begin{minted}[]{common-lisp}
 (use-package htmlize)
 \end{minted}
 \end{enumerate}
 \subsubsection{Org-mode Config Settings}
-\label{sec:org4cb03e9}
+\label{sec:org615917d}
 Our config files live in \texttt{the-lib-directory}, but our org source files
 live in \texttt{the-org-lib-directory}. Unless I decide to start loading org
 files directly (which is doable if a touch annoying, at times), for
@@ -2863,7 +2863,7 @@ Finally, I'd like to automatically tangle the files on save.
 (add-hook 'after-save-hook 'the-org-lib-tangle-hook)
 \end{minted}
 \subsubsection{\texttt{org-tree-slide}}
-\label{sec:orgb4df790}
+\label{sec:orgb5f6f0a}
 \begin{minted}[]{common-lisp}
 (use-package org-tree-slide
   :config
@@ -2886,9 +2886,9 @@ Finally, I'd like to automatically tangle the files on save.
   )
 \end{minted}
 \subsection{Editing Prose}
-\label{sec:org4fd04b5}
+\label{sec:org5d518a0}
 \subsubsection{AUCTeX}
-\label{sec:orgd36e4f5}
+\label{sec:org886bf46}
 \begin{minted}[]{common-lisp}
 (use-package tex
   :demand t
@@ -2926,7 +2926,7 @@ Finally, I'd like to automatically tangle the files on save.
   (company-auctex-init))
 \end{minted}
 \subsubsection{Flyspell}
-\label{sec:org30e838e}
+\label{sec:org5a6e0f2}
 Flyspell is Flycheck but for spelling. Simple as.
 \begin{minted}[]{common-lisp}
 (use-package flyspell
@@ -2934,15 +2934,15 @@ Flyspell is Flycheck but for spelling. Simple as.
   :diminish (flyspell-mode . "φ"))
 \end{minted}
 \subsection{Formatting}
-\label{sec:org2871332}
+\label{sec:orgda1ec43}
 \subsubsection{Formatting Options}
-\label{sec:org6cc7e67}
+\label{sec:org341cd39}
 \begin{enumerate}
 \item Formatting
-\label{sec:org47e451d}
+\label{sec:org95e030f}
 \begin{enumerate}
 \item Sanity
-\label{sec:orga042327}
+\label{sec:org969fd84}
 Don't use tabs for indentation, even in deeply indented lines.
 
 \begin{minted}[]{common-lisp}
@@ -2962,7 +2962,7 @@ so cut it out.
 \end{minted}
 
 \item Whitespace
-\label{sec:org57f497d}
+\label{sec:org66bf466}
 Trim trailing whitespace on save. This will get rid of end-of-line
 whitespace, and reduce the number of blank lines at the end of the
 file to one.
@@ -3006,7 +3006,7 @@ Finally, always end files with a newline.
 
 \begin{enumerate}
 \item \texttt{long-lines-mode}
-\label{sec:orgaf808c4}
+\label{sec:orge50a20d}
 We define a minor mode for configuring \texttt{whitespace-mode} to highlight
 long lines. Enabling the mode will highlight characters beyond the
 fill column (80 columns, by default).
@@ -3025,7 +3025,7 @@ fill column (80 columns, by default).
 \end{enumerate}
 
 \item Line Wrapping
-\label{sec:org011943d}
+\label{sec:orgd585212}
 When editing text (i.e., not code), we want to automatically keep
 lines a reasonable length (<80 columns).
 
@@ -3064,7 +3064,7 @@ lifting it up to a global minor mode.
 \end{minted}
 
 \item EditorConfig
-\label{sec:org12d0de9}
+\label{sec:orgfd5a224}
 EditorConfig is a tool for establishing and maintaining consistent
 code style in editors and IDEs which support it (most of the major
 ones have a plugin).
@@ -3074,7 +3074,7 @@ ones have a plugin).
 \end{minted}
 
 \item Utilities
-\label{sec:orgd6d5015}
+\label{sec:org0ae6891}
 Like \texttt{reverse-region}, but works characterwise rather than linewise.
 
 \begin{minted}[]{common-lisp}
@@ -3090,25 +3090,25 @@ Interactively, reverse the characters in the current region."
 \end{enumerate}
 \end{enumerate}
 \subsubsection{Indentation}
-\label{sec:orgedaa99b}
+\label{sec:org0849d7b}
 \begin{enumerate}
 \item Aggressive Indent
-\label{sec:orga669167}
+\label{sec:org4a4a680}
 Assuming your indentation is consistent, this will keep it correct
 without any additional work.
 \begin{enumerate}
 \item Setup
-\label{sec:org2955409}
+\label{sec:org2e26cf0}
 \begin{enumerate}
 \item Local Variable
-\label{sec:org2ccfcb0}
+\label{sec:orgf20578f}
 Here, we set up \texttt{aggressive-indent-mode} as a variable we can set on a
 file- or directory-local level.
 \begin{minted}[]{common-lisp}
 (put 'aggressive-indent-mode 'safe-local-variable #'booleanp)
 \end{minted}
 \item Slow mode
-\label{sec:orgfc0540a}
+\label{sec:org4cd862e}
 We register \texttt{aggressive-indent} with our slow mode, allowing us to
 disabled reindentation on save for situations in which reindentation
 is expensive. Note that
@@ -3132,7 +3132,7 @@ This is done in `the-slow-indent-mode'."
 \end{minted}
 \end{enumerate}
 \item \texttt{use-package} declaration
-\label{sec:orgcbad2bf}
+\label{sec:orgc01ac36}
 \begin{minted}[]{common-lisp}
 (use-package aggressive-indent
   :init
@@ -3145,11 +3145,11 @@ This is done in `the-slow-indent-mode'."
 \end{enumerate}
 \end{enumerate}
 \section{Reading}
-\label{sec:org2a4b1c6}
+\label{sec:org5c69d1a}
 \subsection{PDF Functionality}
-\label{sec:orgad340d4}
+\label{sec:org2498e34}
 \subsubsection{\texttt{pdf-tools}}
-\label{sec:org810d5ac}
+\label{sec:orgc5165e6}
 DocView is the built-in PDF viewer in Emacs, but it's a bit meh.
 \texttt{pdf-tools} is significantly nicer, with much better support for
 in-document hyperlinks and fancy things like that. It does require
@@ -3163,11 +3163,11 @@ compilation of an external library, though.
   (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
 \end{minted}
 \section{Version Control}
-\label{sec:org4816299}
+\label{sec:org2cc7193}
 \subsection{Git integration}
-\label{sec:org27a888c}
+\label{sec:org8e8513b}
 \subsubsection{Direct Interaction}
-\label{sec:orgbe92dab}
+\label{sec:org177f887}
 For Elisp purposes, we occasionally need to get some piece of
 information from Git. We do this using \texttt{git.el}, a dead-simple git
 interaction library.
@@ -3178,7 +3178,7 @@ interaction library.
 \end{minted}
 
 \subsubsection{Magit}
-\label{sec:org8d55a59}
+\label{sec:org0c89a82}
 Magit is one of the Emacs killer apps. It's a Git porcelain which
 makes interacting with Git intuitive, instructive, and quick.
 
@@ -3265,7 +3265,7 @@ makes interacting with Git intuitive, instructive, and quick.
 
 \begin{enumerate}
 \item Github Integration
-\label{sec:orga8930fb}
+\label{sec:org995bc2b}
 \begin{minted}[]{common-lisp}
 (use-package magithub
   :demand t
@@ -3275,7 +3275,7 @@ makes interacting with Git intuitive, instructive, and quick.
 \end{enumerate}
 
 \subsubsection{Get link to commit or source line}
-\label{sec:org85e85cf}
+\label{sec:org5e4b163}
 Occasionally it's useful to send a link to a specific commit or source
 line on <repo host of choice>, and this package makes that relatively
 easy.
@@ -3285,21 +3285,21 @@ easy.
   :bind (("C-c C-g l" . git-link)))
 \end{minted}
 \section{Programming Utilities}
-\label{sec:org1f7cba9}
+\label{sec:orgd17db68}
 \subsection{Syntax Checking}
-\label{sec:org321c12d}
+\label{sec:orgf74aee5}
 \subsubsection{Flycheck}
-\label{sec:org642cb50}
+\label{sec:orgbaf5c6f}
 Flycheck provides a framework for in-buffer error and warning
 highlighting, or more generally syntax checking. It comes with a large
 number of checkers pre-defined, and other packages define more.
 
 \begin{enumerate}
 \item Settings
-\label{sec:orgf70c0de}
+\label{sec:orgb8d6311}
 \begin{enumerate}
 \item Enable Flycheck Globally
-\label{sec:org9a28535}
+\label{sec:orgbad25f3}
 Enable Flycheck in all buffers, but also allow for disabling it
 per-buffer.
 
@@ -3309,7 +3309,7 @@ per-buffer.
 \end{minted}
 
 \item Disable Flycheck in the modeline
-\label{sec:org8eb2e98}
+\label{sec:org9007850}
 It's honestly more distracting than anything,
 
 \begin{minted}[]{common-lisp}
@@ -3318,7 +3318,7 @@ It's honestly more distracting than anything,
 \end{enumerate}
 
 \item \texttt{use-package} declaration
-\label{sec:org97d6c76}
+\label{sec:org350d00c}
 \begin{minted}[]{common-lisp}
 (use-package flycheck
   :defer 3
@@ -3329,9 +3329,9 @@ It's honestly more distracting than anything,
 \end{minted}
 \end{enumerate}
 \subsection{Auto-completion}
-\label{sec:orgf05d43a}
+\label{sec:org56b8b65}
 \subsubsection{Company Settings}
-\label{sec:org4975b52}
+\label{sec:org1d0416b}
 \begin{itemize}
 \item Show completions instantly, rather than after half a second.
 \item Show completions after typing three characters.
@@ -3376,7 +3376,7 @@ have domain-specific words that have particular casing.
 
 \begin{enumerate}
 \item Performance
-\label{sec:orga3f2c91}
+\label{sec:org0a158ff}
 In case autocompletion is making Emacs drag, we add a toggle to slow
 it down.
 
@@ -3396,7 +3396,7 @@ This is done in `the-slow-autocomplete-mode'."
 \end{minted}
 
 \item YaSnippet Hack
-\label{sec:org9baaa32}
+\label{sec:orgaab7e7c}
 Make it so that Company's keymap overrides Yasnippet's keymap when a
 snippet is active. This way, you can TAB to complete a suggestion for
 the current field in a snippet, and then TAB to move to the next
@@ -3472,7 +3472,7 @@ completions menu on-screen in the same location.
 \end{enumerate}
 
 \subsubsection{Company}
-\label{sec:org67a9fae}
+\label{sec:orgb9a5793}
 \texttt{company} provides an in-buffer autocompletion framework. It
 allows for packages to define backends that supply completion
 candidates, as well as optional documentation and source code. Then
@@ -3512,7 +3512,7 @@ backends will still be included.")
 \end{minted}
 
 \subsubsection{Company Statistics}
-\label{sec:org6f9c721}
+\label{sec:org9e04eb5}
 \texttt{company-statistics} adds usage-based sorting to Company completions.
 It is a goal to replace this package with \href{https://github.com/PythonNut/historian.el}{\texttt{historian}} or \href{https://github.com/raxod502/prescient.el}{\texttt{prescient}}.
 
@@ -3537,19 +3537,19 @@ It is a goal to replace this package with \href{https://github.com/PythonNut/his
   (company-statistics-mode +1))
 \end{minted}
 \section{Languages}
-\label{sec:org7dd0472}
+\label{sec:org2cfd11b}
 \subsection{Common Lisp}
-\label{sec:org353415d}
+\label{sec:orgf14e06e}
 \subsubsection{Aggressive Indent}
-\label{sec:org2e13a2a}
+\label{sec:orgf32a3b3}
 Enable aggressive indentation in all Lisp modes.
 \begin{minted}[]{common-lisp}
 (add-hook 'lisp-mode-hook #'aggressive-indent-mode)
 \end{minted}
 \subsection{Emacs Lisp}
-\label{sec:orga68f40c}
+\label{sec:orge0e6b68}
 \subsubsection{Hooks}
-\label{sec:org0e73338}
+\label{sec:org9f4278b}
 Enable ElDoc for Elisp buffers and the \textbf{scratch} buffer.
 \begin{minted}[]{common-lisp}
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
@@ -3562,10 +3562,10 @@ Enable Aggressive Indent for Elisp buffers and the \textbf{scratch} buffer.
 \end{minted}
 
 \subsubsection{Fixes}
-\label{sec:orgf1f5d56}
+\label{sec:orgd5ea579}
 \begin{enumerate}
 \item Advised Function Noise
-\label{sec:org27025e0}
+\label{sec:orgf7ca3b6}
 Emacs barfs up a bunch of nonsense warnings every time a function is
 advised, and we do that a lot, so we'll just tell it to hush.
 
@@ -3575,7 +3575,7 @@ advised, and we do that a lot, so we'll just tell it to hush.
 \end{enumerate}
 
 \subsubsection{Reloading the Init File}
-\label{sec:orgb5618f4}
+\label{sec:org79d7e37}
 First, we define a customizable keybinding to reload our init file.
 
 \begin{minted}[]{common-lisp}
@@ -3604,7 +3604,7 @@ key.
 \end{minted}
 
 \subsubsection{Evaluate an Elisp buffer}
-\label{sec:orgfbff30b}
+\label{sec:org78b56c6}
 Other Lisp interaction modes (like CIDER and Geiser) provide a binding
 for evaluating a whole buffer. We add a similar binding for
 \texttt{eval-buffer}, as well as some sanity-checking so we don't evaluate
@@ -3627,7 +3627,7 @@ the init file in a bad way.
 \end{minted}
 
 \subsubsection{Rebind Find Commands}
-\label{sec:orgd054cb7}
+\label{sec:org3b05a60}
 Add keybindings (\texttt{C-h C-f} and \texttt{C-h C-v}) for jumping to the source of
 Elisp functions and variables. Also, add a keybinding (\texttt{C-h C-o}) that
 performs the functionality of \texttt{M-.} only for Elisp, because the latter
@@ -3652,7 +3652,7 @@ years of Emacsing.
 \end{minted}
 
 \subsubsection{Lisp Interaction Lighter}
-\label{sec:orgbc835d0}
+\label{sec:org2209957}
 Show `lisp-interaction-mode' as "ξι" instead of "Lisp Interaction" in
 the mode line.
 
@@ -3664,13 +3664,13 @@ the mode line.
           #'the--rename-lisp-interaction-mode)
 \end{minted}
 \section{Performance}
-\label{sec:org9a08768}
+\label{sec:org9f3f4ec}
 \subsection{Performance Mode}
-\label{sec:org2659eb4}
+\label{sec:org70a9081}
 Occasionally features like indentation and autocompletion are
 expensive, so we set up a minor mode to slow them down.
 \subsubsection{Aggressive Byte Compilation}
-\label{sec:orgdf2800b}
+\label{sec:orge4e4b47}
 \begin{minted}[]{common-lisp}
 (use-package auto-compile
   :init
@@ -3682,7 +3682,7 @@ expensive, so we set up a minor mode to slow them down.
   (auto-compile-on-save-mode))
 \end{minted}
 \subsubsection{Modes}
-\label{sec:org5b5a063}
+\label{sec:org7ba377b}
 \begin{minted}[]{common-lisp}
 (define-minor-mode the-slow-indent-mode
   "Minor mode for when the indentation code is slow.
@@ -3694,11 +3694,11 @@ This prevents `company' and `eldoc' from displaying metadata as
 quickly.")
 \end{minted}
 \section{Networking}
-\label{sec:org132f19f}
+\label{sec:org75cc121}
 \subsection{Network Services}
-\label{sec:org20893ac}
+\label{sec:org712eef6}
 \subsubsection{macOS TLS verification}
-\label{sec:orga5a0157}
+\label{sec:org5a275e4}
 TLS certs on macOS don't live anywhere that \texttt{gnutls} can see them, by
 default, so \texttt{brew install libressl} and we'll use those.
 \begin{minted}[]{common-lisp}
@@ -3710,7 +3710,7 @@ default, so \texttt{brew install libressl} and we'll use those.
 \end{minted}
 
 \subsubsection{StackOverflow}
-\label{sec:org87814a7}
+\label{sec:orgc106ba1}
 Honestly, probably the most important package here. \texttt{M-x
 sx-authenticate}, provide a username and password, then get to
 overflowing.
@@ -3719,7 +3719,7 @@ overflowing.
 \end{minted}
 
 \subsubsection{Bug URL references}
-\label{sec:orged117e2}
+\label{sec:orgcbcf061}
 Allow setting the regexp for bug references from file-local or
 directory-local variables. CIDER does this in its files, for example.
 \begin{minted}[]{common-lisp}
@@ -3727,14 +3727,14 @@ directory-local variables. CIDER does this in its files, for example.
 \end{minted}
 
 \subsubsection{Pastebin}
-\label{sec:orgb60a4d9}
+\label{sec:orgbbb649c}
 \texttt{ix.io} is a slick little pastebin, and now we can use it in Emacs.
 \begin{minted}[]{common-lisp}
 (use-package ix)
 \end{minted}
 
 \subsubsection{Browsing}
-\label{sec:orgbaced62}
+\label{sec:orgbd3e0d8}
 \texttt{eww} is the wonderfully named Emacs Web Wowser, a text-based browser.
 \begin{minted}[]{common-lisp}
 (use-package eww
@@ -3749,7 +3749,7 @@ directory-local variables. CIDER does this in its files, for example.
 \end{minted}
 
 \subsubsection{RSS}
-\label{sec:orgc733518}
+\label{sec:orgdc0f3fb}
 Org does everything, so we manage our RSS feeds with Org, as well.
 \begin{minted}[]{common-lisp}
 (use-package elfeed
@@ -3761,18 +3761,18 @@ Org does everything, so we manage our RSS feeds with Org, as well.
   (elfeed-org))
 \end{minted}
 \subsubsection{Steam}
-\label{sec:org1360b91}
+\label{sec:org2a261f3}
 \begin{minted}[]{common-lisp}
 (use-package steam
   :init
   (setq steam-username "prooftechnique"))
 \end{minted}
 \section{Etc.}
-\label{sec:org29d93ea}
+\label{sec:org2b86216}
 \subsection{Miscellaneous Utilities}
-\label{sec:orga6afd51}
+\label{sec:orge6b133b}
 \subsubsection{Alerts}
-\label{sec:orgcab2a19}
+\label{sec:org06ee054}
 \begin{minted}[]{common-lisp}
 (use-package alert
   :demand t
@@ -3781,7 +3781,7 @@ Org does everything, so we manage our RSS feeds with Org, as well.
     (setq alert-default-style 'osx-notifier)))
 \end{minted}
 \subsubsection{Eventually-obsolete Functions}
-\label{sec:org8213234}
+\label{sec:org7f32220}
 These functions will become unnecessary in Emacs 26.1, which
 extends \texttt{map-put} to have a TESTFN argument.
 
@@ -3851,7 +3851,7 @@ done with TESTFN, which defaults to `eq'. See also
 \end{minted}
 
 \subsubsection{Framework Identification}
-\label{sec:orgf7bb2eb}
+\label{sec:org0e85629}
 This gives us an easy way to check if the file we're editing is part
 of THE.
 
